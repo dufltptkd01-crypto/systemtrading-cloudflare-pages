@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -6,38 +6,51 @@
   <title>회원가입 | SystemTrading Premier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body class="theme-auth">
-  <div class="bg-aurora" aria-hidden="true"></div>
+<body class="theme-auth" data-auth-page="signup">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow glow-left" aria-hidden="true"></div>
+  <div class="bg-glow glow-right" aria-hidden="true"></div>
+
   <main class="auth-wrap">
-    <a class="brand-link" href="./index.html">SystemTrading Premier</a>
+    <header class="auth-topbar">
+      <a class="brand-link" href="./index.html" data-i18n="brand.name">SystemTrading Premier</a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="btnLangKoAuth" class="lang-btn active" type="button">KO</button>
+        <button id="btnLangEnAuth" class="lang-btn" type="button">EN</button>
+      </div>
+    </header>
+
     <section class="auth-card">
-      <h1>회원가입</h1>
-      <p>실제 자동매매 실행 전, 본인인증 단계까지 완료해 주세요.</p>
+      <h1 data-i18n="auth.signup">회원가입</h1>
+      <p data-i18n="authpage.signup.desc">실제 자동매매 실행 전, 본인인증 단계까지 완료해 주세요.</p>
 
       <form id="signupForm" class="auth-form">
-        <label for="signupName">이름</label>
-        <input id="signupName" type="text" placeholder="홍길동" required />
+        <label for="signupName" data-i18n="authpage.name">이름</label>
+        <input id="signupName" type="text" placeholder="홍길동" data-i18n-placeholder="authpage.ph.name" required />
 
-        <label for="signupPhone">휴대폰 번호</label>
-        <input id="signupPhone" type="text" placeholder="010-1234-5678" required />
+        <label for="signupPhone" data-i18n="authpage.phone">휴대폰 번호</label>
+        <input id="signupPhone" type="text" placeholder="010-1234-5678" data-i18n-placeholder="authpage.ph.phone" required />
 
-        <label for="signupEmail">이메일</label>
-        <input id="signupEmail" type="email" placeholder="you@example.com" required />
+        <label for="signupEmail" data-i18n="authpage.email">이메일</label>
+        <input id="signupEmail" type="email" placeholder="you@example.com" data-i18n-placeholder="authpage.ph.email" required />
 
-        <label for="signupPassword">비밀번호</label>
-        <input id="signupPassword" type="password" minlength="8" placeholder="8자 이상" required />
+        <label for="signupPassword" data-i18n="authpage.password">비밀번호</label>
+        <input id="signupPassword" type="password" minlength="8" placeholder="8자 이상" data-i18n-placeholder="authpage.ph.password_signup" required />
 
-        <label for="authApiBase">Backend API Base URL (선택)</label>
-        <input id="authApiBase" type="text" placeholder="https://api.example.com" />
+        <label for="authApiBase" data-i18n="authpage.api_base_opt">Backend API Base URL (선택)</label>
+        <input id="authApiBase" type="text" placeholder="https://api.example.com" data-i18n-placeholder="authpage.ph.api_base" />
 
-        <button class="soft-btn accent" type="submit">가입 완료</button>
+        <button class="soft-btn accent" type="submit" data-i18n="authpage.signup.submit">가입 완료</button>
       </form>
 
-      <p class="auth-foot">이미 계정이 있으신가요? <a href="./login.html">로그인</a></p>
-      <pre id="authResult" class="auth-result">가입 정보를 입력해 주세요.</pre>
+      <p class="auth-foot">
+        <span data-i18n="authpage.signup.foot_prefix">이미 계정이 있으신가요?</span>
+        <a href="./login.html" data-i18n="auth.login">로그인</a>
+      </p>
+      <pre id="authResult" class="auth-result" data-i18n="authpage.signup.result_default">가입 정보를 입력해 주세요.</pre>
     </section>
   </main>
 

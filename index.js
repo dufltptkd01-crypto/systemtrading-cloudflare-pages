@@ -6,11 +6,235 @@
     return;
   }
 
+  var LANG_KEY = 'systemtrading.ui.lang.v1';
+  var EN = {
+    'meta.title': 'SystemTrading Premier',
+    'brand.name': 'SystemTrading Premier',
+    'aria.menu_toggle': 'Open menu',
+    'aria.home': 'Home',
+    'nav.guide': 'How To Use',
+    'nav.intro': 'System',
+    'nav.stock': 'Stock',
+    'nav.coin': 'Crypto',
+    'nav.billing': 'Billing',
+    'auth.signup': 'Sign Up',
+    'auth.login': 'Log In',
+    'auth.logout': 'Log Out',
+    'hero.kicker': 'AI ASSET ORCHESTRATION',
+    'hero.title.a': 'Spend Less Time Deciding',
+    'hero.title.b': 'Execute With More Precision',
+    'hero.sub': 'Connect news, indicators, chart patterns, and execution logs into one workflow.',
+    'hero.cta_trial': 'Start 7-Day Free Trial',
+    'hero.cta_billing': 'View Plan & Billing',
+    'hero.point.1': 'Multi-source candidate ranking',
+    'hero.point.2': 'Pick 1 from top 10 candidates',
+    'hero.point.3': 'Real-time Telegram fills',
+    'hero.card.1.label': 'Strategy Loop',
+    'hero.card.1.value': 'Collect -> Rank -> Execute -> Improve',
+    'hero.card.2.label': 'Risk Limit',
+    'hero.card.2.value': 'Max KRW 2,000,000 per order',
+    'hero.card.3.label': 'Market Coverage',
+    'hero.card.3.value': 'KR Stocks + Global Crypto',
+    'status.login_label': 'Login',
+    'status.verify_label': 'KYC',
+    'status.api_label': 'API',
+    'status.mode_label': 'Mode',
+    'status.subscription_label': 'Subscription',
+    'shortcut.title': 'Quick Access',
+    'shortcut.guide': 'Open Guide',
+    'shortcut.stock': 'Stock Setup',
+    'shortcut.coin': 'Crypto Setup',
+    'shortcut.intro': 'System Overview',
+    'guide.title': 'How To Use',
+    'guide.lead': 'Follow these steps to launch auto-trading quickly.',
+    'guide.step.1': 'Create an account and log in.',
+    'guide.step.2': 'Complete identity verification.',
+    'guide.step.3': 'Save API keys and budget in Stock/Crypto tabs.',
+    'guide.step.4': 'Check execution mode and start auto-trading.',
+    'guide.step.5': 'Track fills through Telegram and reports.',
+    'guide.stock.title': 'Start Stock Trading',
+    'guide.stock.step.1': 'Enter account number and Kiwoom credentials.',
+    'guide.stock.step.2': 'Enter Telegram Bot Token and Chat ID.',
+    'guide.stock.step.3': 'Auto-select picks 1 from top 10 candidates.',
+    'guide.stock.step.4': 'Click Start Stock Auto-Trading.',
+    'guide.stock.cta': 'Go to Stock Tab',
+    'guide.coin.title': 'Start Crypto Trading',
+    'guide.coin.step.1': 'Choose Binance or Upbit.',
+    'guide.coin.step.2': 'Set exchange keys, budget, and symbol.',
+    'guide.coin.step.3': 'Validate in simulation first.',
+    'guide.coin.step.4': 'Click Start Crypto Auto-Trading.',
+    'guide.coin.cta': 'Go to Crypto Tab',
+    'intro.title': 'System Overview',
+    'intro.lead': 'A continuous loop improves strategy quality over time.',
+    'intro.flow.1.title': '1. Data Collection',
+    'intro.flow.1.body': 'Evaluate news, indicators, volume and chart patterns together.',
+    'intro.flow.2.title': '2. Candidate Compression',
+    'intro.flow.2.body': 'Filter top 10 opportunities, then focus on one.',
+    'intro.flow.3.title': '3. Execution & Alert',
+    'intro.flow.3.body': 'Fill alerts are delivered to Telegram with risk rules.',
+    'intro.flow.4.title': '4. Review & Improve',
+    'intro.flow.4.body': 'Analyze outcomes and apply improvements to next sessions.',
+    'intro.feedback.title': 'Trade Journal Feedback Loop',
+    'intro.feedback.1.title': 'Capture Fills',
+    'intro.feedback.1.body': 'Record rationale, execution price, volume, and pnl automatically.',
+    'intro.feedback.2.title': 'Analyze Performance',
+    'intro.feedback.2.body': 'Extract optimization points from win-rate and volatility response.',
+    'intro.feedback.3.title': 'Apply Improvements',
+    'intro.feedback.3.body': 'Update ranking weights, entry filters, and risk limits.',
+    'intro.cta.stock': 'Stock Setup',
+    'intro.cta.coin': 'Crypto Setup',
+    'intro.cta.billing': 'Billing Tab',
+    'stock.title': 'Stock Trading Setup',
+    'stock.api_base': 'Backend API Base URL',
+    'stock.api_token': 'Static API Token (Optional)',
+    'stock.account': 'Account Number',
+    'stock.symbol': 'Stock Symbol',
+    'stock.budget': 'Max Amount per Order (KRW)',
+    'stock.auto_select': 'Auto Candidate Select',
+    'stock.mode': 'Execution Mode',
+    'stock.mode.sim_option': 'Simulation (No real order)',
+    'stock.mode.live_option': 'Live Trading (Real order)',
+    'stock.mode.help': 'Simulation is for validation. Live mode sends real orders.',
+    'stock.kiwoom_key': 'Kiwoom API Key',
+    'stock.kiwoom_secret': 'Kiwoom API Secret',
+    'stock.telegram_token': 'Telegram Bot Token',
+    'stock.telegram_chat': 'Telegram Chat ID',
+    'stock.save': 'Save Stock Settings',
+    'stock.start': 'Start Stock Auto-Trading',
+    'stock.side.title': 'Security / Runtime',
+    'stock.side.note': 'Complete login and verification before starting.',
+    'stock.api_check': 'Check API Connectivity',
+    'stock.verify_start': 'Start Verification',
+    'stock.verify_refresh': 'Refresh Verification',
+    'stock.verify_code': 'Verification Code',
+    'stock.verify_submit': 'Submit Code',
+    'stock.verify_hint': 'In demo mode, you can test the full flow with temporary code.',
+    'coin.title': 'Crypto Trading Setup',
+    'coin.exchange': 'Exchange',
+    'coin.symbol': 'Symbol',
+    'coin.budget': 'Max Amount per Order (KRW)',
+    'coin.auto_select': 'Auto Symbol Select',
+    'coin.mode': 'Execution Mode',
+    'coin.mode.sim_option': 'Simulation (No real order)',
+    'coin.mode.live_option': 'Live Trading (Real order)',
+    'coin.mode.help': 'Simulation runs without real exchange orders.',
+    'coin.binance_key': 'Binance API Key',
+    'coin.binance_secret': 'Binance API Secret',
+    'coin.upbit_key': 'Upbit Access Key',
+    'coin.upbit_secret': 'Upbit Secret Key',
+    'coin.save': 'Save Crypto Settings',
+    'coin.start': 'Start Crypto Auto-Trading',
+    'coin.side.title': 'Auto-Trading Operations',
+    'coin.stop': 'Stop Auto-Trading',
+    'coin.analyze': 'Run Journal Analysis',
+    'coin.report': 'Load Latest Report',
+    'coin.guard': 'Before run: Login + KYC + Subscription + API check required.',
+    'billing.title': 'Plan & Billing',
+    'billing.lead': 'After signup, auto-trading is free for 7 days. Subscription is required after trial.',
+    'billing.state': 'Billing State',
+    'billing.trial_end': 'Trial End Date',
+    'billing.sub_end': 'Subscription End Date',
+    'billing.remain': 'Days Remaining',
+    'billing.checkout': 'Start Monthly Checkout',
+    'billing.confirm': 'Confirm Payment (Demo)',
+    'billing.refresh': 'Refresh Billing',
+    'billing.note': 'In production, update subscription after verified payment webhook.',
+    'billing.manage_title': 'Member Data Management',
+    'billing.manage.1': 'Store profile, verification, and subscription data separately.',
+    'billing.manage.2': 'Hash passwords and encrypt API credentials.',
+    'billing.manage.3': 'Provide admin tools for search, renewal, and payment history.',
+    'billing.export': 'Export Demo Users',
+    'billing.export_default': 'Click to load member data.',
+    'result.title': 'Execution Logs',
+    'result.default': 'Logs will appear after API calls or actions.',
+    'tip.api_base': 'Your backend server URL. Empty means demo mode; set URL for real API requests.',
+    'tip.telegram_chat': 'Target chat ID for order alerts (private/group chat).',
+    'tip.api_base.aria': 'API Base URL help',
+    'tip.telegram_chat.aria': 'Telegram Chat ID help',
+    'ph.api_base': 'https://api.example.com',
+    'ph.api_token': 'Bearer token',
+    'ph.account': '8120-0764',
+    'ph.stock_symbol': '005930',
+    'ph.verify_code': '6-digit code',
+    'ph.coin_symbol': 'BTC/USDT or BTC/KRW',
+    'ph.kiwoom_key': 'Kiwoom API Key',
+    'ph.kiwoom_secret': 'Kiwoom API Secret',
+    'ph.telegram_token': 'Telegram Bot Token',
+    'ph.telegram_chat': 'Telegram Chat ID',
+    'ph.binance_key': 'Binance API Key',
+    'ph.binance_secret': 'Binance API Secret',
+    'ph.upbit_key': 'Upbit Access Key',
+    'ph.upbit_secret': 'Upbit Secret Key',
+    'auth.user': 'Signed-in User',
+    'mode.sim': 'Simulation',
+    'mode.live': 'Live Trading',
+    'status.badge.logged_out': 'Logged Out',
+    'status.badge.verified': 'Verified',
+    'status.badge.unverified': 'Not Verified',
+    'status.badge.demo': 'Demo',
+    'status.badge.live_ok': 'Live Connected',
+    'status.badge.live_pending': 'Live Pending',
+    'billing.state.trial': 'Trial Active',
+    'billing.state.subscribed': 'Subscription Active',
+    'billing.state.expired': 'Trial Expired',
+    'billing.state.need_payment': 'Payment Required',
+    'billing.state.need_login': 'Login Required',
+    'billing.state.need_check': 'Check Required',
+    'billing.state.trading_enabled': 'Auto-Trading Enabled',
+    'billing.state.trading_disabled': 'Auto-Trading Disabled',
+    'check.login': 'Login required',
+    'check.verify': 'Verification required',
+    'check.plan': 'Subscription required',
+    'check.api': 'API connectivity check required',
+    'check.account': 'Account number required',
+    'check.stock_symbol': 'Stock symbol required',
+    'check.coin_symbol': 'Crypto symbol required',
+    'guard.prefix': 'Pre-run checks',
+    'guard.ready': 'Ready. You can start auto-trading now.',
+    'stock.verify_sent': 'Verification code was sent.',
+    'log.need_login_first': 'Please log in first.',
+    'log.session_fail': 'Session refresh failed',
+    'log.billing_ok': 'Billing status loaded',
+    'log.billing_fail': 'Failed to load billing status',
+    'log.verify_start_ok': 'Verification started',
+    'log.verify_start_fail': 'Failed to start verification',
+    'log.verify_done_ok': 'Verification completed',
+    'log.verify_done_fail': 'Failed to submit verification code',
+    'log.api_ok': 'API connectivity verified',
+    'log.api_fail': 'API connectivity failed',
+    'log.stock_start_ok': 'Stock auto-trading start request sent',
+    'log.stock_start_fail': 'Failed to start stock auto-trading',
+    'log.coin_start_ok': 'Crypto auto-trading start request sent',
+    'log.coin_start_fail': 'Failed to start crypto auto-trading',
+    'log.stop_ok': 'Auto-trading stop request sent',
+    'log.stop_fail': 'Failed to stop auto-trading',
+    'log.analyze_ok': 'Journal analysis completed',
+    'log.analyze_fail': 'Journal analysis failed',
+    'log.report_ok': 'Latest analysis report',
+    'log.report_fail': 'Failed to load report',
+    'log.checkout_ok': 'Subscription checkout started',
+    'log.checkout_fail': 'Failed to start checkout',
+    'log.confirm_ok': 'Payment confirmation completed',
+    'log.confirm_fail': 'Payment confirmation failed',
+    'log.users_ok': 'Demo user data loaded',
+    'log.users_fail': 'Failed to load user data',
+    'log.logout.title': 'Logged out',
+    'log.logout.body': 'Your session has been cleared.',
+    'log.trial_info.title': 'Trial info',
+    'log.trial_info.body': 'During the 7-day trial, auto-trading can be started immediately.',
+    'log.stock_saved': 'Stock settings saved',
+    'log.coin_saved': 'Crypto settings saved',
+    'log.dashboard_ready.title': 'Dashboard ready',
+    'log.dashboard_ready.body': 'Start the 7-day trial from Home, then configure and run auto-trading.'
+  };
+
   var refs = {
     heroNav: document.querySelector('.hero-nav'),
     menuToggle: document.getElementById('menuToggle'),
     menuPanel: document.getElementById('menuPanel'),
     brandHome: document.getElementById('brandHome'),
+    btnLangKo: document.getElementById('btnLangKo'),
+    btnLangEn: document.getElementById('btnLangEn'),
     navPills: Array.from(document.querySelectorAll('.nav-pill[data-tab]')),
     tabs: {
       home: document.getElementById('tab-home'),
@@ -101,12 +325,91 @@
     apiChecked: false,
     checkoutId: '',
     menuOpen: false,
+    lang: loadLanguage(),
     logs: []
   };
 
+  function loadLanguage() {
+    var stored = String(localStorage.getItem(LANG_KEY) || '').toLowerCase();
+    if (stored === 'ko' || stored === 'en') {
+      return stored;
+    }
+    return String(navigator.language || '').toLowerCase().indexOf('ko') === 0 ? 'ko' : 'en';
+  }
+
+  function setLanguage(lang) {
+    if (lang !== 'ko' && lang !== 'en') {
+      return;
+    }
+    state.lang = lang;
+    localStorage.setItem(LANG_KEY, lang);
+    applyI18n();
+    updateStatus();
+    updateGuard();
+  }
+
+  function trans(key, koText) {
+    if (state.lang !== 'en') {
+      return koText;
+    }
+    return EN[key] || koText;
+  }
+
+  function applyI18n() {
+    document.documentElement.lang = state.lang === 'en' ? 'en' : 'ko';
+    document.title = trans('meta.title', 'SystemTrading Premier');
+
+    document.querySelectorAll('[data-i18n]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n');
+      if (!node.dataset.koText) {
+        node.dataset.koText = node.textContent;
+      }
+      if (state.lang === 'ko') {
+        node.textContent = node.dataset.koText;
+      } else {
+        node.textContent = EN[key] || node.dataset.koText;
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n-placeholder');
+      if (!node.dataset.koPlaceholder) {
+        node.dataset.koPlaceholder = node.getAttribute('placeholder') || '';
+      }
+      if (state.lang === 'ko') {
+        node.setAttribute('placeholder', node.dataset.koPlaceholder);
+      } else {
+        node.setAttribute('placeholder', EN[key] || node.dataset.koPlaceholder);
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-tip]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n-tip');
+      if (!node.dataset.koTip) {
+        node.dataset.koTip = node.getAttribute('data-tip') || '';
+      }
+      node.setAttribute('data-tip', state.lang === 'ko' ? node.dataset.koTip : (EN[key] || node.dataset.koTip));
+    });
+
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n-aria');
+      if (!node.dataset.koAria) {
+        node.dataset.koAria = node.getAttribute('aria-label') || '';
+      }
+      node.setAttribute('aria-label', state.lang === 'ko' ? node.dataset.koAria : (EN[key] || node.dataset.koAria));
+    });
+
+    if (refs.btnLangKo) {
+      refs.btnLangKo.classList.toggle('active', state.lang === 'ko');
+    }
+    if (refs.btnLangEn) {
+      refs.btnLangEn.classList.toggle('active', state.lang === 'en');
+    }
+  }
+
   function addLog(title, payload) {
     var body = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
-    var line = '[' + new Date().toLocaleString('ko-KR') + '] ' + title + '\n' + body;
+    var line = '[' + new Date().toLocaleString(state.lang === 'en' ? 'en-US' : 'ko-KR') + '] ' + title + '\n' + body;
     state.logs.unshift(line);
     state.logs = state.logs.slice(0, 20);
     if (refs.resultBox) {
@@ -128,15 +431,15 @@
     if (!Number.isFinite(parsed.getTime())) {
       return '-';
     }
-    return parsed.toLocaleString('ko-KR');
+    return parsed.toLocaleString(state.lang === 'en' ? 'en-US' : 'ko-KR');
   }
 
   function modeLabel(isDryRun) {
-    return isDryRun ? '모의투자' : '실거래';
+    return isDryRun ? trans('mode.sim', '모의투자') : trans('mode.live', '실거래');
   }
 
   function isMobileViewport() {
-    return window.matchMedia('(max-width: 760px)').matches;
+    return window.matchMedia('(max-width: 860px)').matches;
   }
 
   function setMenuOpen(open) {
@@ -220,36 +523,45 @@
   }
 
   function renderBilling(session, billing) {
+    var billingStateMap = {
+      '무료체험 진행중': trans('billing.state.trial', '무료체험 진행중'),
+      '구독 활성': trans('billing.state.subscribed', '구독 활성'),
+      '무료체험 만료': trans('billing.state.expired', '무료체험 만료'),
+      '결제 필요': trans('billing.state.need_payment', '결제 필요')
+    };
+
     if (!session.user) {
-      setText(refs.billingStateText, '로그인 필요');
+      setText(refs.billingStateText, trans('billing.state.need_login', '로그인 필요'));
       setText(refs.trialEndText, '-');
       setText(refs.subscriptionEndText, '-');
       setText(refs.billingRemainText, '-');
-      setText(refs.subscriptionStateBadge, '로그인 필요');
+      setText(refs.subscriptionStateBadge, trans('billing.state.need_login', '로그인 필요'));
       return;
     }
 
     if (!billing) {
-      setText(refs.billingStateText, '확인 필요');
+      setText(refs.billingStateText, trans('billing.state.need_check', '확인 필요'));
       setText(refs.trialEndText, '-');
       setText(refs.subscriptionEndText, '-');
       setText(refs.billingRemainText, '-');
-      setText(refs.subscriptionStateBadge, '확인 필요');
+      setText(refs.subscriptionStateBadge, trans('billing.state.need_check', '확인 필요'));
       return;
     }
 
-    setText(refs.billingStateText, billing.state || '확인 필요');
+    setText(refs.billingStateText, billingStateMap[billing.state] || billing.state || trans('billing.state.need_check', '확인 필요'));
     setText(refs.trialEndText, formatDateText(billing.trial_end_at));
     setText(refs.subscriptionEndText, formatDateText(billing.subscription_end_at));
     setText(
       refs.billingRemainText,
-      Number.isFinite(Number(billing.remaining_days)) ? String(billing.remaining_days) + '일' : '-'
+      Number.isFinite(Number(billing.remaining_days))
+        ? (state.lang === 'en' ? (String(billing.remaining_days) + ' day(s)') : (String(billing.remaining_days) + '일'))
+        : '-'
     );
 
     if (billing.can_trade) {
-      setText(refs.subscriptionStateBadge, billing.state || '자동매매 가능');
+      setText(refs.subscriptionStateBadge, billingStateMap[billing.state] || billing.state || trans('billing.state.trading_enabled', '자동매매 가능'));
     } else {
-      setText(refs.subscriptionStateBadge, '자동매매 불가');
+      setText(refs.subscriptionStateBadge, trans('billing.state.trading_disabled', '자동매매 불가'));
     }
   }
 
@@ -268,7 +580,7 @@
     if (refs.authUserChip) {
       if (loggedIn) {
         refs.authUserChip.hidden = false;
-        refs.authUserChip.textContent = session.user.email || session.user.name || '로그인 사용자';
+        refs.authUserChip.textContent = session.user.email || session.user.name || trans('auth.user', '로그인 사용자');
       } else {
         refs.authUserChip.hidden = true;
         refs.authUserChip.textContent = '';
@@ -282,13 +594,13 @@
     var billing = session.billing || null;
 
     renderAuthMenu(session);
-    setText(refs.authStateBadge, session.user ? (session.user.email || session.user.name || '로그인됨') : '미로그인');
-    setText(refs.verifyStateBadge, session.verified ? '인증완료' : '미인증');
+    setText(refs.authStateBadge, session.user ? (session.user.email || session.user.name || trans('auth.user', '로그인 사용자')) : trans('status.badge.logged_out', '미로그인'));
+    setText(refs.verifyStateBadge, session.verified ? trans('status.badge.verified', '인증완료') : trans('status.badge.unverified', '미인증'));
 
     if (!settings.apiBase) {
-      setText(refs.apiStateBadge, 'Demo');
+      setText(refs.apiStateBadge, trans('status.badge.demo', 'Demo'));
     } else {
-      setText(refs.apiStateBadge, state.apiChecked ? 'Live 연결확인' : 'Live 미확인');
+      setText(refs.apiStateBadge, state.apiChecked ? trans('status.badge.live_ok', 'Live 연결확인') : trans('status.badge.live_pending', 'Live 미확인'));
     }
 
     if (state.activeTab === 'coin') {
@@ -334,30 +646,30 @@
     var billing = session.billing || null;
 
     if (!session.user) {
-      checks.push('로그인 필요');
+      checks.push(trans('check.login', '로그인 필요'));
     }
     if (!session.verified) {
-      checks.push('본인인증 필요');
+      checks.push(trans('check.verify', '본인인증 필요'));
     }
     if (session.user && (!billing || !billing.can_trade)) {
-      checks.push('이용권 필요');
+      checks.push(trans('check.plan', '이용권 필요'));
     }
     if (settings.apiBase && !state.apiChecked) {
-      checks.push('API 연결 확인 필요');
+      checks.push(trans('check.api', 'API 연결 확인 필요'));
     }
 
     if (targetMarket === 'stock') {
       if (!settings.accountNo) {
-        checks.push('계좌번호 필요');
+        checks.push(trans('check.account', '계좌번호 필요'));
       }
       if (!settings.stockAutoSelect && !settings.stockSymbol) {
-        checks.push('주식 종목코드 필요');
+        checks.push(trans('check.stock_symbol', '주식 종목코드 필요'));
       }
     }
 
     if (targetMarket === 'coin') {
       if (!settings.coinAutoSelect && !settings.coinSymbol) {
-        checks.push('코인 심볼 필요');
+        checks.push(trans('check.coin_symbol', '코인 심볼 필요'));
       }
     }
 
@@ -371,8 +683,8 @@
 
     if (refs.guardText) {
       refs.guardText.textContent = visibleChecks.length
-        ? ('실행 전 확인: ' + visibleChecks.join(' / '))
-        : '실행 준비 완료. 자동매매를 시작할 수 있습니다.';
+        ? (trans('guard.prefix', '실행 전 확인') + ': ' + visibleChecks.join(' / '))
+        : trans('guard.ready', '실행 준비 완료. 자동매매를 시작할 수 있습니다.');
     }
 
     if (refs.btnStartStock) {
@@ -405,7 +717,7 @@
       core.clearSession();
       state.apiChecked = false;
       if (!silent) {
-        addLog('세션 갱신 실패', String(err.message || err));
+        addLog(trans('log.session_fail', '세션 갱신 실패'), String(err.message || err));
       }
     }
     updateStatus();
@@ -424,11 +736,11 @@
       var billing = data.billing || null;
       saveSession({ billing: billing });
       if (!silent) {
-        addLog('이용권 상태 조회 완료', billing || data);
+        addLog(trans('log.billing_ok', '이용권 상태 조회 완료'), billing || data);
       }
     } catch (err) {
       if (!silent) {
-        addLog('이용권 상태 조회 실패', String(err.message || err));
+        addLog(trans('log.billing_fail', '이용권 상태 조회 실패'), String(err.message || err));
       }
     }
     updateStatus();
@@ -438,22 +750,22 @@
   async function runVerifyStart() {
     var session = currentSession();
     if (!session.token) {
-      addLog('본인인증 시작 실패', '먼저 로그인하세요.');
+      addLog(trans('log.verify_start_fail', '본인인증 시작 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
       var data = await core.callApi('verifyStart', 'POST', {});
-      refs.verifyHint.textContent = (data.message || '인증 코드가 발송되었습니다.') + (data.debug_code ? (' 데모코드: ' + data.debug_code) : '');
-      addLog('본인인증 시작', data);
+      refs.verifyHint.textContent = (data.message || trans('stock.verify_sent', '인증 코드가 발송되었습니다.')) + (data.debug_code ? (' | code: ' + data.debug_code) : '');
+      addLog(trans('log.verify_start_ok', '본인인증 시작'), data);
     } catch (err) {
-      addLog('본인인증 시작 실패', String(err.message || err));
+      addLog(trans('log.verify_start_fail', '본인인증 시작 실패'), String(err.message || err));
     }
   }
 
   async function runVerifyComplete(code) {
     var session = currentSession();
     if (!session.token) {
-      addLog('인증 코드 제출 실패', '먼저 로그인하세요.');
+      addLog(trans('log.verify_done_fail', '인증 코드 제출 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
@@ -465,11 +777,11 @@
         verified: Boolean(data.verified || (user && user.verified)),
         billing: data.billing || session.billing || null
       });
-      addLog('본인인증 완료', data);
+      addLog(trans('log.verify_done_ok', '본인인증 완료'), data);
       updateStatus();
       updateGuard();
     } catch (err) {
-      addLog('인증 코드 제출 실패', String(err.message || err));
+      addLog(trans('log.verify_done_fail', '인증 코드 제출 실패'), String(err.message || err));
     }
   }
 
@@ -478,10 +790,10 @@
     try {
       var data = await core.callApi('health', 'GET', null, { withAuth: false, apiBase: settings.apiBase });
       state.apiChecked = true;
-      addLog('API 연결 성공', data);
+      addLog(trans('log.api_ok', 'API 연결 성공'), data);
     } catch (err) {
       state.apiChecked = false;
-      addLog('API 연결 실패', String(err.message || err));
+      addLog(trans('log.api_fail', 'API 연결 실패'), String(err.message || err));
     }
     updateStatus();
     updateGuard();
@@ -495,7 +807,7 @@
     var settings = collectFormSettings();
     var checks = buildChecks('stock');
     if (checks.length > 0) {
-      addLog('주식 자동매매 시작 실패', checksToText(checks));
+      addLog(trans('log.stock_start_fail', '주식 자동매매 시작 실패'), checksToText(checks));
       return;
     }
 
@@ -524,9 +836,9 @@
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
-      addLog('주식 자동매매 시작 요청 완료', data);
+      addLog(trans('log.stock_start_ok', '주식 자동매매 시작 요청 완료'), data);
     } catch (err) {
-      addLog('주식 자동매매 시작 실패', String(err.message || err));
+      addLog(trans('log.stock_start_fail', '주식 자동매매 시작 실패'), String(err.message || err));
     }
     updateStatus();
     updateGuard();
@@ -536,7 +848,7 @@
     var settings = collectFormSettings();
     var checks = buildChecks('coin');
     if (checks.length > 0) {
-      addLog('코인 자동매매 시작 실패', checksToText(checks));
+      addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), checksToText(checks));
       return;
     }
 
@@ -577,9 +889,9 @@
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
-      addLog('코인 자동매매 시작 요청 완료', data);
+      addLog(trans('log.coin_start_ok', '코인 자동매매 시작 요청 완료'), data);
     } catch (err) {
-      addLog('코인 자동매매 시작 실패', String(err.message || err));
+      addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), String(err.message || err));
     }
     updateStatus();
     updateGuard();
@@ -588,64 +900,64 @@
   async function stopTrading() {
     var session = currentSession();
     if (!session.token) {
-      addLog('자동매매 중지 실패', '먼저 로그인하세요.');
+      addLog(trans('log.stop_fail', '자동매매 중지 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
       var data = await core.callApi('stop', 'POST', {});
-      addLog('자동매매 중지 요청 완료', data);
+      addLog(trans('log.stop_ok', '자동매매 중지 요청 완료'), data);
     } catch (err) {
-      addLog('자동매매 중지 실패', String(err.message || err));
+      addLog(trans('log.stop_fail', '자동매매 중지 실패'), String(err.message || err));
     }
   }
 
   async function runAnalyze() {
     var session = currentSession();
     if (!session.token) {
-      addLog('매매일지 분석 실패', '먼저 로그인하세요.');
+      addLog(trans('log.analyze_fail', '매매일지 분석 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
       var data = await core.callApi('analyze', 'POST', { trigger: 'manual' });
-      addLog('매매일지 분석 완료', data);
+      addLog(trans('log.analyze_ok', '매매일지 분석 완료'), data);
     } catch (err) {
-      addLog('매매일지 분석 실패', String(err.message || err));
+      addLog(trans('log.analyze_fail', '매매일지 분석 실패'), String(err.message || err));
     }
   }
 
   async function loadLatestReport() {
     var session = currentSession();
     if (!session.token) {
-      addLog('리포트 조회 실패', '먼저 로그인하세요.');
+      addLog(trans('log.report_fail', '리포트 조회 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
       var data = await core.callApi('reportLatest', 'GET');
-      addLog('최근 분석 리포트', data);
+      addLog(trans('log.report_ok', '최근 분석 리포트'), data);
     } catch (err) {
-      addLog('리포트 조회 실패', String(err.message || err));
+      addLog(trans('log.report_fail', '리포트 조회 실패'), String(err.message || err));
     }
   }
 
   async function startCheckout() {
     var session = currentSession();
     if (!session.token) {
-      addLog('결제 시작 실패', '먼저 로그인하세요.');
+      addLog(trans('log.checkout_fail', '결제 시작 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
       var data = await core.callApi('billingCheckout', 'POST', { plan: 'monthly' });
       state.checkoutId = (data.checkout && data.checkout.checkout_id) || '';
-      addLog('구독 결제 시작', data);
+      addLog(trans('log.checkout_ok', '구독 결제 시작'), data);
     } catch (err) {
-      addLog('결제 시작 실패', String(err.message || err));
+      addLog(trans('log.checkout_fail', '결제 시작 실패'), String(err.message || err));
     }
   }
 
   async function confirmPayment() {
     var session = currentSession();
     if (!session.token) {
-      addLog('결제 완료 처리 실패', '먼저 로그인하세요.');
+      addLog(trans('log.confirm_fail', '결제 완료 처리 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
@@ -653,9 +965,9 @@
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
-      addLog('결제 완료 처리', data);
+      addLog(trans('log.confirm_ok', '결제 완료 처리'), data);
     } catch (err) {
-      addLog('결제 완료 처리 실패', String(err.message || err));
+      addLog(trans('log.confirm_fail', '결제 완료 처리 실패'), String(err.message || err));
     }
     updateStatus();
     updateGuard();
@@ -664,7 +976,7 @@
   async function exportUsers() {
     var session = currentSession();
     if (!session.token) {
-      addLog('회원정보 조회 실패', '먼저 로그인하세요.');
+      addLog(trans('log.users_fail', '회원정보 조회 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
       return;
     }
     try {
@@ -672,9 +984,9 @@
       if (refs.userExportBox) {
         refs.userExportBox.textContent = JSON.stringify(data.users || [], null, 2);
       }
-      addLog('데모 회원정보 조회', { count: (data.users || []).length });
+      addLog(trans('log.users_ok', '데모 회원정보 조회'), { count: (data.users || []).length });
     } catch (err) {
-      addLog('회원정보 조회 실패', String(err.message || err));
+      addLog(trans('log.users_fail', '회원정보 조회 실패'), String(err.message || err));
     }
   }
 
@@ -683,9 +995,9 @@
     state.apiChecked = false;
     state.checkoutId = '';
     if (refs.userExportBox) {
-      refs.userExportBox.textContent = '관리 데이터를 불러오려면 버튼을 누르세요.';
+      refs.userExportBox.textContent = trans('billing.export_default', '관리 데이터를 불러오려면 버튼을 누르세요.');
     }
-    addLog('로그아웃 완료', '세션이 종료되었습니다.');
+    addLog(trans('log.logout.title', '로그아웃 완료'), trans('log.logout.body', '세션이 종료되었습니다.'));
     updateStatus();
     updateGuard();
     goToTab('home');
@@ -746,6 +1058,9 @@
       });
     });
 
+    bindButton(refs.btnLangKo, function () { setLanguage('ko'); });
+    bindButton(refs.btnLangEn, function () { setLanguage('en'); });
+
     bindButton(refs.btnTrial, function () {
       var session = currentSession();
       if (!session.user) {
@@ -753,7 +1068,7 @@
         return;
       }
       goToTab('stock');
-      addLog('무료체험 안내', '7일 무료체험 기간에는 자동매매를 바로 실행할 수 있습니다.');
+      addLog(trans('log.trial_info.title', '무료체험 안내'), trans('log.trial_info.body', '7일 무료체험 기간에는 자동매매를 바로 실행할 수 있습니다.'));
     });
     bindButton(refs.btnGotoBilling, function () { goToTab('billing'); });
     bindButton(refs.btnGotoGuide, function () { goToTab('guide'); });
@@ -770,7 +1085,7 @@
       refs.stockForm.addEventListener('submit', function (event) {
         event.preventDefault();
         var saved = collectFormSettings();
-        addLog('주식 설정 저장 완료', {
+        addLog(trans('log.stock_saved', '주식 설정 저장 완료'), {
           accountNo: saved.accountNo,
           symbol: saved.stockSymbol,
           budget: saved.stockBudget,
@@ -786,7 +1101,7 @@
       refs.coinForm.addEventListener('submit', function (event) {
         event.preventDefault();
         var saved = collectFormSettings();
-        addLog('코인 설정 저장 완료', {
+        addLog(trans('log.coin_saved', '코인 설정 저장 완료'), {
           exchange: saved.coinExchange,
           symbol: saved.coinSymbol,
           budget: saved.coinBudget,
@@ -873,11 +1188,12 @@
 
   function init() {
     initApiBase();
+    applyI18n();
     applySettingsToForm(currentSettings());
     bindEvents();
     setMenuOpen(false);
     setActiveTab('home');
-    addLog('대시보드 준비 완료', '홈에서 7일 무료체험을 시작하고, 투자 설정 후 자동매매를 실행하세요.');
+    addLog(trans('log.dashboard_ready.title', '대시보드 준비 완료'), trans('log.dashboard_ready.body', '홈에서 7일 무료체험을 시작하고, 투자 설정 후 자동매매를 실행하세요.'));
     refreshMe(true).then(function () {
       return refreshBillingStatus(true);
     });

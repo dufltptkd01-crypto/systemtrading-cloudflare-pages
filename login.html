@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -6,32 +6,45 @@
   <title>로그인 | SystemTrading Premier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body class="theme-auth">
-  <div class="bg-aurora" aria-hidden="true"></div>
+<body class="theme-auth" data-auth-page="login">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow glow-left" aria-hidden="true"></div>
+  <div class="bg-glow glow-right" aria-hidden="true"></div>
+
   <main class="auth-wrap">
-    <a class="brand-link" href="./index.html">SystemTrading Premier</a>
+    <header class="auth-topbar">
+      <a class="brand-link" href="./index.html" data-i18n="brand.name">SystemTrading Premier</a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="btnLangKoAuth" class="lang-btn active" type="button">KO</button>
+        <button id="btnLangEnAuth" class="lang-btn" type="button">EN</button>
+      </div>
+    </header>
+
     <section class="auth-card">
-      <h1>로그인</h1>
-      <p>로그인 후 본인인증을 완료하면 자동매매를 실행할 수 있습니다.</p>
+      <h1 data-i18n="auth.login">로그인</h1>
+      <p data-i18n="authpage.login.desc">로그인 후 본인인증을 완료하면 자동매매를 실행할 수 있습니다.</p>
 
       <form id="loginForm" class="auth-form">
-        <label for="loginEmail">이메일</label>
-        <input id="loginEmail" type="email" placeholder="you@example.com" required />
+        <label for="loginEmail" data-i18n="authpage.email">이메일</label>
+        <input id="loginEmail" type="email" placeholder="you@example.com" data-i18n-placeholder="authpage.ph.email" required />
 
-        <label for="loginPassword">비밀번호</label>
-        <input id="loginPassword" type="password" placeholder="비밀번호" required />
+        <label for="loginPassword" data-i18n="authpage.password">비밀번호</label>
+        <input id="loginPassword" type="password" placeholder="비밀번호" data-i18n-placeholder="authpage.ph.password" required />
 
-        <label for="authApiBase">Backend API Base URL (선택)</label>
-        <input id="authApiBase" type="text" placeholder="https://api.example.com" />
+        <label for="authApiBase" data-i18n="authpage.api_base_opt">Backend API Base URL (선택)</label>
+        <input id="authApiBase" type="text" placeholder="https://api.example.com" data-i18n-placeholder="authpage.ph.api_base" />
 
-        <button class="soft-btn accent" type="submit">로그인</button>
+        <button class="soft-btn accent" type="submit" data-i18n="auth.login">로그인</button>
       </form>
 
-      <p class="auth-foot">처음 사용하시나요? <a href="./signup.html">회원가입</a></p>
-      <pre id="authResult" class="auth-result">로그인 정보를 입력해 주세요.</pre>
+      <p class="auth-foot">
+        <span data-i18n="authpage.login.foot_prefix">처음 사용하시나요?</span>
+        <a href="./signup.html" data-i18n="auth.signup">회원가입</a>
+      </p>
+      <pre id="authResult" class="auth-result" data-i18n="authpage.login.result_default">로그인 정보를 입력해 주세요.</pre>
     </section>
   </main>
 

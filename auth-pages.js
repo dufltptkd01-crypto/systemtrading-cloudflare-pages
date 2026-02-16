@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   'use strict';
 
   var core = window.PortalCore;
@@ -6,13 +6,108 @@
     return;
   }
 
+  var LANG_KEY = 'systemtrading.ui.lang.v1';
+  var EN = {
+    'brand.name': 'SystemTrading Premier',
+    'auth.login': 'Log In',
+    'auth.signup': 'Sign Up',
+    'auth.login.page_title': 'Log In | SystemTrading Premier',
+    'auth.signup.page_title': 'Sign Up | SystemTrading Premier',
+    'authpage.login.desc': 'After login and verification, you can start auto-trading.',
+    'authpage.signup.desc': 'Please complete identity verification before live auto-trading.',
+    'authpage.email': 'Email',
+    'authpage.password': 'Password',
+    'authpage.name': 'Name',
+    'authpage.phone': 'Mobile Number',
+    'authpage.api_base_opt': 'Backend API Base URL (Optional)',
+    'authpage.signup.submit': 'Create Account',
+    'authpage.login.foot_prefix': 'First time here?',
+    'authpage.signup.foot_prefix': 'Already have an account?',
+    'authpage.login.result_default': 'Enter your login credentials.',
+    'authpage.signup.result_default': 'Enter your sign-up information.',
+    'authpage.ph.email': 'you@example.com',
+    'authpage.ph.password': 'Password',
+    'authpage.ph.password_signup': 'At least 8 characters',
+    'authpage.ph.name': 'Hong Gil-dong',
+    'authpage.ph.phone': '010-1234-5678',
+    'authpage.ph.api_base': 'https://api.example.com',
+    'auth.error.password_short': 'Password must be at least 8 characters.',
+    'auth.log.signup_ok': 'Sign-up completed',
+    'auth.log.signup_fail': 'Sign-up failed',
+    'auth.log.login_ok': 'Login completed',
+    'auth.log.login_fail': 'Login failed',
+    'auth.log.next_home': 'Redirecting to home page.',
+    'auth.log.current_user_prefix': 'Current signed-in user: '
+  };
+
   var signupForm = document.getElementById('signupForm');
   var loginForm = document.getElementById('loginForm');
   var apiInput = document.getElementById('authApiBase');
   var resultBox = document.getElementById('authResult');
+  var btnLangKo = document.getElementById('btnLangKoAuth');
+  var btnLangEn = document.getElementById('btnLangEnAuth');
+  var authPage = String((document.body && document.body.getAttribute('data-auth-page')) || '').toLowerCase();
+
+  var state = {
+    lang: loadLanguage()
+  };
+
+  function loadLanguage() {
+    var stored = String(localStorage.getItem(LANG_KEY) || '').toLowerCase();
+    if (stored === 'ko' || stored === 'en') {
+      return stored;
+    }
+    return String(navigator.language || '').toLowerCase().indexOf('ko') === 0 ? 'ko' : 'en';
+  }
+
+  function setLanguage(lang) {
+    if (lang !== 'ko' && lang !== 'en') {
+      return;
+    }
+    state.lang = lang;
+    localStorage.setItem(LANG_KEY, lang);
+    applyI18n();
+  }
+
+  function trans(key, koText) {
+    if (state.lang !== 'en') {
+      return koText;
+    }
+    return EN[key] || koText;
+  }
+
+  function applyI18n() {
+    document.documentElement.lang = state.lang === 'en' ? 'en' : 'ko';
+    document.title = authPage === 'signup'
+      ? trans('auth.signup.page_title', '회원가입 | SystemTrading Premier')
+      : trans('auth.login.page_title', '로그인 | SystemTrading Premier');
+
+    document.querySelectorAll('[data-i18n]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n');
+      if (!node.dataset.koText) {
+        node.dataset.koText = node.textContent;
+      }
+      node.textContent = state.lang === 'ko' ? node.dataset.koText : (EN[key] || node.dataset.koText);
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n-placeholder');
+      if (!node.dataset.koPlaceholder) {
+        node.dataset.koPlaceholder = node.getAttribute('placeholder') || '';
+      }
+      node.setAttribute('placeholder', state.lang === 'ko' ? node.dataset.koPlaceholder : (EN[key] || node.dataset.koPlaceholder));
+    });
+
+    if (btnLangKo) {
+      btnLangKo.classList.toggle('active', state.lang === 'ko');
+    }
+    if (btnLangEn) {
+      btnLangEn.classList.toggle('active', state.lang === 'en');
+    }
+  }
 
   function log(title, payload) {
-    var text = '[' + new Date().toLocaleString('ko-KR') + '] ' + title + '\n' + (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2));
+    var text = '[' + new Date().toLocaleString(state.lang === 'en' ? 'en-US' : 'ko-KR') + '] ' + title + '\n' + (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2));
     if (resultBox) {
       resultBox.textContent = text;
     }
@@ -57,7 +152,7 @@
     var password = document.getElementById('signupPassword').value;
 
     if (password.length < 8) {
-      log('회원가입 실패', '비밀번호는 8자 이상이어야 합니다.');
+      log(trans('auth.log.signup_fail', '회원가입 실패'), trans('auth.error.password_short', '비밀번호는 8자 이상이어야 합니다.'));
       return;
     }
 
@@ -82,14 +177,14 @@
         verified: Boolean(user && user.verified),
         billing: data.billing || null
       });
-      log('회원가입 완료', {
+      log(trans('auth.log.signup_ok', '회원가입 완료'), {
         email: user ? user.email : email,
-        verified: user ? user.verified : false,
-        next: '메인 페이지로 이동합니다.'
+        verified: Boolean(user && user.verified),
+        next: trans('auth.log.next_home', '메인 페이지로 이동합니다.')
       });
       redirectHomeSoon();
     } catch (err) {
-      log('회원가입 실패', String(err.message || err));
+      log(trans('auth.log.signup_fail', '회원가입 실패'), String(err.message || err));
     }
   }
 
@@ -117,14 +212,14 @@
         verified: Boolean(user && user.verified),
         billing: data.billing || null
       });
-      log('로그인 완료', {
+      log(trans('auth.log.login_ok', '로그인 완료'), {
         email: user ? user.email : email,
-        verified: user ? user.verified : false,
-        next: '메인 페이지로 이동합니다.'
+        verified: Boolean(user && user.verified),
+        next: trans('auth.log.next_home', '메인 페이지로 이동합니다.')
       });
       redirectHomeSoon();
     } catch (err) {
-      log('로그인 실패', String(err.message || err));
+      log(trans('auth.log.login_fail', '로그인 실패'), String(err.message || err));
     }
   }
 
@@ -132,6 +227,15 @@
     var settings = core.loadSettings();
     if (apiInput) {
       apiInput.value = settings.apiBase || '';
+    }
+
+    applyI18n();
+
+    if (btnLangKo) {
+      btnLangKo.addEventListener('click', function () { setLanguage('ko'); });
+    }
+    if (btnLangEn) {
+      btnLangEn.addEventListener('click', function () { setLanguage('en'); });
     }
 
     if (signupForm) {
@@ -148,7 +252,7 @@
 
     var session = core.loadSession();
     if (session.user && resultBox) {
-      resultBox.textContent = '현재 로그인 사용자: ' + (session.user.email || session.user.name || 'unknown');
+      resultBox.textContent = trans('auth.log.current_user_prefix', '현재 로그인 사용자: ') + (session.user.email || session.user.name || 'unknown');
     }
   }
 
