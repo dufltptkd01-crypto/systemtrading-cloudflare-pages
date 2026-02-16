@@ -1,4 +1,5 @@
-﻿window.APP_CONFIG = {
+window.APP_CONFIG = {
+  // 사용자 화면에서 변경할 수 없는 내부 고정 백엔드 주소입니다.
   // 비워두면 데모(Mock) 모드로 동작합니다.
   defaultApiBase: '',
 

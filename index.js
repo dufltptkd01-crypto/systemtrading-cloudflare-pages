@@ -470,6 +470,11 @@
     return core.loadSettings();
   }
 
+  function fixedApiBase() {
+    var cfg = window.APP_CONFIG || {};
+    return String(cfg.defaultApiBase || '').trim();
+  }
+
   function normalizeEmail(raw) {
     return String(raw || '').trim().toLowerCase();
   }
@@ -506,7 +511,9 @@
   }
 
   function applySettingsToForm(settings) {
-    refs.apiBase.value = settings.apiBase;
+    if (refs.apiBase) {
+      refs.apiBase.value = fixedApiBase();
+    }
     refs.apiToken.value = settings.apiToken;
     refs.accountNo.value = settings.accountNo;
     refs.stockSymbol.value = settings.stockSymbol;
@@ -532,8 +539,9 @@
   }
 
   function collectFormSettings() {
+    var apiBase = fixedApiBase();
     return core.saveSettings({
-      apiBase: refs.apiBase.value.trim(),
+      apiBase: apiBase,
       apiToken: refs.apiToken.value.trim(),
       accountNo: refs.accountNo.value,
 
@@ -1258,10 +1266,10 @@
 
   function initApiBase() {
     var settings = currentSettings();
-    var cfg = window.APP_CONFIG || {};
-    if (!settings.apiBase && cfg.defaultApiBase) {
-      settings.apiBase = String(cfg.defaultApiBase);
-      core.saveSettings(settings);
+    settings.apiBase = fixedApiBase();
+    core.saveSettings(settings);
+    if (refs.apiBase) {
+      refs.apiBase.value = settings.apiBase;
     }
   }
 

@@ -224,11 +224,7 @@
         <article class="glass-panel">
           <h2 data-i18n="stock.title">주식 투자 설정</h2>
           <form id="stockForm" class="form-grid">
-            <label for="apiBase" class="label-with-tip">
-              <span data-i18n="stock.api_base">Backend API Base URL</span>
-              <span class="info-tip" tabindex="0" role="button" data-i18n-aria="tip.api_base.aria" data-i18n-tip="tip.api_base">?</span>
-            </label>
-            <input id="apiBase" type="text" data-i18n-placeholder="ph.api_base" placeholder="https://api.example.com" />
+            <input id="apiBase" type="hidden" />
 
             <label for="apiToken" data-i18n="stock.api_token">Static API Token (선택)</label>
             <input id="apiToken" type="password" data-i18n-placeholder="ph.api_token" placeholder="Bearer token" />

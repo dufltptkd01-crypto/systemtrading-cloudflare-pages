@@ -145,14 +145,20 @@
     return digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7, 11);
   }
 
+  function fixedApiBase() {
+    var cfg = window.APP_CONFIG || {};
+    return String(cfg.defaultApiBase || '').trim();
+  }
+
   function saveApiBaseIfAny() {
     var settings = core.loadSettings();
-    var base = String((apiInput && apiInput.value) || '').trim();
-    if (base) {
-      settings.apiBase = base;
-      core.saveSettings(settings);
+    var base = fixedApiBase();
+    settings.apiBase = base;
+    core.saveSettings(settings);
+    if (apiInput) {
+      apiInput.value = base;
     }
-    return base || settings.apiBase || '';
+    return base;
   }
 
   function redirectHomeSoon() {
@@ -242,10 +248,7 @@
   }
 
   function init() {
-    var settings = core.loadSettings();
-    if (apiInput) {
-      apiInput.value = settings.apiBase || '';
-    }
+    saveApiBaseIfAny();
 
     applyI18n();
 
