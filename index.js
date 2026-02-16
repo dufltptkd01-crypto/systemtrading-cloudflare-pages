@@ -7,9 +7,14 @@
   }
 
   var refs = {
+    heroNav: document.querySelector('.hero-nav'),
+    menuToggle: document.getElementById('menuToggle'),
+    menuPanel: document.getElementById('menuPanel'),
+    brandHome: document.getElementById('brandHome'),
     navPills: Array.from(document.querySelectorAll('.nav-pill[data-tab]')),
     tabs: {
       home: document.getElementById('tab-home'),
+      guide: document.getElementById('tab-guide'),
       intro: document.getElementById('tab-intro'),
       stock: document.getElementById('tab-stock'),
       coin: document.getElementById('tab-coin'),
@@ -18,12 +23,20 @@
 
     btnTrial: document.getElementById('btnTrial'),
     btnGotoBilling: document.getElementById('btnGotoBilling'),
+    btnGotoGuide: document.getElementById('btnGotoGuide'),
     btnGotoStock: document.getElementById('btnGotoStock'),
     btnGotoCoin: document.getElementById('btnGotoCoin'),
     btnGotoIntro: document.getElementById('btnGotoIntro'),
+    btnGuideToStock: document.getElementById('btnGuideToStock'),
+    btnGuideToCoin: document.getElementById('btnGuideToCoin'),
     btnMoveStock: document.getElementById('btnMoveStock'),
     btnMoveCoin: document.getElementById('btnMoveCoin'),
     btnMoveBilling: document.getElementById('btnMoveBilling'),
+
+    linkSignup: document.getElementById('linkSignup'),
+    linkLogin: document.getElementById('linkLogin'),
+    btnLogout: document.getElementById('btnLogout'),
+    authUserChip: document.getElementById('authUserChip'),
 
     authStateBadge: document.getElementById('authStateBadge'),
     verifyStateBadge: document.getElementById('verifyStateBadge'),
@@ -87,6 +100,7 @@
     activeTab: 'home',
     apiChecked: false,
     checkoutId: '',
+    menuOpen: false,
     logs: []
   };
 
@@ -119,6 +133,20 @@
 
   function modeLabel(isDryRun) {
     return isDryRun ? '모의투자' : '실거래';
+  }
+
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: 760px)').matches;
+  }
+
+  function setMenuOpen(open) {
+    state.menuOpen = Boolean(open);
+    if (refs.heroNav) {
+      refs.heroNav.classList.toggle('menu-open', state.menuOpen);
+    }
+    if (refs.menuToggle) {
+      refs.menuToggle.setAttribute('aria-expanded', state.menuOpen ? 'true' : 'false');
+    }
   }
 
   function currentSession() {
@@ -225,11 +253,35 @@
     }
   }
 
+  function renderAuthMenu(session) {
+    var loggedIn = Boolean(session && session.user);
+
+    if (refs.linkSignup) {
+      refs.linkSignup.hidden = loggedIn;
+    }
+    if (refs.linkLogin) {
+      refs.linkLogin.hidden = loggedIn;
+    }
+    if (refs.btnLogout) {
+      refs.btnLogout.hidden = !loggedIn;
+    }
+    if (refs.authUserChip) {
+      if (loggedIn) {
+        refs.authUserChip.hidden = false;
+        refs.authUserChip.textContent = session.user.email || session.user.name || '로그인 사용자';
+      } else {
+        refs.authUserChip.hidden = true;
+        refs.authUserChip.textContent = '';
+      }
+    }
+  }
+
   function updateStatus() {
     var session = currentSession();
     var settings = currentSettings();
     var billing = session.billing || null;
 
+    renderAuthMenu(session);
     setText(refs.authStateBadge, session.user ? (session.user.email || session.user.name || '로그인됨') : '미로그인');
     setText(refs.verifyStateBadge, session.verified ? '인증완료' : '미인증');
 
@@ -249,7 +301,7 @@
   }
 
   function tabKeys() {
-    return ['home', 'intro', 'stock', 'coin', 'billing'];
+    return ['home', 'guide', 'intro', 'stock', 'coin', 'billing'];
   }
 
   function setActiveTab(tab) {
@@ -266,6 +318,10 @@
         panel.classList.toggle('active', name === key);
       }
     });
+
+    if (state.menuOpen && isMobileViewport()) {
+      setMenuOpen(false);
+    }
 
     updateStatus();
     updateGuard();
@@ -622,6 +678,19 @@
     }
   }
 
+  function runLogout() {
+    core.clearSession();
+    state.apiChecked = false;
+    state.checkoutId = '';
+    if (refs.userExportBox) {
+      refs.userExportBox.textContent = '관리 데이터를 불러오려면 버튼을 누르세요.';
+    }
+    addLog('로그아웃 완료', '세션이 종료되었습니다.');
+    updateStatus();
+    updateGuard();
+    goToTab('home');
+  }
+
   function goToTab(tab) {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -634,6 +703,43 @@
   }
 
   function bindEvents() {
+    if (refs.brandHome) {
+      refs.brandHome.addEventListener('click', function (event) {
+        event.preventDefault();
+        goToTab('home');
+      });
+    }
+
+    if (refs.menuToggle) {
+      refs.menuToggle.addEventListener('click', function () {
+        setMenuOpen(!state.menuOpen);
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      if (!state.menuOpen || !isMobileViewport()) {
+        return;
+      }
+      if (!refs.heroNav) {
+        return;
+      }
+      if (!refs.heroNav.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      if (!isMobileViewport() && state.menuOpen) {
+        setMenuOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && state.menuOpen) {
+        setMenuOpen(false);
+      }
+    });
+
     refs.navPills.forEach(function (btn) {
       btn.addEventListener('click', function () {
         setActiveTab(btn.dataset.tab);
@@ -650,9 +756,12 @@
       addLog('무료체험 안내', '7일 무료체험 기간에는 자동매매를 바로 실행할 수 있습니다.');
     });
     bindButton(refs.btnGotoBilling, function () { goToTab('billing'); });
+    bindButton(refs.btnGotoGuide, function () { goToTab('guide'); });
     bindButton(refs.btnGotoStock, function () { goToTab('stock'); });
     bindButton(refs.btnGotoCoin, function () { goToTab('coin'); });
     bindButton(refs.btnGotoIntro, function () { goToTab('intro'); });
+    bindButton(refs.btnGuideToStock, function () { goToTab('stock'); });
+    bindButton(refs.btnGuideToCoin, function () { goToTab('coin'); });
     bindButton(refs.btnMoveStock, function () { goToTab('stock'); });
     bindButton(refs.btnMoveCoin, function () { goToTab('coin'); });
     bindButton(refs.btnMoveBilling, function () { goToTab('billing'); });
@@ -709,6 +818,7 @@
     bindButton(refs.btnConfirmPayment, confirmPayment);
     bindButton(refs.btnRefreshBilling, function () { refreshBillingStatus(false); });
     bindButton(refs.btnExportUsers, exportUsers);
+    bindButton(refs.btnLogout, runLogout);
 
     [
       refs.apiBase,
@@ -765,6 +875,7 @@
     initApiBase();
     applySettingsToForm(currentSettings());
     bindEvents();
+    setMenuOpen(false);
     setActiveTab('home');
     addLog('대시보드 준비 완료', '홈에서 7일 무료체험을 시작하고, 투자 설정 후 자동매매를 실행하세요.');
     refreshMe(true).then(function () {

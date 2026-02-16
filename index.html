@@ -16,33 +16,64 @@
   <div class="bg-arc arc-2" aria-hidden="true"></div>
 
   <header class="hero-nav wrap">
-    <nav class="left-nav" aria-label="서비스 메뉴">
-      <button class="nav-pill nav-home active" type="button" data-tab="home" aria-label="메인 홈">
-        <span class="home-icon" aria-hidden="true">⌂</span>
-      </button>
-      <button class="nav-pill" type="button" data-tab="intro">시스템 소개</button>
-      <button class="nav-pill" type="button" data-tab="stock">주식 투자</button>
-      <button class="nav-pill" type="button" data-tab="coin">코인 투자</button>
-      <button class="nav-pill" type="button" data-tab="billing">이용권/결제</button>
-    </nav>
-    <div class="right-nav">
-      <a class="nav-pill link" href="./signup.html">회원가입</a>
-      <a class="nav-pill link" href="./login.html">로그인</a>
+    <a href="#" id="brandHome" class="brand-wordmark" aria-label="메인으로 이동">SystemTrading Premier</a>
+    <button id="menuToggle" class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="menuPanel">
+      <span></span><span></span><span></span>
+    </button>
+    <div id="menuPanel" class="menu-panel">
+      <nav class="left-nav" aria-label="서비스 메뉴">
+        <button class="nav-pill nav-home active" type="button" data-tab="home" aria-label="메인 홈">
+          <span class="home-icon" aria-hidden="true">⌂</span>
+        </button>
+        <button class="nav-pill" type="button" data-tab="guide">사용 방법</button>
+        <button class="nav-pill" type="button" data-tab="intro">시스템 소개</button>
+        <button class="nav-pill" type="button" data-tab="stock">주식 투자</button>
+        <button class="nav-pill" type="button" data-tab="coin">코인 투자</button>
+        <button class="nav-pill" type="button" data-tab="billing">이용권/결제</button>
+      </nav>
+      <div class="right-nav">
+        <span id="authUserChip" class="auth-user-chip" hidden></span>
+        <a id="linkSignup" class="nav-pill link" href="./signup.html">회원가입</a>
+        <a id="linkLogin" class="nav-pill link" href="./login.html">로그인</a>
+        <button id="btnLogout" class="nav-pill link nav-logout" type="button" hidden>로그아웃</button>
+      </div>
     </div>
   </header>
 
   <main class="wrap home-main">
     <section id="tab-home" class="tab-panel active">
-      <section class="hero-copy">
-        <p class="hero-mini">신개념 AI 투자</p>
-        <h1>
-          <span class="highlight-1">시간은 절반으로</span>,<br />
-          <span class="highlight-2">수익 기회는 더 크게</span>
-        </h1>
-        <p class="hero-sub">뉴스·기술지표·차트·매매일지 피드백을 연결한 자동매매 엔진으로 실행 품질을 끌어올립니다.</p>
-        <div class="hero-actions">
-          <button id="btnTrial" type="button" class="cta-main">7일 무료체험 시작</button>
-          <button id="btnGotoBilling" type="button" class="soft-btn">이용권/결제 보기</button>
+      <section class="hero-stage glass-panel">
+        <div class="hero-copy">
+          <p class="hero-mini">AI TRADING CONSOLE</p>
+          <h1>
+            <span class="highlight-1">시간은 덜 쓰고</span>,<br />
+            <span class="highlight-2">기회는 더 빠르게 잡으세요</span>
+          </h1>
+          <p class="hero-sub">시장 데이터 수집부터 후보 선별, 진입/청산, 매매일지 피드백까지 하나의 루프로 연결해 자동매매 품질을 안정적으로 끌어올립니다.</p>
+          <div class="hero-actions">
+            <button id="btnTrial" type="button" class="cta-main">7일 무료체험 시작</button>
+            <button id="btnGotoBilling" type="button" class="soft-btn">이용권/결제 보기</button>
+          </div>
+          <div class="hero-points">
+            <span>뉴스 + 차트 + 보조지표 결합</span>
+            <span>상위 10개 후보 중 1종목 집중</span>
+            <span>Telegram 실시간 체결 알림</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <article class="pulse-card">
+            <p>전략 루프</p>
+            <strong>수집 → 선별 → 실행 → 회고</strong>
+          </article>
+          <article class="pulse-card">
+            <p>리스크 관리</p>
+            <strong>1회 최대 2,000,000원 제한</strong>
+          </article>
+          <article class="pulse-card">
+            <p>실행 환경</p>
+            <strong>주식 + 코인 통합 운영</strong>
+          </article>
         </div>
       </section>
 
@@ -72,11 +103,50 @@
       <section class="home-shortcuts glass-panel">
         <h2>빠른 이동</h2>
         <div class="shortcut-row">
+          <button id="btnGotoGuide" type="button" class="soft-btn">사용 방법 보기</button>
           <button id="btnGotoStock" type="button" class="soft-btn">주식 투자 설정</button>
           <button id="btnGotoCoin" type="button" class="soft-btn">코인 투자 설정</button>
           <button id="btnGotoIntro" type="button" class="soft-btn">시스템 소개 보기</button>
         </div>
       </section>
+    </section>
+
+    <section id="tab-guide" class="tab-panel">
+      <div class="guide-grid">
+        <article class="glass-panel">
+          <h2>사용 방법</h2>
+          <p class="lead">아래 순서대로 진행하면 바로 자동매매를 시작할 수 있습니다.</p>
+          <ol class="howto-list">
+            <li>회원가입 후 로그인합니다.</li>
+            <li>본인인증을 완료합니다.</li>
+            <li>주식 또는 코인 탭에서 API 키와 예산을 저장합니다.</li>
+            <li>실행 모드를 확인하고 자동매매 시작을 누릅니다.</li>
+            <li>체결 내역은 Telegram 알림과 리포트에서 확인합니다.</li>
+          </ol>
+        </article>
+
+        <article class="glass-panel">
+          <h2>주식 투자 시작</h2>
+          <ol class="howto-list">
+            <li>주식 투자 탭에서 계좌번호와 키움 API 정보를 입력합니다.</li>
+            <li>Telegram Bot Token과 Telegram Chat ID를 입력합니다.</li>
+            <li>자동 종목 선정 ON이면 상위 10개 후보 중 1개를 자동 선택합니다.</li>
+            <li>주식 자동매매 시작 버튼으로 실행합니다.</li>
+          </ol>
+          <button id="btnGuideToStock" type="button" class="soft-btn">주식 탭으로 이동</button>
+        </article>
+
+        <article class="glass-panel">
+          <h2>코인 투자 시작</h2>
+          <ol class="howto-list">
+            <li>코인 투자 탭에서 Binance/Upbit를 선택합니다.</li>
+            <li>거래소 API 키와 예산, 심볼(또는 자동선정)을 설정합니다.</li>
+            <li>모의투자로 먼저 점검 후 실거래 전환을 권장합니다.</li>
+            <li>코인 자동매매 시작 버튼으로 실행합니다.</li>
+          </ol>
+          <button id="btnGuideToCoin" type="button" class="soft-btn">코인 탭으로 이동</button>
+        </article>
+      </div>
     </section>
 
     <section id="tab-intro" class="tab-panel">
@@ -143,7 +213,10 @@
         <article class="glass-panel">
           <h2>주식 투자 설정</h2>
           <form id="stockForm" class="form-grid">
-            <label for="apiBase">Backend API Base URL</label>
+            <label for="apiBase" class="label-with-tip">
+              <span>Backend API Base URL</span>
+              <span class="info-tip" tabindex="0" role="button" aria-label="API Base URL 도움말" data-tip="내 백엔드 서버 주소입니다. 비워두면 데모 모드로 동작하며, 입력하면 해당 서버 API로 실제 인증/매매 요청을 보냅니다.">?</span>
+            </label>
             <input id="apiBase" type="text" placeholder="https://api.example.com" />
 
             <label for="apiToken">Static API Token (선택)</label>
@@ -180,7 +253,10 @@
             <label for="telegramToken">Telegram Bot Token</label>
             <input id="telegramToken" type="text" placeholder="123456:ABC..." />
 
-            <label for="telegramChatId">Telegram Chat ID</label>
+            <label for="telegramChatId" class="label-with-tip">
+              <span>Telegram Chat ID</span>
+              <span class="info-tip" tabindex="0" role="button" aria-label="Telegram Chat ID 도움말" data-tip="알림을 받을 텔레그램 채팅방 ID입니다. 개인 대화 또는 그룹의 chat id를 입력하면 체결/상태 알림이 해당 채팅으로 전송됩니다.">?</span>
+            </label>
             <input id="telegramChatId" type="text" placeholder="123456789" />
 
             <div class="form-actions">
