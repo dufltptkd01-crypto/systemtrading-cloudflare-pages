@@ -4,6 +4,7 @@
   var SETTINGS_KEY = 'systemtrading.settings.v6';
   var SESSION_KEY = 'systemtrading.session.v6';
   var MOCK_KEY = 'systemtrading.mockdb.v3';
+  var ADMIN_EMAILS = ['dufltptkd01@naver.com'];
 
   function defaults() {
     return {
@@ -171,6 +172,27 @@
     return { token: '', user: null, verified: false, billing: null };
   }
 
+  function normalizeEmail(raw) {
+    return String(raw || '').trim().toLowerCase();
+  }
+
+  function isAdminEmail(email) {
+    var normalized = normalizeEmail(email);
+    return ADMIN_EMAILS.indexOf(normalized) >= 0;
+  }
+
+  function syncAdminRoles(db) {
+    var dirty = false;
+    db.users.forEach(function (u) {
+      var next = isAdminEmail(u.email);
+      if (Boolean(u.is_admin) !== next) {
+        u.is_admin = next;
+        dirty = true;
+      }
+    });
+    return dirty;
+  }
+
   function readMockDb() {
     try {
       var parsed = JSON.parse(localStorage.getItem(MOCK_KEY) || '{}');
@@ -191,6 +213,9 @@
       }
       if (!parsed.checkout || typeof parsed.checkout !== 'object') {
         parsed.checkout = {};
+      }
+      if (syncAdminRoles(parsed)) {
+        localStorage.setItem(MOCK_KEY, JSON.stringify(parsed));
       }
       return parsed;
     } catch (_err) {
@@ -228,6 +253,7 @@
       email: user.email,
       name: user.name,
       phone: user.phone,
+      is_admin: Boolean(user.is_admin),
       verified: user.verified,
       created_at: user.created_at
     };
@@ -263,6 +289,7 @@
         password: password,
         name: name,
         phone: phone,
+        is_admin: isAdminEmail(email),
         verified: false,
         created_at: nowIso,
         trial_start_at: nowIso,
@@ -291,6 +318,7 @@
       if (!found) {
         throw new Error('이메일 또는 비밀번호가 일치하지 않습니다.');
       }
+      found.is_admin = isAdminEmail(found.email);
       var loginToken = issueToken(found.id);
       db.tokens[loginToken] = found.id;
       writeMockDb(db);
@@ -419,6 +447,13 @@
     }
 
     if (endpointName === 'adminUsers' && method === 'GET') {
+      var adminUser = sessionUserByToken(db, sessionToken);
+      if (!adminUser) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      if (!isAdminEmail(adminUser.email)) {
+        throw new Error('관리자 권한이 필요합니다.');
+      }
       return {
         ok: true,
         mode: 'mock',

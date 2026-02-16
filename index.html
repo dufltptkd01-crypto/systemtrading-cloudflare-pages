@@ -34,6 +34,7 @@
         <button class="nav-pill" type="button" data-tab="stock" data-i18n="nav.stock">주식 투자</button>
         <button class="nav-pill" type="button" data-tab="coin" data-i18n="nav.coin">코인 투자</button>
         <button class="nav-pill" type="button" data-tab="billing" data-i18n="nav.billing">이용권/결제</button>
+        <button id="navAdmin" class="nav-pill" type="button" data-tab="admin" data-i18n="nav.admin" hidden>운영자</button>
       </nav>
 
       <div class="right-nav">
@@ -400,8 +401,30 @@
             <li data-i18n="billing.manage.3">운영자 화면에서 회원검색/구독갱신/결제조회 기능을 제공하세요.</li>
           </ul>
 
-          <button id="btnExportUsers" type="button" class="soft-btn" data-i18n="billing.export">데모 회원정보 내보내기</button>
-          <pre id="userExportBox" class="compact-pre" data-i18n="billing.export_default">관리 데이터를 불러오려면 버튼을 누르세요.</pre>
+          <p class="side-note" data-i18n="billing.admin_hint">운영자 회원관리는 관리자 계정으로 로그인 후 운영자 메뉴에서 확인할 수 있습니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="tab-admin" class="tab-panel" hidden>
+      <div class="setup-grid">
+        <article class="glass-panel">
+          <h2 data-i18n="admin.title">운영자 회원관리</h2>
+          <p class="lead" data-i18n="admin.lead">관리자 계정으로 로그인한 경우에만 회원 정보를 조회할 수 있습니다.</p>
+          <div class="action-stack top-gap">
+            <button id="btnExportUsers" type="button" class="soft-btn" data-i18n="billing.export">데모 회원정보 내보내기</button>
+          </div>
+          <pre id="userExportBox" class="compact-pre top-gap" data-i18n="billing.export_default">관리 데이터를 불러오려면 버튼을 누르세요.</pre>
+        </article>
+
+        <article class="glass-panel side-panel">
+          <h2 data-i18n="billing.manage_title">회원정보 보관/관리</h2>
+          <ul class="guide-list">
+            <li data-i18n="billing.manage.1">회원 기본정보, 인증상태, 이용권 상태를 DB에 분리 저장하세요.</li>
+            <li data-i18n="billing.manage.2">비밀번호는 해시 저장, API 키는 암호화 저장하세요.</li>
+            <li data-i18n="billing.manage.3">운영자 화면에서 회원검색/구독갱신/결제조회 기능을 제공하세요.</li>
+          </ul>
+          <p class="side-note" data-i18n="admin.notice">데모 모드 관리자 계정: dufltptkd01@naver.com</p>
         </article>
       </div>
     </section>

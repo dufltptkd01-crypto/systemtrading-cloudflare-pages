@@ -7,6 +7,7 @@
   }
 
   var LANG_KEY = 'systemtrading.ui.lang.v1';
+  var ADMIN_EMAIL = 'dufltptkd01@naver.com';
   var EN = {
     'meta.title': 'SystemTrading Premier',
     'brand.name': 'STP',
@@ -17,6 +18,7 @@
     'nav.stock': 'Stock',
     'nav.coin': 'Crypto',
     'nav.billing': 'Billing',
+    'nav.admin': 'Admin',
     'auth.signup': 'Sign Up',
     'auth.login': 'Log In',
     'auth.logout': 'Log Out',
@@ -139,12 +141,17 @@
     'billing.confirm': 'Confirm Payment (Demo)',
     'billing.refresh': 'Refresh Billing',
     'billing.note': 'In production, update subscription after verified payment webhook.',
+    'billing.admin_hint': 'Operator member management is available in the Admin menu after admin login.',
     'billing.manage_title': 'Member Data Management',
     'billing.manage.1': 'Store profile, verification, and subscription data separately.',
     'billing.manage.2': 'Hash passwords and encrypt API credentials.',
     'billing.manage.3': 'Provide admin tools for search, renewal, and payment history.',
     'billing.export': 'Export Demo Users',
     'billing.export_default': 'Click to load member data.',
+    'admin.title': 'Admin Member Management',
+    'admin.lead': 'Only administrator accounts can view member data.',
+    'admin.notice': 'Demo admin account: dufltptkd01@naver.com',
+    'admin.access_denied': 'Admin access only',
     'result.title': 'Execution Logs',
     'result.default': 'Logs will appear after API calls or actions.',
     'tip.api_base': 'Your backend server URL. Empty means demo mode; set URL for real API requests.',
@@ -218,6 +225,7 @@
     'log.confirm_fail': 'Payment confirmation failed',
     'log.users_ok': 'Demo user data loaded',
     'log.users_fail': 'Failed to load user data',
+    'log.admin_required': 'Admin account required',
     'log.logout.title': 'Logged out',
     'log.logout.body': 'Your session has been cleared.',
     'log.trial_info.title': 'Trial info',
@@ -242,8 +250,10 @@
       intro: document.getElementById('tab-intro'),
       stock: document.getElementById('tab-stock'),
       coin: document.getElementById('tab-coin'),
-      billing: document.getElementById('tab-billing')
+      billing: document.getElementById('tab-billing'),
+      admin: document.getElementById('tab-admin')
     },
+    navAdmin: document.getElementById('navAdmin'),
 
     btnTrial: document.getElementById('btnTrial'),
     btnGotoBilling: document.getElementById('btnGotoBilling'),
@@ -460,6 +470,31 @@
     return core.loadSettings();
   }
 
+  function normalizeEmail(raw) {
+    return String(raw || '').trim().toLowerCase();
+  }
+
+  function isAdminUser(user) {
+    if (!user) {
+      return false;
+    }
+    if (Boolean(user.is_admin)) {
+      return true;
+    }
+    return normalizeEmail(user.email) === ADMIN_EMAIL;
+  }
+
+  function renderAdminMenu(session) {
+    var admin = isAdminUser(session && session.user);
+    if (refs.navAdmin) {
+      refs.navAdmin.hidden = !admin;
+    }
+    if (refs.tabs.admin) {
+      refs.tabs.admin.hidden = !admin;
+    }
+    return admin;
+  }
+
   function saveSession(next) {
     var prev = currentSession();
     return core.saveSession({
@@ -619,6 +654,7 @@
     var settings = currentSettings();
     var billing = session.billing || null;
 
+    renderAdminMenu(session);
     renderAuthMenu(session);
     setText(refs.authStateBadge, session.user ? (session.user.email || session.user.name || trans('auth.user', '로그인 사용자')) : trans('status.badge.logged_out', '미로그인'));
     setText(refs.verifyStateBadge, session.verified ? trans('status.badge.verified', '인증완료') : trans('status.badge.unverified', '미인증'));
@@ -639,11 +675,14 @@
   }
 
   function tabKeys() {
-    return ['home', 'guide', 'intro', 'stock', 'coin', 'billing'];
+    return ['home', 'guide', 'intro', 'stock', 'coin', 'billing', 'admin'];
   }
 
   function setActiveTab(tab) {
     var key = tabKeys().indexOf(tab) >= 0 ? tab : 'home';
+    if (key === 'admin' && !isAdminUser(currentSession().user)) {
+      key = 'home';
+    }
     state.activeTab = key;
 
     refs.navPills.forEach(function (btn) {
@@ -1003,6 +1042,14 @@
     var session = currentSession();
     if (!session.token) {
       addLog(trans('log.users_fail', '회원정보 조회 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      return;
+    }
+    if (!isAdminUser(session.user)) {
+      addLog(trans('log.admin_required', '관리자 계정 필요'), trans('admin.access_denied', '관리자 전용 메뉴입니다.'));
+      if (refs.userExportBox) {
+        refs.userExportBox.textContent = trans('admin.access_denied', '관리자 전용 메뉴입니다.');
+      }
+      goToTab('home');
       return;
     }
     try {
