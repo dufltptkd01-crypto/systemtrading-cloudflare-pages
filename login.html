@@ -34,7 +34,10 @@
         <label for="loginPassword" data-i18n="authpage.password">비밀번호</label>
         <input id="loginPassword" type="password" placeholder="비밀번호" data-i18n-placeholder="authpage.ph.password" required />
 
-        <label for="authApiBase" data-i18n="authpage.api_base_opt">Backend API Base URL (선택)</label>
+        <label for="authApiBase" class="label-with-tip">
+          <span data-i18n="authpage.api_base_opt">Backend API Base URL (선택)</span>
+          <span class="info-tip" tabindex="0" role="button" aria-label="Backend API Base URL 도움말" data-i18n-aria="authpage.tip.api_base.aria" data-i18n-tip="authpage.tip.api_base" data-tip="백엔드 서버 주소입니다. 비워두면 데모 모드로 동작합니다.">?</span>
+        </label>
         <input id="authApiBase" type="text" placeholder="https://api.example.com" data-i18n-placeholder="authpage.ph.api_base" />
 
         <button class="soft-btn accent" type="submit" data-i18n="auth.login">로그인</button>
@@ -44,7 +47,6 @@
         <span data-i18n="authpage.login.foot_prefix">처음 사용하시나요?</span>
         <a href="./signup.html" data-i18n="auth.signup">회원가입</a>
       </p>
-      <pre id="authResult" class="auth-result" data-i18n="authpage.login.result_default">로그인 정보를 입력해 주세요.</pre>
     </section>
   </main>
 

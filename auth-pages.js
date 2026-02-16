@@ -20,6 +20,8 @@
     'authpage.name': 'Name',
     'authpage.phone': 'Mobile Number',
     'authpage.api_base_opt': 'Backend API Base URL (Optional)',
+    'authpage.tip.api_base': 'Backend server URL. Leave empty for demo mode; set URL to connect real backend APIs.',
+    'authpage.tip.api_base.aria': 'Backend API Base URL help',
     'authpage.signup.submit': 'Create Account',
     'authpage.login.foot_prefix': 'First time here?',
     'authpage.signup.foot_prefix': 'Already have an account?',
@@ -96,6 +98,22 @@
         node.dataset.koPlaceholder = node.getAttribute('placeholder') || '';
       }
       node.setAttribute('placeholder', state.lang === 'ko' ? node.dataset.koPlaceholder : (EN[key] || node.dataset.koPlaceholder));
+    });
+
+    document.querySelectorAll('[data-i18n-tip]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n-tip');
+      if (!node.dataset.koTip) {
+        node.dataset.koTip = node.getAttribute('data-tip') || '';
+      }
+      node.setAttribute('data-tip', state.lang === 'ko' ? node.dataset.koTip : (EN[key] || node.dataset.koTip));
+    });
+
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (node) {
+      var key = node.getAttribute('data-i18n-aria');
+      if (!node.dataset.koAria) {
+        node.dataset.koAria = node.getAttribute('aria-label') || '';
+      }
+      node.setAttribute('aria-label', state.lang === 'ko' ? node.dataset.koAria : (EN[key] || node.dataset.koAria));
     });
 
     if (btnLangKo) {
