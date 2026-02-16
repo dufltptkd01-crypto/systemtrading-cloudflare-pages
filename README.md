@@ -1,33 +1,31 @@
 ﻿# systemtrading-cloudflare-pages
 
-Cloudflare Pages에 바로 배포 가능한 정적 웹 대시보드입니다.
+Cloudflare Pages에 바로 배포 가능한 프리미엄 트레이딩 웹 콘솔입니다.
 
-## 포함 기능
+## 주요 기능
 
-- 자동매매 설정 입력 (계좌번호, 1회 최대 주문금액, Telegram 정보 등)
-- API 연결 확인
-- 자동매매 시작/중지 버튼
+- 고급 랜딩 페이지 + 홍보 문구 + CTA 버튼
+  - `7일 무료체험`
+  - `둘러보기`
+- 회원가입 / 로그인 UI
+- 본인인증(KYC) 단계 UI 및 검증 플로우
+- 주식 + 코인 멀티 마켓 설정
+  - Stock: Kiwoom
+  - Crypto: Binance / Upbit
+- 자동매매 시작/중지
 - 매매일지 분석 요청 및 최신 리포트 조회
-- 설정값 브라우저 로컬 저장
+- Telegram 알림 정보 입력
+- API URL이 비어 있을 때 데모(Mock) 모드 내장
 
-## 중요한 구조
+## 배포 (Cloudflare Pages)
 
-- 이 저장소는 **프론트엔드(정적 페이지)** 전용입니다.
-- Kiwoom OpenAPI 연동 자동매매는 별도 백엔드 서버(보통 Windows 환경)에서 실행되어야 합니다.
-- 본 페이지는 그 백엔드의 REST API를 호출해 제어합니다.
-
-## Cloudflare Pages 배포
-
-1. GitHub에 이 저장소 푸시
-2. Cloudflare Dashboard > Pages > Create project
-3. 이 저장소 연결
-4. Build settings
-   - Framework preset: `None`
-   - Build command: 비워두기
-   - Build output directory: `/`
+1. GitHub 저장소 연결
+2. Framework preset: `None`
+3. Build command: 비움
+4. Build output directory: `/`
 5. Deploy
 
-## 로컬 테스트
+## 로컬 실행
 
 ```powershell
 cd systemtrading-cloudflare-pages
@@ -36,25 +34,64 @@ python -m http.server 8080
 
 브라우저에서 `http://localhost:8080` 접속.
 
-## 백엔드 API 계약(예시)
+## 데모 모드
 
+- `API Base URL`을 비워두면 브라우저 LocalStorage 기반 데모 모드로 동작합니다.
+- 회원가입/로그인/본인인증/자동매매 제어를 즉시 체험할 수 있습니다.
+- 실제 주문은 발생하지 않습니다.
+
+## 실서비스 연동 시 필요한 백엔드 API
+
+### Health
 - `GET /health`
+
+### Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+
+### KYC
+- `POST /api/auth/verify/start`
+- `POST /api/auth/verify/complete`
+
+### Trading
 - `POST /api/trading/start`
 - `POST /api/trading/stop`
 - `POST /api/trading/analyze`
 - `GET /api/trading/report/latest`
 
-`POST /api/trading/start` 요청 본문 예시:
+## 자동매매 시작 요청 예시
 
 ```json
 {
+  "market_type": "crypto",
+  "exchange": "binance",
   "account_no": "8120-0764",
-  "broker_api_key": "...",
-  "broker_api_secret": "...",
-  "telegram_bot_token": "...",
-  "telegram_chat_id": "...",
+  "symbol": "BTC/USDT",
   "max_order_amount_krw": 2000000,
   "auto_select_top_candidate": true,
-  "dry_run": true
+  "dry_run": true,
+  "telegram_bot_token": "123456:ABC",
+  "telegram_chat_id": "123456789",
+  "credentials": {
+    "kiwoom": {
+      "api_key": "",
+      "api_secret": ""
+    },
+    "binance": {
+      "api_key": "",
+      "api_secret": ""
+    },
+    "upbit": {
+      "access_key": "",
+      "secret_key": ""
+    }
+  }
 }
 ```
+
+## 보안 참고
+
+- 실제 운영에서는 API 키/시크릿을 프론트에 직접 저장하지 말고 백엔드에서 암호화 저장하세요.
+- 본인인증은 PortOne/NICE 등 상용 인증사 연동 후 서버에서 검증 완료 상태를 관리하세요.
+- 거래 API는 반드시 서버에서 서명/호출하고, 프론트는 제어 요청만 전송하도록 구성하세요.

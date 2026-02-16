@@ -1,9 +1,21 @@
 ﻿window.APP_CONFIG = {
-  // Cloudflare Pages에서는 정적 파일만 배포됩니다.
-  // 실제 운영 시 아래 값을 백엔드 URL로 교체하거나, UI 입력칸에 직접 넣으세요.
+  // 비워두면 데모(Mock) 모드로 동작합니다.
   defaultApiBase: '',
+
+  // 필요 시 본인인증 공급자 정보(예: PortOne/NICE) 전달용 확장 필드
+  identity: {
+    provider: 'mock',
+    channelKey: '',
+    merchantId: ''
+  },
+
   endpoints: {
     health: '/health',
+    register: '/api/auth/register',
+    login: '/api/auth/login',
+    me: '/api/auth/me',
+    verifyStart: '/api/auth/verify/start',
+    verifyComplete: '/api/auth/verify/complete',
     start: '/api/trading/start',
     stop: '/api/trading/stop',
     analyze: '/api/trading/analyze',

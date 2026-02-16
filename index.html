@@ -3,94 +3,239 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SystemTrading Cloud Dashboard</title>
+  <title>SystemTrading Premier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <header class="top">
-    <div class="wrap">
-      <h1>SystemTrading Cloud Dashboard</h1>
-      <p>Cloudflare Pages에 바로 배포 가능한 운영 콘솔</p>
+  <div class="bg-layer bg-a"></div>
+  <div class="bg-layer bg-b"></div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="#" class="brand">
+        <span class="brand-dot"></span>
+        <span>SystemTrading Premier</span>
+      </a>
+      <nav class="main-nav">
+        <a href="#features">기능</a>
+        <a href="#auth">인증</a>
+        <a href="#trading">거래</a>
+      </nav>
+      <button id="btnHeaderLogin" class="btn ghost" type="button">로그인</button>
     </div>
   </header>
 
-  <main class="wrap grid">
-    <section class="card">
-      <h2>1) API 연결</h2>
-      <label for="apiBase">Backend API Base URL</label>
-      <input id="apiBase" type="text" placeholder="예: https://api.example.com" />
-      <label for="apiToken">API Token (선택)</label>
-      <input id="apiToken" type="password" placeholder="Bearer 토큰" />
-      <div class="row">
-        <button id="btnCheckApi" type="button">연결 확인</button>
-        <span id="apiStatus" class="status">대기</span>
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">AI Assisted Multi-Market Trading</p>
+        <h1>당신의 시간은 1/2로 투자하고,<br />돈은 2배로 가져가세요.</h1>
+        <p class="subline">신호는 자동화하고 실행은 정교하게. 주식과 코인을 하나의 콘솔에서 연결합니다.</p>
+        <div class="hero-cta">
+          <button id="btnTrial" class="btn solid" type="button">7일 무료체험</button>
+          <button id="btnExplore" class="btn ghost" type="button">둘러보기</button>
+        </div>
       </div>
-      <p class="hint">
-        Cloudflare Pages는 정적 프론트엔드만 실행됩니다.
-        실제 자동매매는 별도 백엔드(예: Windows 서버의 Kiwoom 연동 서비스)와 연결해야 동작합니다.
-      </p>
+      <div class="hero-panel reveal delay-1">
+        <h2>실행 현황</h2>
+        <ul>
+          <li><span>지원 시장</span><strong>Kiwoom / Binance / Upbit</strong></li>
+          <li><span>알림</span><strong>Telegram 실시간 전송</strong></li>
+          <li><span>기본 모드</span><strong>DRY RUN 안전 시작</strong></li>
+        </ul>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>2) 사용자 설정</h2>
-      <form id="settingsForm">
-        <label for="accountNo">계좌번호</label>
-        <input id="accountNo" type="text" placeholder="예: 8120-0764" required />
-
-        <label for="apiKey">증권 API Key (선택)</label>
-        <input id="apiKey" type="text" placeholder="API Key" />
-
-        <label for="apiSecret">증권 API Secret (선택)</label>
-        <input id="apiSecret" type="password" placeholder="API Secret" />
-
-        <label for="telegramToken">텔레그램 봇 토큰</label>
-        <input id="telegramToken" type="text" placeholder="123456:ABC..." />
-
-        <label for="telegramChatId">텔레그램 Chat ID</label>
-        <input id="telegramChatId" type="text" placeholder="123456789" />
-
-        <label for="orderBudget">1회 주문 최대금액 (KRW)</label>
-        <input id="orderBudget" type="number" min="10000" max="2000000" value="2000000" />
-
-        <label for="autoSelect">자동 종목 선정</label>
-        <select id="autoSelect">
-          <option value="true">ON</option>
-          <option value="false">OFF</option>
-        </select>
-
-        <label for="dryRun">DRY RUN</label>
-        <select id="dryRun">
-          <option value="true">ON</option>
-          <option value="false">OFF</option>
-        </select>
-
-        <button type="submit">설정 저장 (브라우저 로컬)</button>
-      </form>
+    <section id="features" class="wrap feature-grid reveal delay-1">
+      <article class="feature-card">
+        <h3>자동 후보 선정</h3>
+        <p>뉴스, 추세, 보조지표를 결합해 상위 후보를 선별하고 최종 1종목(또는 1심볼)에 집중합니다.</p>
+      </article>
+      <article class="feature-card">
+        <h3>본인인증 게이트</h3>
+        <p>회원가입 후 본인인증 완료 사용자만 자동매매 실행이 가능하도록 안전장치를 둡니다.</p>
+      </article>
+      <article class="feature-card">
+        <h3>매매일지 개선 루프</h3>
+        <p>매매 기록을 분석 요청하여 전략 개선 포인트를 지속적으로 추적합니다.</p>
+      </article>
     </section>
 
-    <section class="card">
-      <h2>3) 자동매매 제어</h2>
-      <div class="row">
-        <button id="btnStart" type="button">자동매매 시작</button>
-        <button id="btnStop" type="button" class="danger">자동매매 중지</button>
-      </div>
-      <div class="row">
-        <button id="btnAnalyze" type="button" class="secondary">일지 분석 실행</button>
-        <button id="btnLoadReport" type="button" class="secondary">최근 분석 조회</button>
-      </div>
-      <pre id="resultBox">응답 대기 중...</pre>
-    </section>
+    <section class="wrap console-grid">
+      <article id="auth" class="console-card reveal">
+        <div class="card-head">
+          <h2>회원가입 / 로그인</h2>
+          <span id="authBadge" class="badge">미로그인</span>
+        </div>
 
-    <section class="card">
-      <h2>4) Cloudflare Pages 배포 체크리스트</h2>
-      <ol>
-        <li>이 저장소를 Cloudflare Pages와 연결</li>
-        <li>Framework preset: <code>None</code></li>
-        <li>Build command: 비워두기</li>
-        <li>Build output directory: <code>/</code></li>
-        <li>배포 후 페이지 접속해서 API URL 입력</li>
-      </ol>
-      <p class="hint">백엔드 URL은 상단 API Base URL에 입력하세요.</p>
+        <div class="auth-switch">
+          <button id="tabRegister" type="button" class="tab active">회원가입</button>
+          <button id="tabLogin" type="button" class="tab">로그인</button>
+        </div>
+
+        <form id="registerForm" class="stack">
+          <label for="regName">이름</label>
+          <input id="regName" type="text" placeholder="홍길동" required />
+
+          <label for="regPhone">휴대폰 번호</label>
+          <input id="regPhone" type="text" placeholder="01012345678" required />
+
+          <label for="regEmail">이메일</label>
+          <input id="regEmail" type="email" placeholder="you@example.com" required />
+
+          <label for="regPassword">비밀번호</label>
+          <input id="regPassword" type="password" minlength="8" placeholder="8자 이상" required />
+
+          <button class="btn solid" type="submit">회원가입</button>
+        </form>
+
+        <form id="loginForm" class="stack hidden">
+          <label for="loginEmail">이메일</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" required />
+
+          <label for="loginPassword">비밀번호</label>
+          <input id="loginPassword" type="password" placeholder="비밀번호" required />
+
+          <button class="btn solid" type="submit">로그인</button>
+        </form>
+
+        <div class="inline-row top-gap">
+          <button id="btnLogout" class="btn ghost" type="button">로그아웃</button>
+        </div>
+
+        <p id="authMessage" class="hint">아직 로그인되지 않았습니다.</p>
+      </article>
+
+      <article class="console-card reveal delay-1">
+        <div class="card-head">
+          <h2>본인인증</h2>
+          <span id="kycBadge" class="badge warning">미인증</span>
+        </div>
+
+        <p class="hint">본인인증이 완료되어야 자동매매 시작이 가능합니다.</p>
+
+        <div class="inline-row">
+          <button id="btnVerifyStart" class="btn solid" type="button">본인인증 시작</button>
+          <button id="btnVerifyRefresh" class="btn ghost" type="button">상태 새로고침</button>
+        </div>
+
+        <form id="verifyCodeForm" class="stack top-gap">
+          <label for="verifyCode">인증 코드</label>
+          <input id="verifyCode" type="text" placeholder="6자리 코드 입력" />
+          <button class="btn ghost" type="submit">코드 제출</button>
+        </form>
+
+        <p id="verifyHint" class="hint">실서비스 연동 전에는 데모 코드 검증으로 동작합니다.</p>
+      </article>
+
+      <article class="console-card reveal delay-1">
+        <div class="card-head">
+          <h2>API 연결</h2>
+          <span id="apiStatus" class="badge">대기</span>
+        </div>
+
+        <label for="apiBase">Backend API Base URL</label>
+        <input id="apiBase" type="text" placeholder="https://api.example.com" />
+
+        <label for="apiToken">Static API Token (선택)</label>
+        <input id="apiToken" type="password" placeholder="Bearer Token" />
+
+        <div class="inline-row top-gap">
+          <button id="btnCheckApi" class="btn ghost" type="button">연결 확인</button>
+          <small class="hint">비워두면 데모 모드로 동작합니다.</small>
+        </div>
+      </article>
+
+      <article id="trading" class="console-card span-2 reveal">
+        <div class="card-head">
+          <h2>거래 설정</h2>
+          <span id="marketBadge" class="badge">Stock / Kiwoom</span>
+        </div>
+
+        <form id="settingsForm" class="settings-grid">
+          <label for="marketType">시장 타입</label>
+          <select id="marketType">
+            <option value="stock">Stock</option>
+            <option value="crypto">Crypto</option>
+          </select>
+
+          <label for="exchange">거래소 / 증권사</label>
+          <select id="exchange">
+            <option value="kiwoom">Kiwoom</option>
+            <option value="binance">Binance</option>
+            <option value="upbit">Upbit</option>
+          </select>
+
+          <label for="accountNo">계좌번호</label>
+          <input id="accountNo" type="text" placeholder="8120-0764" />
+
+          <label for="symbol">종목/심볼</label>
+          <input id="symbol" type="text" placeholder="005930 또는 BTC/USDT" />
+
+          <label for="orderBudget">1회 최대 주문금액 (KRW)</label>
+          <input id="orderBudget" type="number" min="10000" max="2000000" value="2000000" />
+
+          <label for="autoSelect">자동 종목/심볼 선정</label>
+          <select id="autoSelect">
+            <option value="true">ON</option>
+            <option value="false">OFF</option>
+          </select>
+
+          <label for="dryRun">DRY RUN</label>
+          <select id="dryRun">
+            <option value="true">ON</option>
+            <option value="false">OFF</option>
+          </select>
+
+          <label for="telegramToken">Telegram Bot Token</label>
+          <input id="telegramToken" type="text" placeholder="123456:ABC..." />
+
+          <label for="telegramChatId">Telegram Chat ID</label>
+          <input id="telegramChatId" type="text" placeholder="123456789" />
+
+          <div id="kiwoomFields" class="provider-fields">
+            <h3>Kiwoom 연결</h3>
+            <label for="kiwoomApiKey">Kiwoom API Key (선택)</label>
+            <input id="kiwoomApiKey" type="text" placeholder="Kiwoom API Key" />
+            <label for="kiwoomApiSecret">Kiwoom API Secret (선택)</label>
+            <input id="kiwoomApiSecret" type="password" placeholder="Kiwoom API Secret" />
+          </div>
+
+          <div id="binanceFields" class="provider-fields hidden">
+            <h3>Binance 연결</h3>
+            <label for="binanceApiKey">Binance API Key</label>
+            <input id="binanceApiKey" type="text" placeholder="Binance API Key" />
+            <label for="binanceApiSecret">Binance API Secret</label>
+            <input id="binanceApiSecret" type="password" placeholder="Binance API Secret" />
+          </div>
+
+          <div id="upbitFields" class="provider-fields hidden">
+            <h3>Upbit 연결</h3>
+            <label for="upbitApiKey">Upbit Access Key</label>
+            <input id="upbitApiKey" type="text" placeholder="Upbit Access Key" />
+            <label for="upbitApiSecret">Upbit Secret Key</label>
+            <input id="upbitApiSecret" type="password" placeholder="Upbit Secret Key" />
+          </div>
+
+          <button class="btn solid" type="submit">설정 저장</button>
+        </form>
+      </article>
+
+      <article class="console-card span-2 reveal delay-1">
+        <div class="card-head">
+          <h2>자동매매 제어</h2>
+        </div>
+        <div class="control-grid">
+          <button id="btnStart" class="btn solid" type="button">자동매매 시작</button>
+          <button id="btnStop" class="btn ghost danger" type="button">자동매매 중지</button>
+          <button id="btnAnalyze" class="btn ghost" type="button">매매일지 분석 실행</button>
+          <button id="btnLoadReport" class="btn ghost" type="button">최근 분석 조회</button>
+        </div>
+        <pre id="resultBox">준비 완료. API URL 또는 데모 모드를 선택해 시작하세요.</pre>
+      </article>
     </section>
   </main>
 
