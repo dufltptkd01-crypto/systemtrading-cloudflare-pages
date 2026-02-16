@@ -492,6 +492,8 @@
     refs.binanceApiSecret.value = settings.binanceApiSecret;
     refs.upbitApiKey.value = settings.upbitApiKey;
     refs.upbitApiSecret.value = settings.upbitApiSecret;
+
+    updateCoinCredentialFields();
   }
 
   function collectFormSettings() {
@@ -519,6 +521,25 @@
 
       telegramToken: refs.telegramToken.value.trim(),
       telegramChatId: refs.telegramChatId.value.trim()
+    });
+  }
+
+  function updateCoinCredentialFields() {
+    var exchange = refs.coinExchange ? refs.coinExchange.value : 'binance';
+    var showBinance = exchange !== 'upbit';
+
+    document.querySelectorAll('.coin-only-binance').forEach(function (node) {
+      node.hidden = !showBinance;
+      if (node.tagName === 'INPUT') {
+        node.disabled = !showBinance;
+      }
+    });
+
+    document.querySelectorAll('.coin-only-upbit').forEach(function (node) {
+      node.hidden = showBinance;
+      if (node.tagName === 'INPUT') {
+        node.disabled = showBinance;
+      }
     });
   }
 
@@ -1110,6 +1131,12 @@
         });
         updateStatus();
         updateGuard();
+      });
+    }
+
+    if (refs.coinExchange) {
+      refs.coinExchange.addEventListener('change', function () {
+        updateCoinCredentialFields();
       });
     }
 
