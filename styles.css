@@ -504,6 +504,7 @@ input::placeholder {
 
 .result-area {
   margin-top: 14px;
+  display: none;
 }
 
 .result-area h2 {
