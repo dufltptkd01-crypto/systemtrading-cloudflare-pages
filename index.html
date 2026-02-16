@@ -3,71 +3,101 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0d2238" />
   <title>SystemTrading Premier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="bg-layer bg-a"></div>
-  <div class="bg-layer bg-b"></div>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="wrap header-inner">
       <a href="#" class="brand">
-        <span class="brand-dot"></span>
+        <span class="brand-dot" aria-hidden="true"></span>
         <span>SystemTrading Premier</span>
       </a>
-      <nav class="main-nav">
-        <a href="#features">기능</a>
+
+      <nav class="main-nav" aria-label="메인 메뉴">
+        <a href="#overview">개요</a>
+        <a href="#onboarding">시작 순서</a>
         <a href="#auth">인증</a>
-        <a href="#trading">거래</a>
+        <a href="#trading">거래 설정</a>
       </nav>
-      <button id="btnHeaderLogin" class="btn ghost" type="button">로그인</button>
+
+      <div class="header-actions">
+        <button id="btnHeaderLogin" class="btn ghost" type="button">로그인</button>
+        <button id="btnMenu" class="icon-btn" type="button" aria-label="메뉴 열기">☰</button>
+      </div>
+    </div>
+
+    <div id="mobileNav" class="mobile-nav hidden" aria-label="모바일 메뉴">
+      <a class="mobile-link" href="#overview">개요</a>
+      <a class="mobile-link" href="#onboarding">시작 순서</a>
+      <a class="mobile-link" href="#auth">인증</a>
+      <a class="mobile-link" href="#trading">거래 설정</a>
     </div>
   </header>
 
   <main>
-    <section class="hero wrap">
+    <section id="overview" class="hero wrap">
       <div class="hero-copy reveal">
-        <p class="eyebrow">AI Assisted Multi-Market Trading</p>
+        <p class="eyebrow">Premium Multi-Market Auto Trading</p>
         <h1>당신의 시간은 1/2로 투자하고,<br />돈은 2배로 가져가세요.</h1>
-        <p class="subline">신호는 자동화하고 실행은 정교하게. 주식과 코인을 하나의 콘솔에서 연결합니다.</p>
+        <p class="subline">복잡한 분석, 반복적인 실행, 사후 기록까지 한 화면에서 연결합니다. 주식과 코인을 같은 운영 콘솔에서 통합 제어하세요.</p>
+
         <div class="hero-cta">
           <button id="btnTrial" class="btn solid" type="button">7일 무료체험</button>
           <button id="btnExplore" class="btn ghost" type="button">둘러보기</button>
         </div>
       </div>
-      <div class="hero-panel reveal delay-1">
-        <h2>실행 현황</h2>
+
+      <aside class="hero-panel reveal delay-1">
+        <h2>운영 포인트</h2>
         <ul>
           <li><span>지원 시장</span><strong>Kiwoom / Binance / Upbit</strong></li>
-          <li><span>알림</span><strong>Telegram 실시간 전송</strong></li>
-          <li><span>기본 모드</span><strong>DRY RUN 안전 시작</strong></li>
+          <li><span>알림</span><strong>Telegram 실시간 발송</strong></li>
+          <li><span>안전 시작</span><strong>DRY RUN 기본 모드</strong></li>
         </ul>
+      </aside>
+    </section>
+
+    <section class="wrap proof-strip reveal delay-1" aria-label="서비스 강점">
+      <article class="proof-item">
+        <p class="proof-value">1 Console</p>
+        <p class="proof-label">주식/코인 통합 운영</p>
+      </article>
+      <article class="proof-item">
+        <p class="proof-value">Top 10 → 1</p>
+        <p class="proof-label">후보 압축 후 집중 매수</p>
+      </article>
+      <article class="proof-item">
+        <p class="proof-value">24/7 Alert</p>
+        <p class="proof-label">Telegram 즉시 알림</p>
+      </article>
+    </section>
+
+    <section id="onboarding" class="wrap onboarding reveal">
+      <div class="onboarding-head">
+        <h2>시작 순서</h2>
+        <p id="progressText">1단계: 회원가입 또는 로그인</p>
+      </div>
+      <div class="step-track" role="list" aria-label="진행 단계">
+        <button id="stepAuth" type="button" class="step-chip active" role="listitem">1. 회원 인증</button>
+        <button id="stepKyc" type="button" class="step-chip" role="listitem">2. 본인인증</button>
+        <button id="stepApi" type="button" class="step-chip" role="listitem">3. API 연결</button>
+        <button id="stepTrade" type="button" class="step-chip" role="listitem">4. 자동매매 시작</button>
       </div>
     </section>
 
-    <section id="features" class="wrap feature-grid reveal delay-1">
-      <article class="feature-card">
-        <h3>자동 후보 선정</h3>
-        <p>뉴스, 추세, 보조지표를 결합해 상위 후보를 선별하고 최종 1종목(또는 1심볼)에 집중합니다.</p>
-      </article>
-      <article class="feature-card">
-        <h3>본인인증 게이트</h3>
-        <p>회원가입 후 본인인증 완료 사용자만 자동매매 실행이 가능하도록 안전장치를 둡니다.</p>
-      </article>
-      <article class="feature-card">
-        <h3>매매일지 개선 루프</h3>
-        <p>매매 기록을 분석 요청하여 전략 개선 포인트를 지속적으로 추적합니다.</p>
-      </article>
-    </section>
-
-    <section class="wrap console-grid">
-      <article id="auth" class="console-card reveal">
-        <div class="card-head">
-          <h2>회원가입 / 로그인</h2>
+    <section class="wrap app-grid">
+      <article id="auth" class="panel panel-auth reveal">
+        <div class="panel-head">
+          <h3>회원가입 / 로그인</h3>
           <span id="authBadge" class="badge">미로그인</span>
         </div>
 
@@ -81,7 +111,7 @@
           <input id="regName" type="text" placeholder="홍길동" required />
 
           <label for="regPhone">휴대폰 번호</label>
-          <input id="regPhone" type="text" placeholder="01012345678" required />
+          <input id="regPhone" type="text" placeholder="010-1234-5678" required />
 
           <label for="regEmail">이메일</label>
           <input id="regEmail" type="email" placeholder="you@example.com" required />
@@ -109,17 +139,17 @@
         <p id="authMessage" class="hint">아직 로그인되지 않았습니다.</p>
       </article>
 
-      <article class="console-card reveal delay-1">
-        <div class="card-head">
-          <h2>본인인증</h2>
+      <article class="panel panel-kyc reveal delay-1">
+        <div class="panel-head">
+          <h3>본인인증</h3>
           <span id="kycBadge" class="badge warning">미인증</span>
         </div>
 
-        <p class="hint">본인인증이 완료되어야 자동매매 시작이 가능합니다.</p>
+        <p class="hint">자동매매 실행 전 본인인증을 완료하세요.</p>
 
-        <div class="inline-row">
+        <div class="inline-row top-gap">
           <button id="btnVerifyStart" class="btn solid" type="button">본인인증 시작</button>
-          <button id="btnVerifyRefresh" class="btn ghost" type="button">상태 새로고침</button>
+          <button id="btnVerifyRefresh" class="btn ghost" type="button">상태 확인</button>
         </div>
 
         <form id="verifyCodeForm" class="stack top-gap">
@@ -131,9 +161,9 @@
         <p id="verifyHint" class="hint">실서비스 연동 전에는 데모 코드 검증으로 동작합니다.</p>
       </article>
 
-      <article class="console-card reveal delay-1">
-        <div class="card-head">
-          <h2>API 연결</h2>
+      <article class="panel panel-api reveal delay-1">
+        <div class="panel-head">
+          <h3>API 연결</h3>
           <span id="apiStatus" class="badge">대기</span>
         </div>
 
@@ -145,13 +175,28 @@
 
         <div class="inline-row top-gap">
           <button id="btnCheckApi" class="btn ghost" type="button">연결 확인</button>
-          <small class="hint">비워두면 데모 모드로 동작합니다.</small>
         </div>
+        <p class="hint">비워두면 데모 모드로 동작합니다.</p>
       </article>
 
-      <article id="trading" class="console-card span-2 reveal">
-        <div class="card-head">
-          <h2>거래 설정</h2>
+      <article class="panel panel-summary reveal">
+        <div class="panel-head">
+          <h3>운영 요약</h3>
+        </div>
+        <dl class="summary-list">
+          <div><dt>사용자</dt><dd id="sumUser">-</dd></div>
+          <div><dt>인증 상태</dt><dd id="sumVerify">미인증</dd></div>
+          <div><dt>API 모드</dt><dd id="sumApi">Demo</dd></div>
+          <div><dt>시장 / 거래소</dt><dd id="sumMarket">Stock / Kiwoom</dd></div>
+          <div><dt>종목 / 심볼</dt><dd id="sumSymbol">-</dd></div>
+          <div><dt>1회 주문금액</dt><dd id="sumBudget">0 KRW</dd></div>
+          <div><dt>실행 모드</dt><dd id="sumMode">DRY RUN</dd></div>
+        </dl>
+      </article>
+
+      <article id="trading" class="panel panel-trading reveal delay-1">
+        <div class="panel-head">
+          <h3>거래 설정</h3>
           <span id="marketBadge" class="badge">Stock / Kiwoom</span>
         </div>
 
@@ -184,10 +229,10 @@
             <option value="false">OFF</option>
           </select>
 
-          <label for="dryRun">DRY RUN</label>
+          <label for="dryRun">실행 모드</label>
           <select id="dryRun">
-            <option value="true">ON</option>
-            <option value="false">OFF</option>
+            <option value="true">DRY RUN</option>
+            <option value="false">LIVE</option>
           </select>
 
           <label for="telegramToken">Telegram Bot Token</label>
@@ -197,7 +242,7 @@
           <input id="telegramChatId" type="text" placeholder="123456789" />
 
           <div id="kiwoomFields" class="provider-fields">
-            <h3>Kiwoom 연결</h3>
+            <h4>Kiwoom 연결</h4>
             <label for="kiwoomApiKey">Kiwoom API Key (선택)</label>
             <input id="kiwoomApiKey" type="text" placeholder="Kiwoom API Key" />
             <label for="kiwoomApiSecret">Kiwoom API Secret (선택)</label>
@@ -205,7 +250,7 @@
           </div>
 
           <div id="binanceFields" class="provider-fields hidden">
-            <h3>Binance 연결</h3>
+            <h4>Binance 연결</h4>
             <label for="binanceApiKey">Binance API Key</label>
             <input id="binanceApiKey" type="text" placeholder="Binance API Key" />
             <label for="binanceApiSecret">Binance API Secret</label>
@@ -213,7 +258,7 @@
           </div>
 
           <div id="upbitFields" class="provider-fields hidden">
-            <h3>Upbit 연결</h3>
+            <h4>Upbit 연결</h4>
             <label for="upbitApiKey">Upbit Access Key</label>
             <input id="upbitApiKey" type="text" placeholder="Upbit Access Key" />
             <label for="upbitApiSecret">Upbit Secret Key</label>
@@ -224,20 +269,30 @@
         </form>
       </article>
 
-      <article class="console-card span-2 reveal delay-1">
-        <div class="card-head">
-          <h2>자동매매 제어</h2>
+      <article class="panel panel-control reveal">
+        <div class="panel-head">
+          <h3>자동매매 제어</h3>
         </div>
+
+        <p id="startGuardText" class="guard-text">시작 전 필수 항목을 확인하세요.</p>
+
         <div class="control-grid">
           <button id="btnStart" class="btn solid" type="button">자동매매 시작</button>
           <button id="btnStop" class="btn ghost danger" type="button">자동매매 중지</button>
-          <button id="btnAnalyze" class="btn ghost" type="button">매매일지 분석 실행</button>
+          <button id="btnAnalyze" class="btn ghost" type="button">매매일지 분석</button>
           <button id="btnLoadReport" class="btn ghost" type="button">최근 분석 조회</button>
         </div>
+
         <pre id="resultBox">준비 완료. API URL 또는 데모 모드를 선택해 시작하세요.</pre>
       </article>
     </section>
   </main>
+
+  <div class="mobile-dock" aria-label="모바일 빠른 실행">
+    <button id="btnMobileStart" class="btn solid" type="button">시작</button>
+    <button id="btnMobileStop" class="btn ghost danger" type="button">중지</button>
+    <button id="btnMobileTop" class="btn ghost" type="button">맨 위</button>
+  </div>
 
   <script src="./config.js"></script>
   <script src="./app.js"></script>

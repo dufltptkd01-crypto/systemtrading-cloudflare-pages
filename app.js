@@ -1,14 +1,18 @@
 ﻿(function () {
   'use strict';
 
-  const STORAGE_SETTINGS = 'systemtrading.premier.settings.v2';
-  const STORAGE_SESSION = 'systemtrading.premier.session.v2';
+  const STORAGE_SETTINGS = 'systemtrading.premier.settings.v3';
+  const STORAGE_SESSION = 'systemtrading.premier.session.v3';
   const STORAGE_MOCK_DB = 'systemtrading.premier.mockdb.v1';
+  const MAX_LOG_ENTRIES = 24;
 
   const refs = {
     btnHeaderLogin: document.getElementById('btnHeaderLogin'),
     btnTrial: document.getElementById('btnTrial'),
     btnExplore: document.getElementById('btnExplore'),
+    btnMenu: document.getElementById('btnMenu'),
+    mobileNav: document.getElementById('mobileNav'),
+    mobileLinks: document.querySelectorAll('.mobile-link'),
 
     tabRegister: document.getElementById('tabRegister'),
     tabLogin: document.getElementById('tabLogin'),
@@ -62,7 +66,26 @@
     btnStop: document.getElementById('btnStop'),
     btnAnalyze: document.getElementById('btnAnalyze'),
     btnLoadReport: document.getElementById('btnLoadReport'),
-    resultBox: document.getElementById('resultBox')
+    resultBox: document.getElementById('resultBox'),
+    startGuardText: document.getElementById('startGuardText'),
+
+    btnMobileStart: document.getElementById('btnMobileStart'),
+    btnMobileStop: document.getElementById('btnMobileStop'),
+    btnMobileTop: document.getElementById('btnMobileTop'),
+
+    stepAuth: document.getElementById('stepAuth'),
+    stepKyc: document.getElementById('stepKyc'),
+    stepApi: document.getElementById('stepApi'),
+    stepTrade: document.getElementById('stepTrade'),
+    progressText: document.getElementById('progressText'),
+
+    sumUser: document.getElementById('sumUser'),
+    sumVerify: document.getElementById('sumVerify'),
+    sumApi: document.getElementById('sumApi'),
+    sumMarket: document.getElementById('sumMarket'),
+    sumSymbol: document.getElementById('sumSymbol'),
+    sumBudget: document.getElementById('sumBudget'),
+    sumMode: document.getElementById('sumMode')
   };
 
   const cfg = window.APP_CONFIG || {};
@@ -88,8 +111,12 @@
       token: '',
       user: null,
       verified: false
-    }
+    },
+    apiChecked: false,
+    logs: []
   };
+
+  let persistTimer = null;
 
   function nowText() {
     return new Date().toLocaleString('ko-KR');
@@ -106,8 +133,11 @@
     }
   }
 
-  function writeResult(title, payload) {
-    refs.resultBox.textContent = `[${nowText()}] ${title}\n${toJsonText(payload)}`;
+  function pushLog(title, payload) {
+    const entry = `[${nowText()}] ${title}\n${toJsonText(payload)}`;
+    state.logs.unshift(entry);
+    state.logs = state.logs.slice(0, MAX_LOG_ENTRIES);
+    refs.resultBox.textContent = state.logs.join('\n\n');
   }
 
   function clampBudget(raw) {
@@ -116,6 +146,24 @@
       return 2000000;
     }
     return Math.min(Math.max(Math.round(parsed), 10000), 2000000);
+  }
+
+  function normalizeAccount(value) {
+    return String(value || '').replace(/[^\d-]/g, '').replace(/-{2,}/g, '-').slice(0, 20);
+  }
+
+  function formatPhone(value) {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 11);
+    if (digits.length < 4) {
+      return digits;
+    }
+    if (digits.length < 8) {
+      return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    }
+    if (digits.length < 11) {
+      return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+    }
+    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
   }
 
   function defaultSettings() {
@@ -152,6 +200,7 @@
   function collectSettings() {
     const marketType = refs.marketType.value === 'crypto' ? 'crypto' : 'stock';
     let exchange = refs.exchange.value;
+
     if (marketType === 'stock') {
       exchange = 'kiwoom';
     }
@@ -162,9 +211,9 @@
     const settings = {
       apiBase: refs.apiBase.value.trim(),
       apiToken: refs.apiToken.value.trim(),
-      marketType,
-      exchange,
-      accountNo: refs.accountNo.value.trim(),
+      marketType: marketType,
+      exchange: exchange,
+      accountNo: normalizeAccount(refs.accountNo.value),
       symbol: refs.symbol.value.trim(),
       orderBudget: clampBudget(refs.orderBudget.value),
       autoSelect: refs.autoSelect.value === 'true',
@@ -180,17 +229,17 @@
     };
 
     refs.orderBudget.value = String(settings.orderBudget);
+    refs.accountNo.value = settings.accountNo;
     refs.exchange.value = settings.exchange;
     return settings;
   }
-
   function applySettings(settings) {
     const s = Object.assign(defaultSettings(), settings || {});
     refs.apiBase.value = s.apiBase;
     refs.apiToken.value = s.apiToken;
     refs.marketType.value = s.marketType;
     refs.exchange.value = s.exchange;
-    refs.accountNo.value = s.accountNo;
+    refs.accountNo.value = normalizeAccount(s.accountNo);
     refs.symbol.value = s.symbol;
     refs.orderBudget.value = String(clampBudget(s.orderBudget));
     refs.autoSelect.value = String(Boolean(s.autoSelect));
@@ -209,6 +258,15 @@
     const settings = collectSettings();
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
     return settings;
+  }
+
+  function schedulePersistAndRender() {
+    clearTimeout(persistTimer);
+    persistTimer = setTimeout(function () {
+      persistSettings();
+      renderMarketFields();
+      refreshSummaryAndGuard();
+    }, 180);
   }
 
   function loadSession() {
@@ -232,6 +290,7 @@
     state.session = { token: '', user: null, verified: false };
     saveSession();
     renderAuthState();
+    refreshSummaryAndGuard();
   }
 
   function maskPhone(phone) {
@@ -249,6 +308,7 @@
       refs.verifyHint.textContent = '본인인증이 완료되었습니다.';
       return;
     }
+
     refs.kycBadge.textContent = '미인증';
     refs.kycBadge.classList.add('warning');
   }
@@ -285,11 +345,10 @@
     const exchangeName = settings.exchange.charAt(0).toUpperCase() + settings.exchange.slice(1);
     refs.marketBadge.textContent = `${marketName} / ${exchangeName}`;
 
-    if (settings.marketType === 'stock' && !settings.symbol) {
-      refs.symbol.value = '005930';
-    }
-    if (settings.marketType === 'crypto' && !settings.symbol) {
-      refs.symbol.value = settings.exchange === 'upbit' ? 'BTC/KRW' : 'BTC/USDT';
+    if (!settings.symbol) {
+      refs.symbol.value = settings.marketType === 'stock'
+        ? '005930'
+        : (settings.exchange === 'upbit' ? 'BTC/KRW' : 'BTC/USDT');
     }
   }
 
@@ -356,7 +415,6 @@
     }
     return db.users.find(function (u) { return u.id === userId; }) || null;
   }
-
   function mockRequest(endpointName, method, body, sessionToken) {
     const db = readMockDb();
 
@@ -382,10 +440,10 @@
 
       const user = {
         id: Date.now(),
-        email,
-        password,
-        name,
-        phone,
+        email: email,
+        password: password,
+        name: name,
+        phone: phone,
         verified: false,
         created_at: new Date().toISOString()
       };
@@ -452,13 +510,13 @@
       }
       const code = String(Math.floor(100000 + Math.random() * 900000));
       db.pendingCodes[user.id] = {
-        code,
+        code: code,
         expires_at: Date.now() + 5 * 60 * 1000
       };
       writeMockDb(db);
       return {
         started: true,
-        message: '인증 코드를 발송했습니다. (데모 모드) ',
+        message: '인증 코드를 발송했습니다. (데모 모드)',
         masked_phone: maskPhone(user.phone),
         debug_code: code
       };
@@ -469,8 +527,8 @@
       if (!user) {
         throw new Error('인증이 필요합니다.');
       }
-      const code = String(body.code || '').trim();
       const pending = db.pendingCodes[user.id];
+      const code = String(body.code || '').trim();
       if (!pending) {
         throw new Error('진행 중인 인증 요청이 없습니다.');
       }
@@ -505,7 +563,6 @@
       if (!user.verified) {
         throw new Error('본인인증 완료 후 시작할 수 있습니다.');
       }
-
       db.reports[user.id] = db.reports[user.id] || [];
       db.reports[user.id].push({
         ts: new Date().toISOString(),
@@ -533,11 +590,7 @@
       if (!user) {
         throw new Error('로그인이 필요합니다.');
       }
-      return {
-        ok: true,
-        mode: 'mock',
-        stopped: true
-      };
+      return { ok: true, mode: 'mock', stopped: true };
     }
 
     if (endpointName === 'analyze' && method === 'POST') {
@@ -545,7 +598,6 @@
       if (!user) {
         throw new Error('로그인이 필요합니다.');
       }
-
       const report = {
         ts: new Date().toISOString(),
         summary: '최근 20회 기준 진입 시점 필터 강화 필요',
@@ -553,22 +605,13 @@
           win_rate: 0.58,
           avg_return_pct: 0.016,
           drawdown_pct: 0.031,
-          improvement: [
-            '과열 구간 진입 제한',
-            '뉴스 스코어 하한선 상향',
-            '연속 손실 2회 시 휴식 모드'
-          ]
+          improvement: ['과열 구간 진입 제한', '뉴스 스코어 하한선 상향', '연속 손실 2회 시 휴식 모드']
         }
       };
-
       db.reports[user.id] = db.reports[user.id] || [];
       db.reports[user.id].push(report);
       writeMockDb(db);
-      return {
-        ok: true,
-        mode: 'mock',
-        report
-      };
+      return { ok: true, mode: 'mock', report: report };
     }
 
     if (endpointName === 'reportLatest' && method === 'GET') {
@@ -576,7 +619,6 @@
       if (!user) {
         throw new Error('로그인이 필요합니다.');
       }
-
       const reports = db.reports[user.id] || [];
       if (!reports.length) {
         return {
@@ -613,7 +655,6 @@
 
     const url = apiBase.replace(/\/+$/, '') + endpoint;
     const headers = { 'Content-Type': 'application/json' };
-
     if (opts.withAuth !== false && authToken) {
       headers.Authorization = `Bearer ${authToken}`;
     }
@@ -622,8 +663,8 @@
     }
 
     const response = await fetch(url, {
-      method,
-      headers,
+      method: method,
+      headers: headers,
       body: body ? JSON.stringify(body) : undefined
     });
 
@@ -632,7 +673,7 @@
     try {
       data = raw ? JSON.parse(raw) : {};
     } catch (_err) {
-      // keep text
+      // keep text response
     }
 
     if (!response.ok) {
@@ -643,7 +684,6 @@
 
   function buildTradingPayload() {
     const settings = collectSettings();
-
     return {
       market_type: settings.marketType,
       exchange: settings.exchange,
@@ -655,25 +695,136 @@
       telegram_bot_token: settings.telegramToken,
       telegram_chat_id: settings.telegramChatId,
       credentials: {
-        kiwoom: {
-          api_key: settings.kiwoomApiKey,
-          api_secret: settings.kiwoomApiSecret
-        },
-        binance: {
-          api_key: settings.binanceApiKey,
-          api_secret: settings.binanceApiSecret
-        },
-        upbit: {
-          access_key: settings.upbitApiKey,
-          secret_key: settings.upbitApiSecret
-        }
+        kiwoom: { api_key: settings.kiwoomApiKey, api_secret: settings.kiwoomApiSecret },
+        binance: { api_key: settings.binanceApiKey, api_secret: settings.binanceApiSecret },
+        upbit: { access_key: settings.upbitApiKey, secret_key: settings.upbitApiSecret }
       }
     };
+  }
+  function setStepStatus(node, status) {
+    if (!node) {
+      return;
+    }
+    node.classList.remove('done', 'active');
+    if (status === 'done') {
+      node.classList.add('done');
+    }
+    if (status === 'active') {
+      node.classList.add('active');
+    }
+  }
+
+  function evaluateReadiness() {
+    const settings = collectSettings();
+    const loggedIn = Boolean(state.session.token && state.session.user);
+    const verified = loggedIn && Boolean(state.session.verified);
+    const hasLiveApi = Boolean(settings.apiBase);
+    const apiReady = !hasLiveApi || state.apiChecked;
+    const symbolReady = Boolean(settings.symbol);
+    const accountReady = settings.marketType === 'crypto' ? true : Boolean(settings.accountNo);
+    const tradingConfigReady = symbolReady && accountReady;
+    const canStart = loggedIn && verified && apiReady && tradingConfigReady;
+
+    const missing = [];
+    if (!loggedIn) {
+      missing.push('로그인 필요');
+    }
+    if (!verified) {
+      missing.push('본인인증 필요');
+    }
+    if (!apiReady) {
+      missing.push('API 연결 확인 필요');
+    }
+    if (!symbolReady) {
+      missing.push('종목/심볼 입력 필요');
+    }
+    if (!accountReady) {
+      missing.push('계좌번호 입력 필요');
+    }
+
+    return {
+      settings: settings,
+      loggedIn: loggedIn,
+      verified: verified,
+      apiReady: apiReady,
+      tradingConfigReady: tradingConfigReady,
+      canStart: canStart,
+      missing: missing
+    };
+  }
+
+  function refreshSteps(readiness) {
+    const r = readiness || evaluateReadiness();
+
+    if (!r.loggedIn) {
+      setStepStatus(refs.stepAuth, 'active');
+      setStepStatus(refs.stepKyc, 'pending');
+      setStepStatus(refs.stepApi, 'pending');
+      setStepStatus(refs.stepTrade, 'pending');
+      refs.progressText.textContent = '1단계: 회원가입 또는 로그인';
+      return;
+    }
+
+    setStepStatus(refs.stepAuth, 'done');
+    if (!r.verified) {
+      setStepStatus(refs.stepKyc, 'active');
+      setStepStatus(refs.stepApi, 'pending');
+      setStepStatus(refs.stepTrade, 'pending');
+      refs.progressText.textContent = '2단계: 본인인증 완료';
+      return;
+    }
+
+    setStepStatus(refs.stepKyc, 'done');
+    if (!r.apiReady) {
+      setStepStatus(refs.stepApi, 'active');
+      setStepStatus(refs.stepTrade, 'pending');
+      refs.progressText.textContent = '3단계: API 연결을 확인하세요';
+      return;
+    }
+
+    setStepStatus(refs.stepApi, 'done');
+    if (!r.tradingConfigReady) {
+      setStepStatus(refs.stepTrade, 'active');
+      refs.progressText.textContent = '4단계: 거래 설정을 완료하세요';
+      return;
+    }
+
+    setStepStatus(refs.stepTrade, 'done');
+    refs.progressText.textContent = '모든 단계 완료. 자동매매 시작 가능합니다.';
+  }
+
+  function refreshSummaryAndGuard() {
+    const r = evaluateReadiness();
+    const s = r.settings;
+
+    refs.sumUser.textContent = r.loggedIn ? (state.session.user.email || state.session.user.name || '사용자') : '미로그인';
+    refs.sumVerify.textContent = r.verified ? '인증완료' : '미인증';
+    refs.sumApi.textContent = s.apiBase ? (r.apiReady ? 'Live API 연결확인' : 'Live API 미확인') : 'Demo 모드';
+    refs.sumMarket.textContent = `${s.marketType === 'stock' ? 'Stock' : 'Crypto'} / ${s.exchange}`;
+    refs.sumSymbol.textContent = s.symbol || '-';
+    refs.sumBudget.textContent = `${s.orderBudget.toLocaleString('ko-KR')} KRW`;
+    refs.sumMode.textContent = s.dryRun ? 'DRY RUN' : 'LIVE';
+
+    if (r.canStart) {
+      refs.startGuardText.textContent = '준비 완료. 자동매매 시작 버튼을 눌러 실행하세요.';
+    } else {
+      refs.startGuardText.textContent = `시작 전 확인: ${r.missing.join(' / ')}`;
+    }
+
+    refs.btnStart.disabled = !r.canStart;
+    refs.btnMobileStart.disabled = !r.canStart;
+    refs.btnStop.disabled = !r.loggedIn;
+    refs.btnAnalyze.disabled = !r.loggedIn;
+    refs.btnLoadReport.disabled = !r.loggedIn;
+    refs.btnMobileStop.disabled = !r.loggedIn;
+
+    refreshSteps(r);
   }
 
   async function refreshMe() {
     if (!state.session.token) {
       renderAuthState();
+      refreshSummaryAndGuard();
       return;
     }
 
@@ -690,6 +841,7 @@
     }
 
     renderAuthState();
+    refreshSummaryAndGuard();
   }
 
   function scrollToSection(id) {
@@ -700,6 +852,51 @@
     node.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function closeMobileNav() {
+    refs.mobileNav.classList.add('hidden');
+    refs.btnMenu.textContent = '☰';
+  }
+
+  function openMobileNav() {
+    refs.mobileNav.classList.remove('hidden');
+    refs.btnMenu.textContent = '✕';
+  }
+
+  function toggleMobileNav() {
+    if (refs.mobileNav.classList.contains('hidden')) {
+      openMobileNav();
+    } else {
+      closeMobileNav();
+    }
+  }
+
+  function bindInputs() {
+    refs.regPhone.addEventListener('input', function () {
+      refs.regPhone.value = formatPhone(refs.regPhone.value);
+    });
+
+    refs.accountNo.addEventListener('input', function () {
+      refs.accountNo.value = normalizeAccount(refs.accountNo.value);
+      schedulePersistAndRender();
+    });
+
+    refs.orderBudget.addEventListener('input', function () {
+      refs.orderBudget.value = String(clampBudget(refs.orderBudget.value));
+      schedulePersistAndRender();
+    });
+
+    const tracked = refs.settingsForm.querySelectorAll('input, select');
+    tracked.forEach(function (node) {
+      node.addEventListener('change', schedulePersistAndRender);
+      node.addEventListener('keyup', schedulePersistAndRender);
+    });
+
+    refs.apiBase.addEventListener('input', function () {
+      state.apiChecked = false;
+      refs.apiStatus.textContent = refs.apiBase.value.trim() ? '미확인' : 'Demo';
+      schedulePersistAndRender();
+    });
+  }
   refs.btnTrial.addEventListener('click', function () {
     setAuthMode('register');
     scrollToSection('auth');
@@ -714,6 +911,11 @@
     scrollToSection('auth');
   });
 
+  refs.btnMenu.addEventListener('click', toggleMobileNav);
+  refs.mobileLinks.forEach(function (link) {
+    link.addEventListener('click', closeMobileNav);
+  });
+
   refs.tabRegister.addEventListener('click', function () {
     setAuthMode('register');
   });
@@ -722,9 +924,21 @@
     setAuthMode('login');
   });
 
+  refs.stepAuth.addEventListener('click', function () {
+    scrollToSection('auth');
+  });
+  refs.stepKyc.addEventListener('click', function () {
+    scrollToSection('auth');
+  });
+  refs.stepApi.addEventListener('click', function () {
+    scrollToSection('auth');
+  });
+  refs.stepTrade.addEventListener('click', function () {
+    scrollToSection('trading');
+  });
+
   refs.registerForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-
     try {
       const payload = {
         name: refs.regName.value.trim(),
@@ -738,19 +952,19 @@
       state.session.verified = Boolean((state.session.user && state.session.user.verified) || data.verified);
       saveSession();
       renderAuthState();
-      writeResult('회원가입 완료', {
+      refreshSummaryAndGuard();
+      pushLog('회원가입 완료', {
         email: state.session.user ? state.session.user.email : payload.email,
         verified: state.session.verified
       });
       setAuthMode('login');
     } catch (err) {
-      writeResult('회원가입 실패', String(err.message || err));
+      pushLog('회원가입 실패', String(err.message || err));
     }
   });
 
   refs.loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-
     try {
       const payload = {
         email: refs.loginEmail.value.trim(),
@@ -762,67 +976,62 @@
       state.session.verified = Boolean((state.session.user && state.session.user.verified) || data.verified);
       saveSession();
       renderAuthState();
-      writeResult('로그인 성공', {
+      refreshSummaryAndGuard();
+      pushLog('로그인 성공', {
         email: state.session.user ? state.session.user.email : payload.email,
         verified: state.session.verified
       });
     } catch (err) {
-      writeResult('로그인 실패', String(err.message || err));
+      pushLog('로그인 실패', String(err.message || err));
     }
   });
 
   refs.btnLogout.addEventListener('click', function () {
     clearSession();
-    writeResult('로그아웃', '세션이 초기화되었습니다.');
+    pushLog('로그아웃', '세션이 초기화되었습니다.');
   });
 
   refs.btnVerifyStart.addEventListener('click', async function () {
     if (!state.session.token) {
-      writeResult('본인인증 시작 실패', '먼저 로그인하세요.');
+      pushLog('본인인증 시작 실패', '먼저 로그인하세요.');
       return;
     }
-
     try {
       const data = await callApi('verifyStart', 'POST', {});
-      const code = data.debug_code ? ` 데모코드: ${data.debug_code}` : '';
+      const code = data.debug_code ? ` (데모코드: ${data.debug_code})` : '';
       refs.verifyHint.textContent = `${data.message || '인증 코드가 전송되었습니다.'}${code}`;
-      writeResult('본인인증 시작', {
+      pushLog('본인인증 시작', {
         masked_phone: data.masked_phone || '-',
         note: data.debug_code ? '데모 코드가 발급되었습니다.' : '실서비스 인증이 시작되었습니다.'
       });
     } catch (err) {
-      writeResult('본인인증 시작 실패', String(err.message || err));
+      pushLog('본인인증 시작 실패', String(err.message || err));
     }
   });
 
   refs.verifyCodeForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-
     if (!state.session.token) {
-      writeResult('인증 코드 제출 실패', '먼저 로그인하세요.');
+      pushLog('인증 코드 제출 실패', '먼저 로그인하세요.');
       return;
     }
-
     try {
-      const code = refs.verifyCode.value.trim();
-      const data = await callApi('verifyComplete', 'POST', { code: code });
+      const data = await callApi('verifyComplete', 'POST', { code: refs.verifyCode.value.trim() });
       const user = extractUser(data) || state.session.user;
       state.session.user = user;
       state.session.verified = Boolean((user && user.verified) || data.verified);
       saveSession();
       renderAuthState();
-      writeResult('본인인증 완료', {
-        email: user ? user.email : '-',
-        verified: state.session.verified
-      });
+      refreshSummaryAndGuard();
+      pushLog('본인인증 완료', { email: user ? user.email : '-', verified: state.session.verified });
     } catch (err) {
-      writeResult('인증 코드 제출 실패', String(err.message || err));
+      pushLog('인증 코드 제출 실패', String(err.message || err));
     }
   });
 
   refs.btnVerifyRefresh.addEventListener('click', async function () {
     await refreshMe();
-    writeResult('인증 상태 새로고침', {
+    pushLog('인증 상태 새로고침', {
       user: state.session.user ? state.session.user.email : null,
       verified: state.session.verified
     });
@@ -832,11 +1041,15 @@
     refs.apiStatus.textContent = '확인 중...';
     try {
       const data = await callApi('health', 'GET', null, { withAuth: false });
-      refs.apiStatus.textContent = '정상';
-      writeResult('API 연결 성공', data);
+      state.apiChecked = true;
+      refs.apiStatus.textContent = refs.apiBase.value.trim() ? '정상' : 'Demo';
+      refreshSummaryAndGuard();
+      pushLog('API 연결 성공', data);
     } catch (err) {
+      state.apiChecked = false;
       refs.apiStatus.textContent = '실패';
-      writeResult('API 연결 실패', String(err.message || err));
+      refreshSummaryAndGuard();
+      pushLog('API 연결 실패', String(err.message || err));
     }
   });
 
@@ -844,7 +1057,8 @@
     event.preventDefault();
     const settings = persistSettings();
     renderMarketFields();
-    writeResult('설정 저장 완료', sanitizeSettingsForLog(settings));
+    refreshSummaryAndGuard();
+    pushLog('설정 저장 완료', sanitizeSettingsForLog(settings));
   });
 
   refs.marketType.addEventListener('change', function () {
@@ -854,6 +1068,7 @@
       refs.exchange.value = 'binance';
     }
     renderMarketFields();
+    refreshSummaryAndGuard();
   });
 
   refs.exchange.addEventListener('change', function () {
@@ -861,73 +1076,69 @@
       refs.exchange.value = 'kiwoom';
     }
     renderMarketFields();
+    refreshSummaryAndGuard();
   });
-
-  refs.btnStart.addEventListener('click', async function () {
-    if (!state.session.token) {
-      writeResult('자동매매 시작 실패', '로그인 후 실행하세요.');
+  async function onStartClicked() {
+    const readiness = evaluateReadiness();
+    if (!readiness.canStart) {
+      refreshSummaryAndGuard();
+      pushLog('자동매매 시작 실패', `필수 조건 미완료: ${readiness.missing.join(' / ')}`);
       return;
     }
-    if (!state.session.verified) {
-      writeResult('자동매매 시작 실패', '본인인증 완료 후 실행 가능합니다.');
-      return;
-    }
-
     try {
-      const payload = buildTradingPayload();
-      if (!payload.symbol) {
-        throw new Error('종목/심볼을 입력하세요.');
-      }
-      if (payload.market_type === 'stock' && !payload.account_no) {
-        throw new Error('주식 거래는 계좌번호가 필요합니다.');
-      }
-      const data = await callApi('start', 'POST', payload);
-      writeResult('자동매매 시작 요청 완료', data);
+      const data = await callApi('start', 'POST', buildTradingPayload());
+      pushLog('자동매매 시작 요청 완료', data);
     } catch (err) {
-      writeResult('자동매매 시작 실패', String(err.message || err));
+      pushLog('자동매매 시작 실패', String(err.message || err));
     }
-  });
+  }
 
-  refs.btnStop.addEventListener('click', async function () {
+  async function onStopClicked() {
     if (!state.session.token) {
-      writeResult('자동매매 중지 실패', '로그인 후 실행하세요.');
+      pushLog('자동매매 중지 실패', '로그인 후 실행하세요.');
       return;
     }
-
     try {
       const data = await callApi('stop', 'POST', {});
-      writeResult('자동매매 중지 요청 완료', data);
+      pushLog('자동매매 중지 요청 완료', data);
     } catch (err) {
-      writeResult('자동매매 중지 실패', String(err.message || err));
+      pushLog('자동매매 중지 실패', String(err.message || err));
     }
-  });
+  }
+
+  refs.btnStart.addEventListener('click', onStartClicked);
+  refs.btnMobileStart.addEventListener('click', onStartClicked);
+  refs.btnStop.addEventListener('click', onStopClicked);
+  refs.btnMobileStop.addEventListener('click', onStopClicked);
 
   refs.btnAnalyze.addEventListener('click', async function () {
     if (!state.session.token) {
-      writeResult('매매일지 분석 실패', '로그인 후 실행하세요.');
+      pushLog('매매일지 분석 실패', '로그인 후 실행하세요.');
       return;
     }
-
     try {
       const data = await callApi('analyze', 'POST', { trigger: 'manual' });
-      writeResult('매매일지 분석 완료', data);
+      pushLog('매매일지 분석 완료', data);
     } catch (err) {
-      writeResult('매매일지 분석 실패', String(err.message || err));
+      pushLog('매매일지 분석 실패', String(err.message || err));
     }
   });
 
   refs.btnLoadReport.addEventListener('click', async function () {
     if (!state.session.token) {
-      writeResult('리포트 조회 실패', '로그인 후 실행하세요.');
+      pushLog('리포트 조회 실패', '로그인 후 실행하세요.');
       return;
     }
-
     try {
       const data = await callApi('reportLatest', 'GET');
-      writeResult('최근 분석 리포트', data);
+      pushLog('최근 분석 리포트', data);
     } catch (err) {
-      writeResult('리포트 조회 실패', String(err.message || err));
+      pushLog('리포트 조회 실패', String(err.message || err));
     }
+  });
+
+  refs.btnMobileTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   function initialize() {
@@ -936,7 +1147,10 @@
     setAuthMode('register');
     renderMarketFields();
     renderAuthState();
-    writeResult('대시보드 준비 완료', '7일 무료체험 또는 둘러보기로 시작하세요.');
+    refs.apiStatus.textContent = refs.apiBase.value.trim() ? '미확인' : 'Demo';
+    bindInputs();
+    refreshSummaryAndGuard();
+    pushLog('대시보드 준비 완료', '모바일 친화형 UI가 활성화되었습니다.');
     refreshMe();
   }
 
