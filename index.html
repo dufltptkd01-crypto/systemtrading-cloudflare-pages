@@ -1,0 +1,100 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SystemTrading Cloud Dashboard</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>SystemTrading Cloud Dashboard</h1>
+      <p>Cloudflare Pages에 바로 배포 가능한 운영 콘솔</p>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <section class="card">
+      <h2>1) API 연결</h2>
+      <label for="apiBase">Backend API Base URL</label>
+      <input id="apiBase" type="text" placeholder="예: https://api.example.com" />
+      <label for="apiToken">API Token (선택)</label>
+      <input id="apiToken" type="password" placeholder="Bearer 토큰" />
+      <div class="row">
+        <button id="btnCheckApi" type="button">연결 확인</button>
+        <span id="apiStatus" class="status">대기</span>
+      </div>
+      <p class="hint">
+        Cloudflare Pages는 정적 프론트엔드만 실행됩니다.
+        실제 자동매매는 별도 백엔드(예: Windows 서버의 Kiwoom 연동 서비스)와 연결해야 동작합니다.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>2) 사용자 설정</h2>
+      <form id="settingsForm">
+        <label for="accountNo">계좌번호</label>
+        <input id="accountNo" type="text" placeholder="예: 8120-0764" required />
+
+        <label for="apiKey">증권 API Key (선택)</label>
+        <input id="apiKey" type="text" placeholder="API Key" />
+
+        <label for="apiSecret">증권 API Secret (선택)</label>
+        <input id="apiSecret" type="password" placeholder="API Secret" />
+
+        <label for="telegramToken">텔레그램 봇 토큰</label>
+        <input id="telegramToken" type="text" placeholder="123456:ABC..." />
+
+        <label for="telegramChatId">텔레그램 Chat ID</label>
+        <input id="telegramChatId" type="text" placeholder="123456789" />
+
+        <label for="orderBudget">1회 주문 최대금액 (KRW)</label>
+        <input id="orderBudget" type="number" min="10000" max="2000000" value="2000000" />
+
+        <label for="autoSelect">자동 종목 선정</label>
+        <select id="autoSelect">
+          <option value="true">ON</option>
+          <option value="false">OFF</option>
+        </select>
+
+        <label for="dryRun">DRY RUN</label>
+        <select id="dryRun">
+          <option value="true">ON</option>
+          <option value="false">OFF</option>
+        </select>
+
+        <button type="submit">설정 저장 (브라우저 로컬)</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>3) 자동매매 제어</h2>
+      <div class="row">
+        <button id="btnStart" type="button">자동매매 시작</button>
+        <button id="btnStop" type="button" class="danger">자동매매 중지</button>
+      </div>
+      <div class="row">
+        <button id="btnAnalyze" type="button" class="secondary">일지 분석 실행</button>
+        <button id="btnLoadReport" type="button" class="secondary">최근 분석 조회</button>
+      </div>
+      <pre id="resultBox">응답 대기 중...</pre>
+    </section>
+
+    <section class="card">
+      <h2>4) Cloudflare Pages 배포 체크리스트</h2>
+      <ol>
+        <li>이 저장소를 Cloudflare Pages와 연결</li>
+        <li>Framework preset: <code>None</code></li>
+        <li>Build command: 비워두기</li>
+        <li>Build output directory: <code>/</code></li>
+        <li>배포 후 페이지 접속해서 API URL 입력</li>
+      </ol>
+      <p class="hint">백엔드 URL은 상단 API Base URL에 입력하세요.</p>
+    </section>
+  </main>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

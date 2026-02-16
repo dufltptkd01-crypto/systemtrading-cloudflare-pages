@@ -1,0 +1,145 @@
+:root {
+  --bg: #edf2f7;
+  --panel: #ffffff;
+  --ink: #1d2a36;
+  --muted: #5b6978;
+  --line: #d5dee8;
+  --main: #0a6ed1;
+  --danger: #bf1e2e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: radial-gradient(circle at 10% 10%, #d8e8fb, var(--bg));
+  font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+}
+
+.wrap {
+  width: min(1120px, 94vw);
+  margin: 0 auto;
+}
+
+.top {
+  padding: 28px 0 16px;
+}
+
+.top h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.top p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  padding-bottom: 28px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 26px rgba(35, 62, 92, 0.08);
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 10px 0 6px;
+}
+
+input, select, button {
+  width: 100%;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+
+input, select {
+  padding: 0 10px;
+  background: #fff;
+}
+
+button {
+  padding: 0 12px;
+  background: var(--main);
+  border-color: var(--main);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #4e6074;
+  border-color: #4e6074;
+}
+
+button.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10px;
+}
+
+.status {
+  align-self: center;
+  justify-self: end;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+pre {
+  background: #0f1620;
+  color: #d5edff;
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 150px;
+  overflow: auto;
+  font-size: 12px;
+}
+
+ol {
+  padding-left: 18px;
+  margin: 8px 0 0;
+}
+
+li {
+  margin: 6px 0;
+}
+
+@media (max-width: 920px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
