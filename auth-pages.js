@@ -8,7 +8,7 @@
 
   var LANG_KEY = 'systemtrading.ui.lang.v1';
   var EN = {
-    'brand.name': 'SystemTrading Premier',
+    'brand.name': 'STP',
     'auth.login': 'Log In',
     'auth.signup': 'Sign Up',
     'auth.login.page_title': 'Log In | SystemTrading Premier',

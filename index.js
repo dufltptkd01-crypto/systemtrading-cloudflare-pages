@@ -9,7 +9,7 @@
   var LANG_KEY = 'systemtrading.ui.lang.v1';
   var EN = {
     'meta.title': 'SystemTrading Premier',
-    'brand.name': 'SystemTrading Premier',
+    'brand.name': 'STP',
     'aria.menu_toggle': 'Open menu',
     'aria.home': 'Home',
     'nav.guide': 'How To Use',
@@ -35,7 +35,7 @@
     'hero.card.2.value': 'Max KRW 2,000,000 per order',
     'hero.card.3.label': 'Market Coverage',
     'hero.card.3.value': 'KR Stocks + Global Crypto',
-    'status.login_label': 'Login',
+    'status.login_label': 'Account',
     'status.verify_label': 'KYC',
     'status.api_label': 'API',
     'status.mode_label': 'Mode',
@@ -439,7 +439,7 @@
   }
 
   function isMobileViewport() {
-    return window.matchMedia('(max-width: 860px)').matches;
+    return window.matchMedia('(max-width: 1100px)').matches;
   }
 
   function setMenuOpen(open) {
