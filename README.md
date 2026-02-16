@@ -28,6 +28,20 @@ Cloudflare Pages에 바로 배포 가능한 자동매매 웹 콘솔입니다.
 4. Build output directory: `/`
 5. Deploy
 
+## 자동배포 (GitHub Actions)
+
+이 저장소는 `main` 브랜치에 push 될 때 Cloudflare Pages로 자동배포되도록 설정되어 있습니다.
+
+필수 GitHub 설정:
+
+- Repository Secret: `CLOUDFLARE_API_TOKEN`
+- Repository Secret: `CLOUDFLARE_ACCOUNT_ID`
+- Repository Variable: `CF_PAGES_PROJECT` (예: `systemtrading`)
+
+워크플로우 파일:
+
+- `.github/workflows/deploy-cloudflare-pages.yml`
+
 ## 로컬 실행
 
 ```powershell
