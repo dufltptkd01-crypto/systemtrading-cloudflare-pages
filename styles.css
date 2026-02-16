@@ -777,6 +777,91 @@ input::placeholder {
   max-height: 300px;
 }
 
+.admin-table-wrap {
+  border: 1px solid rgba(131, 156, 196, 0.28);
+  border-radius: 16px;
+  overflow: auto;
+  max-height: 360px;
+  background: rgba(8, 13, 22, 0.9);
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(131, 156, 196, 0.2);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.admin-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(20, 31, 47, 0.96);
+  color: #d8e6ff;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.admin-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(48, 129, 221, 0.08);
+}
+
+.admin-cell-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+}
+
+.admin-table-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 26px 14px !important;
+}
+
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 62px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(131, 156, 196, 0.32);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-pill.is-ok {
+  color: #d6ffef;
+  border-color: rgba(72, 207, 168, 0.58);
+  background: rgba(34, 124, 98, 0.35);
+}
+
+.admin-pill.is-off {
+  color: #d7e3fa;
+  border-color: rgba(125, 148, 180, 0.5);
+  background: rgba(78, 96, 124, 0.32);
+}
+
+.admin-pill.is-warn {
+  color: #fff2d1;
+  border-color: rgba(229, 168, 79, 0.58);
+  background: rgba(138, 88, 34, 0.35);
+}
+
 .result-area {
   margin-top: 14px;
   display: none;
@@ -998,6 +1083,10 @@ pre {
   .billing-grid {
     grid-template-columns: 1fr;
   }
+
+  .admin-table {
+    min-width: 860px;
+  }
 }
 
 @media (max-width: 620px) {
@@ -1038,5 +1127,15 @@ pre {
   .auth-topbar {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .admin-table {
+    min-width: 760px;
+    font-size: 12px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 9px 10px;
   }
 }

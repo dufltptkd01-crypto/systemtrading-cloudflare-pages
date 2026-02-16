@@ -408,9 +408,30 @@
           <h2 data-i18n="admin.title">운영자 회원관리</h2>
           <p class="lead" data-i18n="admin.lead">관리자 계정으로 로그인한 경우에만 회원 정보를 조회할 수 있습니다.</p>
           <div class="action-stack top-gap">
-            <button id="btnExportUsers" type="button" class="soft-btn" data-i18n="billing.export">데모 회원정보 내보내기</button>
+            <button id="btnExportUsers" type="button" class="soft-btn" data-i18n="billing.export">데모 회원정보 불러오기</button>
           </div>
-          <pre id="userExportBox" class="compact-pre top-gap" data-i18n="billing.export_default">관리 데이터를 불러오려면 버튼을 누르세요.</pre>
+          <div class="admin-table-wrap top-gap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th scope="col" data-i18n="admin.table.id">ID</th>
+                  <th scope="col" data-i18n="admin.table.email">이메일</th>
+                  <th scope="col" data-i18n="admin.table.name">이름</th>
+                  <th scope="col" data-i18n="admin.table.verified">인증</th>
+                  <th scope="col" data-i18n="admin.table.billing">이용권 상태</th>
+                  <th scope="col" data-i18n="admin.table.can_trade">자동매매</th>
+                  <th scope="col" data-i18n="admin.table.created">가입일</th>
+                  <th scope="col" data-i18n="admin.table.trial_end">무료체험 만료</th>
+                  <th scope="col" data-i18n="admin.table.sub_end">구독 만료</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody">
+                <tr>
+                  <td class="admin-table-empty" colspan="9" data-i18n="billing.export_default">관리 데이터를 불러오려면 버튼을 누르세요.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </article>
 
         <article class="glass-panel side-panel">

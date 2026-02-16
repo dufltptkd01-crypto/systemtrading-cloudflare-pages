@@ -146,8 +146,18 @@
     'billing.manage.1': 'Store profile, verification, and subscription data separately.',
     'billing.manage.2': 'Hash passwords and encrypt API credentials.',
     'billing.manage.3': 'Provide admin tools for search, renewal, and payment history.',
-    'billing.export': 'Export Demo Users',
+    'billing.export': 'Load Demo Users',
     'billing.export_default': 'Click to load member data.',
+    'admin.table.id': 'ID',
+    'admin.table.email': 'Email',
+    'admin.table.name': 'Name',
+    'admin.table.verified': 'Verified',
+    'admin.table.billing': 'Billing State',
+    'admin.table.can_trade': 'Auto-Trading',
+    'admin.table.created': 'Created At',
+    'admin.table.trial_end': 'Trial Ends',
+    'admin.table.sub_end': 'Subscription Ends',
+    'admin.table.no_users': 'No member data found.',
     'admin.title': 'Admin Member Management',
     'admin.lead': 'Only administrator accounts can view member data.',
     'admin.notice': 'Demo admin account: dufltptkd01@naver.com',
@@ -175,6 +185,8 @@
     'auth.user': 'Signed-in User',
     'mode.sim': 'Simulation',
     'mode.live': 'Live Trading',
+    'label.yes': 'Yes',
+    'label.no': 'No',
     'status.badge.logged_out': 'Logged Out',
     'status.badge.verified': 'Verified',
     'status.badge.unverified': 'Not Verified',
@@ -325,7 +337,7 @@
     btnConfirmPayment: document.getElementById('btnConfirmPayment'),
     btnRefreshBilling: document.getElementById('btnRefreshBilling'),
     btnExportUsers: document.getElementById('btnExportUsers'),
-    userExportBox: document.getElementById('userExportBox'),
+    userTableBody: document.getElementById('userTableBody'),
 
     resultBox: document.getElementById('resultBox')
   };
@@ -336,7 +348,9 @@
     checkoutId: '',
     menuOpen: false,
     lang: loadLanguage(),
-    logs: []
+    logs: [],
+    adminUsers: [],
+    adminUsersLoaded: false
   };
 
   function loadLanguage() {
@@ -356,6 +370,7 @@
     applyI18n();
     updateStatus();
     updateGuard();
+    renderUserTable();
   }
 
   function trans(key, koText) {
@@ -442,6 +457,92 @@
       return '-';
     }
     return parsed.toLocaleString(state.lang === 'en' ? 'en-US' : 'ko-KR');
+  }
+
+  function clearNode(node) {
+    if (!node) {
+      return;
+    }
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function appendTableCell(row, value, className) {
+    var cell = document.createElement('td');
+    if (className) {
+      cell.className = className;
+    }
+    cell.textContent = value;
+    row.appendChild(cell);
+    return cell;
+  }
+
+  function buildAdminPill(label, toneClass) {
+    var pill = document.createElement('span');
+    pill.className = 'admin-pill ' + toneClass;
+    pill.textContent = label;
+    return pill;
+  }
+
+  function renderAdminTableMessage(message) {
+    if (!refs.userTableBody) {
+      return;
+    }
+    clearNode(refs.userTableBody);
+    var row = document.createElement('tr');
+    var cell = document.createElement('td');
+    cell.colSpan = 9;
+    cell.className = 'admin-table-empty';
+    cell.textContent = message;
+    row.appendChild(cell);
+    refs.userTableBody.appendChild(row);
+  }
+
+  function yesNoText(value) {
+    return value ? trans('label.yes', '예') : trans('label.no', '아니오');
+  }
+
+  function renderUserTable() {
+    if (!refs.userTableBody) {
+      return;
+    }
+    if (!state.adminUsersLoaded) {
+      renderAdminTableMessage(trans('billing.export_default', '관리 데이터를 불러오려면 버튼을 누르세요.'));
+      return;
+    }
+    if (!Array.isArray(state.adminUsers) || state.adminUsers.length < 1) {
+      renderAdminTableMessage(trans('admin.table.no_users', '조회된 회원이 없습니다.'));
+      return;
+    }
+
+    clearNode(refs.userTableBody);
+    state.adminUsers.forEach(function (user) {
+      var row = document.createElement('tr');
+      var billing = (user && user.billing) || {};
+      var verified = Boolean(user && user.verified);
+      var canTrade = Boolean(billing.can_trade);
+
+      appendTableCell(row, String((user && user.id) || '-'), 'admin-cell-mono');
+      appendTableCell(row, String((user && user.email) || '-'));
+      appendTableCell(row, String((user && user.name) || '-'));
+
+      var verifiedCell = document.createElement('td');
+      verifiedCell.appendChild(buildAdminPill(yesNoText(verified), verified ? 'is-ok' : 'is-off'));
+      row.appendChild(verifiedCell);
+
+      appendTableCell(row, String(billing.state || '-'));
+
+      var tradingCell = document.createElement('td');
+      tradingCell.appendChild(buildAdminPill(yesNoText(canTrade), canTrade ? 'is-ok' : 'is-warn'));
+      row.appendChild(tradingCell);
+
+      appendTableCell(row, formatDateText(user && user.created_at));
+      appendTableCell(row, formatDateText(billing.trial_end_at || (user && user.trial_end_at)));
+      appendTableCell(row, formatDateText(billing.subscription_end_at || (user && user.subscription_end_at)));
+
+      refs.userTableBody.appendChild(row);
+    });
   }
 
   function modeLabel(isDryRun) {
@@ -1054,20 +1155,23 @@
     }
     if (!isAdminUser(session.user)) {
       addLog(trans('log.admin_required', '관리자 계정 필요'), trans('admin.access_denied', '관리자 전용 메뉴입니다.'));
-      if (refs.userExportBox) {
-        refs.userExportBox.textContent = trans('admin.access_denied', '관리자 전용 메뉴입니다.');
-      }
+      state.adminUsersLoaded = false;
+      state.adminUsers = [];
+      renderAdminTableMessage(trans('admin.access_denied', '관리자 전용 메뉴입니다.'));
       goToTab('home');
       return;
     }
     try {
       var data = await core.callApi('adminUsers', 'GET');
-      if (refs.userExportBox) {
-        refs.userExportBox.textContent = JSON.stringify(data.users || [], null, 2);
-      }
-      addLog(trans('log.users_ok', '데모 회원정보 조회'), { count: (data.users || []).length });
+      state.adminUsers = Array.isArray(data.users) ? data.users : [];
+      state.adminUsersLoaded = true;
+      renderUserTable();
+      addLog(trans('log.users_ok', '데모 회원정보 불러오기 완료'), { count: state.adminUsers.length });
     } catch (err) {
       addLog(trans('log.users_fail', '회원정보 조회 실패'), String(err.message || err));
+      state.adminUsersLoaded = false;
+      state.adminUsers = [];
+      renderAdminTableMessage(String(err.message || err));
     }
   }
 
@@ -1075,9 +1179,9 @@
     core.clearSession();
     state.apiChecked = false;
     state.checkoutId = '';
-    if (refs.userExportBox) {
-      refs.userExportBox.textContent = trans('billing.export_default', '관리 데이터를 불러오려면 버튼을 누르세요.');
-    }
+    state.adminUsersLoaded = false;
+    state.adminUsers = [];
+    renderUserTable();
     addLog(trans('log.logout.title', '로그아웃 완료'), trans('log.logout.body', '세션이 종료되었습니다.'));
     updateStatus();
     updateGuard();
@@ -1276,6 +1380,7 @@
   function init() {
     initApiBase();
     applyI18n();
+    renderUserTable();
     applySettingsToForm(currentSettings());
     bindEvents();
     setMenuOpen(false);
