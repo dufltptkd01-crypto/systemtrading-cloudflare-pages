@@ -1,9 +1,9 @@
 ﻿(function () {
   'use strict';
 
-  var SETTINGS_KEY = 'systemtrading.settings.v5';
-  var SESSION_KEY = 'systemtrading.session.v5';
-  var MOCK_KEY = 'systemtrading.mockdb.v2';
+  var SETTINGS_KEY = 'systemtrading.settings.v6';
+  var SESSION_KEY = 'systemtrading.session.v6';
+  var MOCK_KEY = 'systemtrading.mockdb.v3';
 
   function defaults() {
     return {
@@ -52,6 +52,69 @@
     return String(raw || '').replace(/[^\d-]/g, '').replace(/-{2,}/g, '-').slice(0, 20);
   }
 
+  function parseIsoMs(isoText) {
+    if (!isoText) {
+      return 0;
+    }
+    var ms = Date.parse(String(isoText));
+    return Number.isFinite(ms) ? ms : 0;
+  }
+
+  function msToIso(ms) {
+    return new Date(ms).toISOString();
+  }
+
+  function ceilDayDiff(targetMs, nowMs) {
+    var diff = targetMs - nowMs;
+    if (diff <= 0) {
+      return 0;
+    }
+    return Math.ceil(diff / (24 * 60 * 60 * 1000));
+  }
+
+  function computeBilling(user) {
+    var now = Date.now();
+
+    var createdMs = parseIsoMs(user.created_at) || now;
+    var trialStartMs = parseIsoMs(user.trial_start_at) || createdMs;
+    var trialEndMs = parseIsoMs(user.trial_end_at);
+    if (!trialEndMs) {
+      trialEndMs = trialStartMs + (7 * 24 * 60 * 60 * 1000);
+    }
+
+    var subscriptionEndMs = parseIsoMs(user.subscription_end_at);
+    var trialActive = now <= trialEndMs;
+    var subscriptionActive = subscriptionEndMs > now;
+    var canTrade = trialActive || subscriptionActive;
+
+    var state = '결제 필요';
+    if (subscriptionActive) {
+      state = '구독 활성';
+    } else if (trialActive) {
+      state = '무료체험 진행중';
+    } else {
+      state = '무료체험 만료';
+    }
+
+    var remainingDays = 0;
+    if (subscriptionActive) {
+      remainingDays = ceilDayDiff(subscriptionEndMs, now);
+    } else if (trialActive) {
+      remainingDays = ceilDayDiff(trialEndMs, now);
+    }
+
+    return {
+      state: state,
+      can_trade: canTrade,
+      trial_active: trialActive,
+      trial_start_at: msToIso(trialStartMs),
+      trial_end_at: msToIso(trialEndMs),
+      subscription_active: subscriptionActive,
+      subscription_end_at: subscriptionEndMs ? msToIso(subscriptionEndMs) : '',
+      remaining_days: remainingDays
+    };
+  }
+
   function loadSettings() {
     try {
       var parsed = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
@@ -84,10 +147,11 @@
       return {
         token: String(parsed.token || ''),
         user: parsed.user || null,
-        verified: Boolean(parsed.verified)
+        verified: Boolean(parsed.verified),
+        billing: parsed.billing || null
       };
     } catch (_err) {
-      return { token: '', user: null, verified: false };
+      return { token: '', user: null, verified: false, billing: null };
     }
   }
 
@@ -95,7 +159,8 @@
     var payload = {
       token: String((session && session.token) || ''),
       user: (session && session.user) || null,
-      verified: Boolean(session && session.verified)
+      verified: Boolean(session && session.verified),
+      billing: (session && session.billing) || null
     };
     localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
     return payload;
@@ -103,7 +168,7 @@
 
   function clearSession() {
     localStorage.removeItem(SESSION_KEY);
-    return { token: '', user: null, verified: false };
+    return { token: '', user: null, verified: false, billing: null };
   }
 
   function readMockDb() {
@@ -124,9 +189,12 @@
       if (!parsed.runtime || typeof parsed.runtime !== 'object') {
         parsed.runtime = {};
       }
+      if (!parsed.checkout || typeof parsed.checkout !== 'object') {
+        parsed.checkout = {};
+      }
       return parsed;
     } catch (_err) {
-      return { users: [], tokens: {}, pending: {}, reports: {}, runtime: {} };
+      return { users: [], tokens: {}, pending: {}, reports: {}, runtime: {}, checkout: {} };
     }
   }
 
@@ -154,6 +222,17 @@
     return digits.slice(0, 3) + '****' + digits.slice(-4);
   }
 
+  function userPublic(user) {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      verified: user.verified,
+      created_at: user.created_at
+    };
+  }
+
   function mockRequest(endpointName, method, body, sessionToken) {
     var db = readMockDb();
 
@@ -177,6 +256,7 @@
         throw new Error('이미 가입된 이메일입니다.');
       }
 
+      var nowIso = new Date().toISOString();
       var user = {
         id: Date.now(),
         email: email,
@@ -184,22 +264,21 @@
         name: name,
         phone: phone,
         verified: false,
-        created_at: new Date().toISOString()
+        created_at: nowIso,
+        trial_start_at: nowIso,
+        trial_end_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        subscription_end_at: ''
       };
       db.users.push(user);
+
       var token = issueToken(user.id);
       db.tokens[token] = user.id;
       writeMockDb(db);
 
       return {
         access_token: token,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          phone: user.phone,
-          verified: user.verified
-        }
+        user: userPublic(user),
+        billing: computeBilling(user)
       };
     }
 
@@ -217,13 +296,8 @@
       writeMockDb(db);
       return {
         access_token: loginToken,
-        user: {
-          id: found.id,
-          email: found.email,
-          name: found.name,
-          phone: found.phone,
-          verified: found.verified
-        }
+        user: userPublic(found),
+        billing: computeBilling(found)
       };
     }
 
@@ -233,13 +307,8 @@
         throw new Error('인증이 필요합니다.');
       }
       return {
-        user: {
-          id: meUser.id,
-          email: meUser.email,
-          name: meUser.name,
-          phone: meUser.phone,
-          verified: meUser.verified
-        }
+        user: userPublic(meUser),
+        billing: computeBilling(meUser)
       };
     }
 
@@ -285,13 +354,86 @@
       writeMockDb(db);
       return {
         verified: true,
-        user: {
-          id: cUser.id,
-          email: cUser.email,
-          name: cUser.name,
-          phone: cUser.phone,
-          verified: true
-        }
+        user: userPublic(cUser),
+        billing: computeBilling(cUser)
+      };
+    }
+
+    if (endpointName === 'billingStatus' && method === 'GET') {
+      var bUser = sessionUserByToken(db, sessionToken);
+      if (!bUser) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      return {
+        ok: true,
+        mode: 'mock',
+        billing: computeBilling(bUser)
+      };
+    }
+
+    if (endpointName === 'billingCheckout' && method === 'POST') {
+      var bcUser = sessionUserByToken(db, sessionToken);
+      if (!bcUser) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      var checkoutId = 'chk_' + bcUser.id + '_' + Date.now();
+      db.checkout[bcUser.id] = {
+        checkout_id: checkoutId,
+        plan: String((body && body.plan) || 'monthly'),
+        amount_krw: 39000,
+        created_at: new Date().toISOString(),
+        status: 'pending'
+      };
+      writeMockDb(db);
+      return {
+        ok: true,
+        mode: 'mock',
+        checkout: db.checkout[bcUser.id],
+        message: '데모 결제창이 생성되었습니다. 결제 완료 처리 버튼을 눌러 다음 단계로 진행하세요.'
+      };
+    }
+
+    if (endpointName === 'billingConfirm' && method === 'POST') {
+      var cfUser = sessionUserByToken(db, sessionToken);
+      if (!cfUser) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      var now = Date.now();
+      var currentEnd = parseIsoMs(cfUser.subscription_end_at);
+      var baseMs = currentEnd > now ? currentEnd : now;
+      var newEnd = baseMs + 30 * 24 * 60 * 60 * 1000;
+      cfUser.subscription_end_at = msToIso(newEnd);
+
+      if (db.checkout[cfUser.id]) {
+        db.checkout[cfUser.id].status = 'paid';
+        db.checkout[cfUser.id].paid_at = new Date().toISOString();
+      }
+
+      writeMockDb(db);
+      return {
+        ok: true,
+        mode: 'mock',
+        billing: computeBilling(cfUser),
+        message: '결제가 완료되어 구독권이 활성화되었습니다.'
+      };
+    }
+
+    if (endpointName === 'adminUsers' && method === 'GET') {
+      return {
+        ok: true,
+        mode: 'mock',
+        users: db.users.map(function (u) {
+          return {
+            id: u.id,
+            email: u.email,
+            name: u.name,
+            verified: u.verified,
+            created_at: u.created_at,
+            trial_end_at: u.trial_end_at,
+            subscription_end_at: u.subscription_end_at,
+            billing: computeBilling(u)
+          };
+        })
       };
     }
 
@@ -302,6 +444,11 @@
       }
       if (!sUser.verified) {
         throw new Error('본인인증 완료 후 시작할 수 있습니다.');
+      }
+
+      var billing = computeBilling(sUser);
+      if (!billing.can_trade) {
+        throw new Error('무료체험 7일이 종료되었습니다. 자동매매를 계속하려면 구독권 결제가 필요합니다.');
       }
 
       db.runtime[sUser.id] = {
@@ -332,7 +479,8 @@
         started: true,
         market: body.market_type,
         exchange: body.exchange,
-        symbol: body.symbol
+        symbol: body.symbol,
+        billing: billing
       };
     }
 
@@ -400,6 +548,10 @@
         me: '/api/auth/me',
         verifyStart: '/api/auth/verify/start',
         verifyComplete: '/api/auth/verify/complete',
+        billingStatus: '/api/billing/status',
+        billingCheckout: '/api/billing/checkout',
+        billingConfirm: '/api/billing/confirm',
+        adminUsers: '/api/admin/users',
         start: '/api/trading/start',
         stop: '/api/trading/stop',
         analyze: '/api/trading/analyze',

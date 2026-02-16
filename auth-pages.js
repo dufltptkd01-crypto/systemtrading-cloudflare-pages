@@ -76,7 +76,12 @@
 
       var token = String(data.access_token || '');
       var user = data.user || null;
-      core.saveSession({ token: token, user: user, verified: Boolean(user && user.verified) });
+      core.saveSession({
+        token: token,
+        user: user,
+        verified: Boolean(user && user.verified),
+        billing: data.billing || null
+      });
       log('회원가입 완료', {
         email: user ? user.email : email,
         verified: user ? user.verified : false,
@@ -106,7 +111,12 @@
 
       var token = String(data.access_token || '');
       var user = data.user || null;
-      core.saveSession({ token: token, user: user, verified: Boolean(user && user.verified) });
+      core.saveSession({
+        token: token,
+        user: user,
+        verified: Boolean(user && user.verified),
+        billing: data.billing || null
+      });
       log('로그인 완료', {
         email: user ? user.email : email,
         verified: user ? user.verified : false,

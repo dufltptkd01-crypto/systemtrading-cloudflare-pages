@@ -17,9 +17,13 @@
 
   <header class="hero-nav wrap">
     <nav class="left-nav" aria-label="서비스 메뉴">
-      <button class="nav-pill active" type="button" data-tab="intro">시스템 소개</button>
+      <button class="nav-pill nav-home active" type="button" data-tab="home" aria-label="메인 홈">
+        <span class="home-icon" aria-hidden="true">⌂</span>
+      </button>
+      <button class="nav-pill" type="button" data-tab="intro">시스템 소개</button>
       <button class="nav-pill" type="button" data-tab="stock">주식 투자</button>
       <button class="nav-pill" type="button" data-tab="coin">코인 투자</button>
+      <button class="nav-pill" type="button" data-tab="billing">이용권/결제</button>
     </nav>
     <div class="right-nav">
       <a class="nav-pill link" href="./signup.html">회원가입</a>
@@ -28,55 +32,74 @@
   </header>
 
   <main class="wrap home-main">
-    <section class="hero-copy">
-      <p class="hero-mini">신개념 AI 투자</p>
-      <h1>시간은 2배 절약,<br />수익은 2배 확장</h1>
-      <p class="hero-sub">뉴스, 기술지표, 차트 패턴, 거래 기록 학습을 통합해 자동매매의 전 과정을 정교하게 운영합니다.</p>
-      <div class="hero-actions">
-        <button id="btnTrial" type="button" class="cta-main">7일 무료체험</button>
-      </div>
+    <section id="tab-home" class="tab-panel active">
+      <section class="hero-copy">
+        <p class="hero-mini">신개념 AI 투자</p>
+        <h1>
+          <span class="highlight-1">시간은 절반으로</span>,<br />
+          <span class="highlight-2">수익 기회는 더 크게</span>
+        </h1>
+        <p class="hero-sub">뉴스·기술지표·차트·매매일지 피드백을 연결한 자동매매 엔진으로 실행 품질을 끌어올립니다.</p>
+        <div class="hero-actions">
+          <button id="btnTrial" type="button" class="cta-main">7일 무료체험 시작</button>
+          <button id="btnGotoBilling" type="button" class="soft-btn">이용권/결제 보기</button>
+        </div>
+      </section>
+
+      <section class="status-row">
+        <article class="status-card">
+          <span>로그인 상태</span>
+          <strong id="authStateBadge">미로그인</strong>
+        </article>
+        <article class="status-card">
+          <span>본인인증</span>
+          <strong id="verifyStateBadge">미인증</strong>
+        </article>
+        <article class="status-card">
+          <span>API 연결</span>
+          <strong id="apiStateBadge">Demo</strong>
+        </article>
+        <article class="status-card">
+          <span>실행 모드</span>
+          <strong id="activeModeBadge">모의투자</strong>
+        </article>
+        <article class="status-card">
+          <span>이용권 상태</span>
+          <strong id="subscriptionStateBadge">확인 필요</strong>
+        </article>
+      </section>
+
+      <section class="home-shortcuts glass-panel">
+        <h2>빠른 이동</h2>
+        <div class="shortcut-row">
+          <button id="btnGotoStock" type="button" class="soft-btn">주식 투자 설정</button>
+          <button id="btnGotoCoin" type="button" class="soft-btn">코인 투자 설정</button>
+          <button id="btnGotoIntro" type="button" class="soft-btn">시스템 소개 보기</button>
+        </div>
+      </section>
     </section>
 
-    <section class="status-row">
-      <article class="status-card">
-        <span>로그인 상태</span>
-        <strong id="authStateBadge">미로그인</strong>
-      </article>
-      <article class="status-card">
-        <span>본인인증</span>
-        <strong id="verifyStateBadge">미인증</strong>
-      </article>
-      <article class="status-card">
-        <span>API 연결</span>
-        <strong id="apiStateBadge">Demo</strong>
-      </article>
-      <article class="status-card">
-        <span>현재 모드</span>
-        <strong id="activeModeBadge">DRY RUN</strong>
-      </article>
-    </section>
-
-    <section id="tab-intro" class="tab-panel active">
+    <section id="tab-intro" class="tab-panel">
       <div class="intro-grid">
         <article class="glass-panel">
           <h2>시스템 소개</h2>
-          <p class="lead">이 시스템은 단순 신호 매매가 아니라, 선별-집행-회고-개선까지 하나의 사이클로 운영됩니다.</p>
+          <p class="lead">이 시스템은 선별-집행-회고-개선 루프를 통해 자동매매 품질을 지속적으로 개선합니다.</p>
           <ul class="flow-list">
             <li>
               <h3>1. 데이터 수집</h3>
-              <p>각종 뉴스, 키움 뉴스, 기술 지표, 가격/거래량 패턴을 동시에 반영합니다.</p>
+              <p>각종 뉴스, 키움 뉴스, 기술 지표, 거래량/가격 패턴을 함께 평가합니다.</p>
             </li>
             <li>
               <h3>2. 후보 압축</h3>
-              <p>상승 확률 상위 10개를 먼저 추리고, 최종 1개 종목/심볼만 선택해 집중 진입합니다.</p>
+              <p>상승 가능성 상위 10개를 추린 뒤 최종 1개 종목/심볼로 집중 진입합니다.</p>
             </li>
             <li>
               <h3>3. 실행 및 알림</h3>
-              <p>매수/매도 체결은 Telegram으로 즉시 전달되고, 리스크 규칙(예: DRY RUN, 손절/익절)이 함께 적용됩니다.</p>
+              <p>체결 알림은 Telegram으로 즉시 전달되며, 손절/익절 규칙과 함께 동작합니다.</p>
             </li>
             <li>
               <h3>4. 회고 및 개선</h3>
-              <p>매매 일지를 자동 기록한 뒤 승률/손익/드로우다운을 분석하여 다음 세션 파라미터를 개선합니다.</p>
+              <p>매매 일지를 분석해 승률, 평균 손익, 손실 패턴을 파악하고 다음 세션에 반영합니다.</p>
             </li>
           </ul>
         </article>
@@ -87,28 +110,29 @@
             <li>
               <span>01</span>
               <div>
-                <h3>체결 로그 누적</h3>
-                <p>진입 사유, 체결가, 손익, 시장상황을 세션별로 축적합니다.</p>
+                <h3>체결 데이터 축적</h3>
+                <p>진입 사유, 체결 단가, 거래량, 손익 결과를 자동 기록합니다.</p>
               </div>
             </li>
             <li>
               <span>02</span>
               <div>
-                <h3>성과 분석 실행</h3>
-                <p>승률, 평균 수익률, 최대 손실 구간을 자동 진단합니다.</p>
+                <h3>성과 분석</h3>
+                <p>승률/손익률/변동성 대응력을 요약해 개선 포인트를 추출합니다.</p>
               </div>
             </li>
             <li>
               <span>03</span>
               <div>
-                <h3>개선 포인트 반영</h3>
-                <p>진입 필터, 종목 선별 가중치, 리스크 파라미터를 재조정합니다.</p>
+                <h3>전략 개선 반영</h3>
+                <p>선정 가중치, 진입 필터, 리스크 제한을 업데이트해 다음 거래에 적용합니다.</p>
               </div>
             </li>
           </ol>
           <div class="intro-actions">
             <button id="btnMoveStock" type="button" class="soft-btn">주식 투자 설정</button>
             <button id="btnMoveCoin" type="button" class="soft-btn">코인 투자 설정</button>
+            <button id="btnMoveBilling" type="button" class="soft-btn">이용권/결제 탭</button>
           </div>
         </article>
       </div>
@@ -142,9 +166,10 @@
 
             <label for="stockDryRun">실행 모드</label>
             <select id="stockDryRun">
-              <option value="true">DRY RUN</option>
-              <option value="false">LIVE</option>
+              <option value="true">모의투자 (실제 주문 없음)</option>
+              <option value="false">실거래 (실제 주문 실행)</option>
             </select>
+            <p class="help-inline full">모의투자는 주문 테스트용, 실거래는 실제 계좌에 주문이 실행됩니다.</p>
 
             <label for="kiwoomApiKey">Kiwoom API Key</label>
             <input id="kiwoomApiKey" type="text" placeholder="Kiwoom API Key" />
@@ -167,7 +192,7 @@
 
         <article class="glass-panel side-panel">
           <h2>보안/실행 상태</h2>
-          <p class="side-note">회원가입/로그인은 상단 버튼에서 별도 페이지로 진행하세요.</p>
+          <p class="side-note">회원가입/로그인은 별도 페이지에서 진행하며, 본인인증 완료 후 자동매매가 가능합니다.</p>
 
           <div class="action-stack">
             <button id="btnCheckApi" type="button" class="soft-btn">API 연결 확인</button>
@@ -181,7 +206,7 @@
             <button type="submit" class="soft-btn">코드 제출</button>
           </form>
 
-          <p id="verifyHint" class="side-note">실서비스 연동 전에는 데모 모드로 인증 흐름을 테스트할 수 있습니다.</p>
+          <p id="verifyHint" class="side-note">실서비스 연동 전에는 데모 코드 방식으로 흐름을 테스트할 수 있습니다.</p>
         </article>
       </div>
     </section>
@@ -211,9 +236,10 @@
 
             <label for="coinDryRun">실행 모드</label>
             <select id="coinDryRun">
-              <option value="true">DRY RUN</option>
-              <option value="false">LIVE</option>
+              <option value="true">모의투자 (실제 주문 없음)</option>
+              <option value="false">실거래 (실제 주문 실행)</option>
             </select>
+            <p class="help-inline full">모의투자는 시뮬레이션, 실거래는 실제 거래소 주문입니다.</p>
 
             <label for="binanceApiKey">Binance API Key</label>
             <input id="binanceApiKey" type="text" placeholder="Binance API Key" />
@@ -241,7 +267,55 @@
             <button id="btnAnalyze" type="button" class="soft-btn">매매일지 분석 실행</button>
             <button id="btnLoadReport" type="button" class="soft-btn">최근 분석 리포트 조회</button>
           </div>
-          <p id="guardText" class="side-note">실행 전: 로그인 + 본인인증 + 종목/심볼 설정 + API 확인이 필요합니다.</p>
+          <p id="guardText" class="side-note">실행 전: 로그인 + 본인인증 + 이용권 + API 확인이 필요합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="tab-billing" class="tab-panel">
+      <div class="setup-grid">
+        <article class="glass-panel">
+          <h2>이용권/결제</h2>
+          <p class="lead">회원가입 후 7일은 무료체험으로 자동매매가 가능하며, 이후에는 구독권 결제가 필요합니다.</p>
+
+          <div class="billing-grid">
+            <div class="billing-item">
+              <span>이용 상태</span>
+              <strong id="billingStateText">확인 필요</strong>
+            </div>
+            <div class="billing-item">
+              <span>무료체험 종료일</span>
+              <strong id="trialEndText">-</strong>
+            </div>
+            <div class="billing-item">
+              <span>구독 만료일</span>
+              <strong id="subscriptionEndText">-</strong>
+            </div>
+            <div class="billing-item">
+              <span>남은 기간</span>
+              <strong id="billingRemainText">-</strong>
+            </div>
+          </div>
+
+          <div class="action-stack top-gap">
+            <button id="btnCheckout" type="button" class="soft-btn accent">월 구독 결제 시작</button>
+            <button id="btnConfirmPayment" type="button" class="soft-btn">결제 완료 처리 (데모)</button>
+            <button id="btnRefreshBilling" type="button" class="soft-btn">이용권 상태 새로고침</button>
+          </div>
+
+          <p class="side-note">실서비스에서는 PG사(예: 토스페이먼츠/PortOne/Stripe) Webhook 검증 후 구독 상태를 서버 DB에 반영하세요.</p>
+        </article>
+
+        <article class="glass-panel side-panel">
+          <h2>회원정보 보관/관리</h2>
+          <ul class="guide-list">
+            <li>회원 기본정보(이메일, 가입일, 인증상태), 이용권 상태(체험 만료일, 구독 만료일)를 DB에 분리 저장하세요.</li>
+            <li>비밀번호는 해시 저장(예: Argon2/PBKDF2), API 키는 암호화 저장(AES-GCM + KMS)하세요.</li>
+            <li>운영자용 관리 화면에서 회원검색, 이용권 갱신, 결제내역 조회, 계정 상태 변경 기능을 제공하세요.</li>
+          </ul>
+
+          <button id="btnExportUsers" type="button" class="soft-btn">데모 회원정보 내보내기</button>
+          <pre id="userExportBox" class="compact-pre">관리 데이터를 불러오려면 버튼을 누르세요.</pre>
         </article>
       </div>
     </section>

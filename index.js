@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   'use strict';
 
   var core = window.PortalCore;
@@ -8,18 +8,28 @@
 
   var refs = {
     navPills: Array.from(document.querySelectorAll('.nav-pill[data-tab]')),
-    tabIntro: document.getElementById('tab-intro'),
-    tabStock: document.getElementById('tab-stock'),
-    tabCoin: document.getElementById('tab-coin'),
+    tabs: {
+      home: document.getElementById('tab-home'),
+      intro: document.getElementById('tab-intro'),
+      stock: document.getElementById('tab-stock'),
+      coin: document.getElementById('tab-coin'),
+      billing: document.getElementById('tab-billing')
+    },
 
     btnTrial: document.getElementById('btnTrial'),
+    btnGotoBilling: document.getElementById('btnGotoBilling'),
+    btnGotoStock: document.getElementById('btnGotoStock'),
+    btnGotoCoin: document.getElementById('btnGotoCoin'),
+    btnGotoIntro: document.getElementById('btnGotoIntro'),
     btnMoveStock: document.getElementById('btnMoveStock'),
     btnMoveCoin: document.getElementById('btnMoveCoin'),
+    btnMoveBilling: document.getElementById('btnMoveBilling'),
 
     authStateBadge: document.getElementById('authStateBadge'),
     verifyStateBadge: document.getElementById('verifyStateBadge'),
     apiStateBadge: document.getElementById('apiStateBadge'),
     activeModeBadge: document.getElementById('activeModeBadge'),
+    subscriptionStateBadge: document.getElementById('subscriptionStateBadge'),
 
     apiBase: document.getElementById('apiBase'),
     apiToken: document.getElementById('apiToken'),
@@ -45,9 +55,7 @@
 
     stockForm: document.getElementById('stockForm'),
     coinForm: document.getElementById('coinForm'),
-    btnSaveStock: document.getElementById('btnSaveStock'),
     btnStartStock: document.getElementById('btnStartStock'),
-    btnSaveCoin: document.getElementById('btnSaveCoin'),
     btnStartCoin: document.getElementById('btnStartCoin'),
 
     btnCheckApi: document.getElementById('btnCheckApi'),
@@ -61,31 +69,56 @@
     btnAnalyze: document.getElementById('btnAnalyze'),
     btnLoadReport: document.getElementById('btnLoadReport'),
     guardText: document.getElementById('guardText'),
+
+    billingStateText: document.getElementById('billingStateText'),
+    trialEndText: document.getElementById('trialEndText'),
+    subscriptionEndText: document.getElementById('subscriptionEndText'),
+    billingRemainText: document.getElementById('billingRemainText'),
+    btnCheckout: document.getElementById('btnCheckout'),
+    btnConfirmPayment: document.getElementById('btnConfirmPayment'),
+    btnRefreshBilling: document.getElementById('btnRefreshBilling'),
+    btnExportUsers: document.getElementById('btnExportUsers'),
+    userExportBox: document.getElementById('userExportBox'),
+
     resultBox: document.getElementById('resultBox')
   };
 
   var state = {
-    activeTab: 'intro',
+    activeTab: 'home',
     apiChecked: false,
+    checkoutId: '',
     logs: []
   };
 
   function addLog(title, payload) {
-    var line = '[' + new Date().toLocaleString('ko-KR') + '] ' + title + '\n' + (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2));
+    var body = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+    var line = '[' + new Date().toLocaleString('ko-KR') + '] ' + title + '\n' + body;
     state.logs.unshift(line);
-    state.logs = state.logs.slice(0, 18);
-    refs.resultBox.textContent = state.logs.join('\n\n');
+    state.logs = state.logs.slice(0, 20);
+    if (refs.resultBox) {
+      refs.resultBox.textContent = state.logs.join('\n\n');
+    }
   }
 
-  function setActiveTab(tab) {
-    state.activeTab = tab;
-    refs.navPills.forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.tab === tab);
-    });
-    refs.tabIntro.classList.toggle('active', tab === 'intro');
-    refs.tabStock.classList.toggle('active', tab === 'stock');
-    refs.tabCoin.classList.toggle('active', tab === 'coin');
-    updateGuard();
+  function setText(node, text) {
+    if (node) {
+      node.textContent = text;
+    }
+  }
+
+  function formatDateText(isoText) {
+    if (!isoText) {
+      return '-';
+    }
+    var parsed = new Date(isoText);
+    if (!Number.isFinite(parsed.getTime())) {
+      return '-';
+    }
+    return parsed.toLocaleString('ko-KR');
+  }
+
+  function modeLabel(isDryRun) {
+    return isDryRun ? '모의투자' : '실거래';
   }
 
   function currentSession() {
@@ -94,6 +127,16 @@
 
   function currentSettings() {
     return core.loadSettings();
+  }
+
+  function saveSession(next) {
+    var prev = currentSession();
+    return core.saveSession({
+      token: next && next.token !== undefined ? next.token : prev.token,
+      user: next && next.user !== undefined ? next.user : prev.user,
+      verified: next && next.verified !== undefined ? next.verified : prev.verified,
+      billing: next && next.billing !== undefined ? next.billing : prev.billing
+    });
   }
 
   function applySettingsToForm(settings) {
@@ -148,30 +191,91 @@
     });
   }
 
-  function updateStatus() {
-    var session = currentSession();
-    var settings = currentSettings();
-
-    refs.authStateBadge.textContent = session.user ? (session.user.email || session.user.name || '로그인됨') : '미로그인';
-    refs.verifyStateBadge.textContent = session.verified ? '인증완료' : '미인증';
-
-    if (!settings.apiBase) {
-      refs.apiStateBadge.textContent = 'Demo';
-    } else {
-      refs.apiStateBadge.textContent = state.apiChecked ? 'Live 연결확인' : 'Live 미확인';
+  function renderBilling(session, billing) {
+    if (!session.user) {
+      setText(refs.billingStateText, '로그인 필요');
+      setText(refs.trialEndText, '-');
+      setText(refs.subscriptionEndText, '-');
+      setText(refs.billingRemainText, '-');
+      setText(refs.subscriptionStateBadge, '로그인 필요');
+      return;
     }
 
-    if (state.activeTab === 'coin') {
-      refs.activeModeBadge.textContent = settings.coinDryRun ? 'DRY RUN' : 'LIVE';
+    if (!billing) {
+      setText(refs.billingStateText, '확인 필요');
+      setText(refs.trialEndText, '-');
+      setText(refs.subscriptionEndText, '-');
+      setText(refs.billingRemainText, '-');
+      setText(refs.subscriptionStateBadge, '확인 필요');
+      return;
+    }
+
+    setText(refs.billingStateText, billing.state || '확인 필요');
+    setText(refs.trialEndText, formatDateText(billing.trial_end_at));
+    setText(refs.subscriptionEndText, formatDateText(billing.subscription_end_at));
+    setText(
+      refs.billingRemainText,
+      Number.isFinite(Number(billing.remaining_days)) ? String(billing.remaining_days) + '일' : '-'
+    );
+
+    if (billing.can_trade) {
+      setText(refs.subscriptionStateBadge, billing.state || '자동매매 가능');
     } else {
-      refs.activeModeBadge.textContent = settings.stockDryRun ? 'DRY RUN' : 'LIVE';
+      setText(refs.subscriptionStateBadge, '자동매매 불가');
     }
   }
 
-  function updateGuard() {
+  function updateStatus() {
     var session = currentSession();
     var settings = currentSettings();
+    var billing = session.billing || null;
+
+    setText(refs.authStateBadge, session.user ? (session.user.email || session.user.name || '로그인됨') : '미로그인');
+    setText(refs.verifyStateBadge, session.verified ? '인증완료' : '미인증');
+
+    if (!settings.apiBase) {
+      setText(refs.apiStateBadge, 'Demo');
+    } else {
+      setText(refs.apiStateBadge, state.apiChecked ? 'Live 연결확인' : 'Live 미확인');
+    }
+
+    if (state.activeTab === 'coin') {
+      setText(refs.activeModeBadge, modeLabel(settings.coinDryRun));
+    } else {
+      setText(refs.activeModeBadge, modeLabel(settings.stockDryRun));
+    }
+
+    renderBilling(session, billing);
+  }
+
+  function tabKeys() {
+    return ['home', 'intro', 'stock', 'coin', 'billing'];
+  }
+
+  function setActiveTab(tab) {
+    var key = tabKeys().indexOf(tab) >= 0 ? tab : 'home';
+    state.activeTab = key;
+
+    refs.navPills.forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.tab === key);
+    });
+
+    tabKeys().forEach(function (name) {
+      var panel = refs.tabs[name];
+      if (panel) {
+        panel.classList.toggle('active', name === key);
+      }
+    });
+
+    updateStatus();
+    updateGuard();
+  }
+
+  function buildChecks(targetMarket) {
     var checks = [];
+    var session = currentSession();
+    var settings = currentSettings();
+    var billing = session.billing || null;
 
     if (!session.user) {
       checks.push('로그인 필요');
@@ -179,36 +283,53 @@
     if (!session.verified) {
       checks.push('본인인증 필요');
     }
+    if (session.user && (!billing || !billing.can_trade)) {
+      checks.push('이용권 필요');
+    }
     if (settings.apiBase && !state.apiChecked) {
       checks.push('API 연결 확인 필요');
     }
 
-    if (state.activeTab === 'stock') {
+    if (targetMarket === 'stock') {
       if (!settings.accountNo) {
         checks.push('계좌번호 필요');
       }
-      if (!settings.stockSymbol) {
+      if (!settings.stockAutoSelect && !settings.stockSymbol) {
         checks.push('주식 종목코드 필요');
       }
     }
 
-    if (state.activeTab === 'coin') {
-      if (!settings.coinSymbol) {
+    if (targetMarket === 'coin') {
+      if (!settings.coinAutoSelect && !settings.coinSymbol) {
         checks.push('코인 심볼 필요');
       }
     }
 
-    refs.guardText.textContent = checks.length
-      ? ('실행 전 확인: ' + checks.join(' / '))
-      : '실행 준비 완료. 자동매매를 시작할 수 있습니다.';
+    return checks;
+  }
 
-    refs.btnStartStock.disabled = !(checks.length === 0 && state.activeTab === 'stock');
-    refs.btnStartCoin.disabled = !(checks.length === 0 && state.activeTab === 'coin');
+  function updateGuard() {
+    var stockChecks = buildChecks('stock');
+    var coinChecks = buildChecks('coin');
+    var visibleChecks = state.activeTab === 'coin' ? coinChecks : stockChecks;
+
+    if (refs.guardText) {
+      refs.guardText.textContent = visibleChecks.length
+        ? ('실행 전 확인: ' + visibleChecks.join(' / '))
+        : '실행 준비 완료. 자동매매를 시작할 수 있습니다.';
+    }
+
+    if (refs.btnStartStock) {
+      refs.btnStartStock.disabled = stockChecks.length > 0;
+    }
+    if (refs.btnStartCoin) {
+      refs.btnStartCoin.disabled = coinChecks.length > 0;
+    }
 
     updateStatus();
   }
 
-  async function refreshMe() {
+  async function refreshMe(silent) {
     var session = currentSession();
     if (!session.token) {
       updateStatus();
@@ -218,11 +339,41 @@
     try {
       var data = await core.callApi('me', 'GET');
       var user = data.user || null;
-      if (user) {
-        core.saveSession({ token: session.token, user: user, verified: Boolean(user.verified) });
-      }
-    } catch (_err) {
+      saveSession({
+        token: session.token,
+        user: user,
+        verified: Boolean(user && user.verified),
+        billing: data.billing || session.billing || null
+      });
+    } catch (err) {
       core.clearSession();
+      state.apiChecked = false;
+      if (!silent) {
+        addLog('세션 갱신 실패', String(err.message || err));
+      }
+    }
+    updateStatus();
+    updateGuard();
+  }
+
+  async function refreshBillingStatus(silent) {
+    var session = currentSession();
+    if (!session.token) {
+      updateStatus();
+      updateGuard();
+      return;
+    }
+    try {
+      var data = await core.callApi('billingStatus', 'GET');
+      var billing = data.billing || null;
+      saveSession({ billing: billing });
+      if (!silent) {
+        addLog('이용권 상태 조회 완료', billing || data);
+      }
+    } catch (err) {
+      if (!silent) {
+        addLog('이용권 상태 조회 실패', String(err.message || err));
+      }
     }
     updateStatus();
     updateGuard();
@@ -252,7 +403,12 @@
     try {
       var data = await core.callApi('verifyComplete', 'POST', { code: code });
       var user = data.user || session.user;
-      core.saveSession({ token: session.token, user: user, verified: Boolean(data.verified || (user && user.verified)) });
+      saveSession({
+        token: session.token,
+        user: user,
+        verified: Boolean(data.verified || (user && user.verified)),
+        billing: data.billing || session.billing || null
+      });
       addLog('본인인증 완료', data);
       updateStatus();
       updateGuard();
@@ -275,22 +431,15 @@
     updateGuard();
   }
 
+  function checksToText(checks) {
+    return checks.join(' / ');
+  }
+
   async function startStockTrading() {
     var settings = collectFormSettings();
-    var session = currentSession();
-
-    if (!session.user || !session.verified) {
-      addLog('주식 자동매매 시작 실패', '로그인 및 본인인증이 필요합니다.');
-      return;
-    }
-
-    if (settings.apiBase && !state.apiChecked) {
-      addLog('주식 자동매매 시작 실패', 'API 연결 확인이 필요합니다.');
-      return;
-    }
-
-    if (!settings.accountNo || !settings.stockSymbol) {
-      addLog('주식 자동매매 시작 실패', '계좌번호와 종목코드를 입력하세요.');
+    var checks = buildChecks('stock');
+    if (checks.length > 0) {
+      addLog('주식 자동매매 시작 실패', checksToText(checks));
       return;
     }
 
@@ -301,6 +450,8 @@
       symbol: settings.stockSymbol,
       max_order_amount_krw: settings.stockBudget,
       auto_select_top_candidate: settings.stockAutoSelect,
+      candidate_pool_size: 10,
+      selection_policy: settings.stockAutoSelect ? 'top10_pick1' : 'manual_single',
       dry_run: settings.stockDryRun,
       telegram_bot_token: settings.telegramToken,
       telegram_chat_id: settings.telegramChatId,
@@ -314,28 +465,22 @@
 
     try {
       var data = await core.callApi('start', 'POST', payload);
+      if (data.billing) {
+        saveSession({ billing: data.billing });
+      }
       addLog('주식 자동매매 시작 요청 완료', data);
     } catch (err) {
       addLog('주식 자동매매 시작 실패', String(err.message || err));
     }
+    updateStatus();
+    updateGuard();
   }
 
   async function startCoinTrading() {
     var settings = collectFormSettings();
-    var session = currentSession();
-
-    if (!session.user || !session.verified) {
-      addLog('코인 자동매매 시작 실패', '로그인 및 본인인증이 필요합니다.');
-      return;
-    }
-
-    if (settings.apiBase && !state.apiChecked) {
-      addLog('코인 자동매매 시작 실패', 'API 연결 확인이 필요합니다.');
-      return;
-    }
-
-    if (!settings.coinSymbol) {
-      addLog('코인 자동매매 시작 실패', '코인 심볼을 입력하세요.');
+    var checks = buildChecks('coin');
+    if (checks.length > 0) {
+      addLog('코인 자동매매 시작 실패', checksToText(checks));
       return;
     }
 
@@ -363,6 +508,8 @@
       symbol: settings.coinSymbol,
       max_order_amount_krw: settings.coinBudget,
       auto_select_top_candidate: settings.coinAutoSelect,
+      candidate_pool_size: 10,
+      selection_policy: settings.coinAutoSelect ? 'top10_pick1' : 'manual_single',
       dry_run: settings.coinDryRun,
       telegram_bot_token: settings.telegramToken,
       telegram_chat_id: settings.telegramChatId,
@@ -371,10 +518,15 @@
 
     try {
       var data = await core.callApi('start', 'POST', payload);
+      if (data.billing) {
+        saveSession({ billing: data.billing });
+      }
       addLog('코인 자동매매 시작 요청 완료', data);
     } catch (err) {
       addLog('코인 자동매매 시작 실패', String(err.message || err));
     }
+    updateStatus();
+    updateGuard();
   }
 
   async function stopTrading() {
@@ -419,6 +571,68 @@
     }
   }
 
+  async function startCheckout() {
+    var session = currentSession();
+    if (!session.token) {
+      addLog('결제 시작 실패', '먼저 로그인하세요.');
+      return;
+    }
+    try {
+      var data = await core.callApi('billingCheckout', 'POST', { plan: 'monthly' });
+      state.checkoutId = (data.checkout && data.checkout.checkout_id) || '';
+      addLog('구독 결제 시작', data);
+    } catch (err) {
+      addLog('결제 시작 실패', String(err.message || err));
+    }
+  }
+
+  async function confirmPayment() {
+    var session = currentSession();
+    if (!session.token) {
+      addLog('결제 완료 처리 실패', '먼저 로그인하세요.');
+      return;
+    }
+    try {
+      var data = await core.callApi('billingConfirm', 'POST', { checkout_id: state.checkoutId || undefined });
+      if (data.billing) {
+        saveSession({ billing: data.billing });
+      }
+      addLog('결제 완료 처리', data);
+    } catch (err) {
+      addLog('결제 완료 처리 실패', String(err.message || err));
+    }
+    updateStatus();
+    updateGuard();
+  }
+
+  async function exportUsers() {
+    var session = currentSession();
+    if (!session.token) {
+      addLog('회원정보 조회 실패', '먼저 로그인하세요.');
+      return;
+    }
+    try {
+      var data = await core.callApi('adminUsers', 'GET');
+      if (refs.userExportBox) {
+        refs.userExportBox.textContent = JSON.stringify(data.users || [], null, 2);
+      }
+      addLog('데모 회원정보 조회', { count: (data.users || []).length });
+    } catch (err) {
+      addLog('회원정보 조회 실패', String(err.message || err));
+    }
+  }
+
+  function goToTab(tab) {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function bindButton(node, handler) {
+    if (node) {
+      node.addEventListener('click', handler);
+    }
+  }
+
   function bindEvents() {
     refs.navPills.forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -426,60 +640,75 @@
       });
     });
 
-    refs.btnTrial.addEventListener('click', function () {
-      setActiveTab('stock');
-      window.scrollTo({ top: document.body.scrollHeight * 0.25, behavior: 'smooth' });
+    bindButton(refs.btnTrial, function () {
+      var session = currentSession();
+      if (!session.user) {
+        window.location.href = './signup.html';
+        return;
+      }
+      goToTab('stock');
+      addLog('무료체험 안내', '7일 무료체험 기간에는 자동매매를 바로 실행할 수 있습니다.');
     });
+    bindButton(refs.btnGotoBilling, function () { goToTab('billing'); });
+    bindButton(refs.btnGotoStock, function () { goToTab('stock'); });
+    bindButton(refs.btnGotoCoin, function () { goToTab('coin'); });
+    bindButton(refs.btnGotoIntro, function () { goToTab('intro'); });
+    bindButton(refs.btnMoveStock, function () { goToTab('stock'); });
+    bindButton(refs.btnMoveCoin, function () { goToTab('coin'); });
+    bindButton(refs.btnMoveBilling, function () { goToTab('billing'); });
 
-    refs.btnMoveStock.addEventListener('click', function () {
-      setActiveTab('stock');
-    });
-
-    refs.btnMoveCoin.addEventListener('click', function () {
-      setActiveTab('coin');
-    });
-
-    refs.stockForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      var saved = collectFormSettings();
-      addLog('주식 설정 저장 완료', {
-        accountNo: saved.accountNo,
-        symbol: saved.stockSymbol,
-        budget: saved.stockBudget,
-        dryRun: saved.stockDryRun
+    if (refs.stockForm) {
+      refs.stockForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var saved = collectFormSettings();
+        addLog('주식 설정 저장 완료', {
+          accountNo: saved.accountNo,
+          symbol: saved.stockSymbol,
+          budget: saved.stockBudget,
+          mode: modeLabel(saved.stockDryRun),
+          autoSelect: saved.stockAutoSelect
+        });
+        updateStatus();
+        updateGuard();
       });
-      updateStatus();
-      updateGuard();
-    });
+    }
 
-    refs.coinForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      var saved = collectFormSettings();
-      addLog('코인 설정 저장 완료', {
-        exchange: saved.coinExchange,
-        symbol: saved.coinSymbol,
-        budget: saved.coinBudget,
-        dryRun: saved.coinDryRun
+    if (refs.coinForm) {
+      refs.coinForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var saved = collectFormSettings();
+        addLog('코인 설정 저장 완료', {
+          exchange: saved.coinExchange,
+          symbol: saved.coinSymbol,
+          budget: saved.coinBudget,
+          mode: modeLabel(saved.coinDryRun),
+          autoSelect: saved.coinAutoSelect
+        });
+        updateStatus();
+        updateGuard();
       });
-      updateStatus();
-      updateGuard();
-    });
+    }
 
-    refs.btnCheckApi.addEventListener('click', runApiHealthCheck);
-    refs.btnVerifyStart.addEventListener('click', runVerifyStart);
-    refs.btnVerifyRefresh.addEventListener('click', refreshMe);
+    bindButton(refs.btnCheckApi, runApiHealthCheck);
+    bindButton(refs.btnVerifyStart, runVerifyStart);
+    bindButton(refs.btnVerifyRefresh, function () { refreshMe(false); });
 
-    refs.verifyCodeForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      runVerifyComplete(refs.verifyCode.value.trim());
-    });
+    if (refs.verifyCodeForm) {
+      refs.verifyCodeForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        runVerifyComplete((refs.verifyCode.value || '').trim());
+      });
+    }
 
-    refs.btnStartStock.addEventListener('click', startStockTrading);
-    refs.btnStartCoin.addEventListener('click', startCoinTrading);
-
-    refs.btnStop.addEventListener('click', stopTrading);
-    refs.btnAnalyze.addEventListener('click', runAnalyze);
-    refs.btnLoadReport.addEventListener('click', loadLatestReport);
+    bindButton(refs.btnStartStock, startStockTrading);
+    bindButton(refs.btnStartCoin, startCoinTrading);
+    bindButton(refs.btnStop, stopTrading);
+    bindButton(refs.btnAnalyze, runAnalyze);
+    bindButton(refs.btnLoadReport, loadLatestReport);
+    bindButton(refs.btnCheckout, startCheckout);
+    bindButton(refs.btnConfirmPayment, confirmPayment);
+    bindButton(refs.btnRefreshBilling, function () { refreshBillingStatus(false); });
+    bindButton(refs.btnExportUsers, exportUsers);
 
     [
       refs.apiBase,
@@ -503,6 +732,9 @@
       refs.upbitApiKey,
       refs.upbitApiSecret
     ].forEach(function (node) {
+      if (!node) {
+        return;
+      }
       node.addEventListener('change', function () {
         collectFormSettings();
         updateStatus();
@@ -510,19 +742,34 @@
       });
     });
 
-    refs.apiBase.addEventListener('input', function () {
-      state.apiChecked = false;
-      updateStatus();
-      updateGuard();
-    });
+    if (refs.apiBase) {
+      refs.apiBase.addEventListener('input', function () {
+        state.apiChecked = false;
+        collectFormSettings();
+        updateStatus();
+        updateGuard();
+      });
+    }
+  }
+
+  function initApiBase() {
+    var settings = currentSettings();
+    var cfg = window.APP_CONFIG || {};
+    if (!settings.apiBase && cfg.defaultApiBase) {
+      settings.apiBase = String(cfg.defaultApiBase);
+      core.saveSettings(settings);
+    }
   }
 
   function init() {
+    initApiBase();
     applySettingsToForm(currentSettings());
     bindEvents();
-    setActiveTab('intro');
-    addLog('대시보드 준비 완료', '시스템 소개 탭에서 운영 구조를 먼저 확인해 주세요.');
-    refreshMe();
+    setActiveTab('home');
+    addLog('대시보드 준비 완료', '홈에서 7일 무료체험을 시작하고, 투자 설정 후 자동매매를 실행하세요.');
+    refreshMe(true).then(function () {
+      return refreshBillingStatus(true);
+    });
   }
 
   init();
