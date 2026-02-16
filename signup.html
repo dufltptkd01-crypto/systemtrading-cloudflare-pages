@@ -1,0 +1,48 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>회원가입 | SystemTrading Premier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="theme-auth">
+  <div class="bg-aurora" aria-hidden="true"></div>
+  <main class="auth-wrap">
+    <a class="brand-link" href="./index.html">SystemTrading Premier</a>
+    <section class="auth-card">
+      <h1>회원가입</h1>
+      <p>실제 자동매매 실행 전, 본인인증 단계까지 완료해 주세요.</p>
+
+      <form id="signupForm" class="auth-form">
+        <label for="signupName">이름</label>
+        <input id="signupName" type="text" placeholder="홍길동" required />
+
+        <label for="signupPhone">휴대폰 번호</label>
+        <input id="signupPhone" type="text" placeholder="010-1234-5678" required />
+
+        <label for="signupEmail">이메일</label>
+        <input id="signupEmail" type="email" placeholder="you@example.com" required />
+
+        <label for="signupPassword">비밀번호</label>
+        <input id="signupPassword" type="password" minlength="8" placeholder="8자 이상" required />
+
+        <label for="authApiBase">Backend API Base URL (선택)</label>
+        <input id="authApiBase" type="text" placeholder="https://api.example.com" />
+
+        <button class="soft-btn accent" type="submit">가입 완료</button>
+      </form>
+
+      <p class="auth-foot">이미 계정이 있으신가요? <a href="./login.html">로그인</a></p>
+      <pre id="authResult" class="auth-result">가입 정보를 입력해 주세요.</pre>
+    </section>
+  </main>
+
+  <script src="./config.js"></script>
+  <script src="./portal-core.js"></script>
+  <script src="./auth-pages.js"></script>
+</body>
+</html>

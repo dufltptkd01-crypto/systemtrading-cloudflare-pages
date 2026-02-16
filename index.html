@@ -3,298 +3,257 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0d2238" />
+  <meta name="theme-color" content="#24185f" />
   <title>SystemTrading Premier</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
-  <div class="ambient ambient-a" aria-hidden="true"></div>
-  <div class="ambient ambient-b" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
+<body class="theme-home">
+  <div class="bg-aurora" aria-hidden="true"></div>
+  <div class="bg-arc arc-1" aria-hidden="true"></div>
+  <div class="bg-arc arc-2" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a href="#" class="brand">
-        <span class="brand-dot" aria-hidden="true"></span>
-        <span>SystemTrading Premier</span>
-      </a>
-
-      <nav class="main-nav" aria-label="메인 메뉴">
-        <a href="#overview">개요</a>
-        <a href="#onboarding">시작 순서</a>
-        <a href="#auth">인증</a>
-        <a href="#trading">거래 설정</a>
-      </nav>
-
-      <div class="header-actions">
-        <button id="btnHeaderLogin" class="btn ghost" type="button">로그인</button>
-        <button id="btnMenu" class="icon-btn" type="button" aria-label="메뉴 열기">☰</button>
-      </div>
-    </div>
-
-    <div id="mobileNav" class="mobile-nav hidden" aria-label="모바일 메뉴">
-      <a class="mobile-link" href="#overview">개요</a>
-      <a class="mobile-link" href="#onboarding">시작 순서</a>
-      <a class="mobile-link" href="#auth">인증</a>
-      <a class="mobile-link" href="#trading">거래 설정</a>
+  <header class="hero-nav wrap">
+    <nav class="left-nav" aria-label="서비스 메뉴">
+      <button class="nav-pill active" type="button" data-tab="intro">시스템 소개</button>
+      <button class="nav-pill" type="button" data-tab="stock">주식 투자</button>
+      <button class="nav-pill" type="button" data-tab="coin">코인 투자</button>
+    </nav>
+    <div class="right-nav">
+      <a class="nav-pill link" href="./signup.html">회원가입</a>
+      <a class="nav-pill link" href="./login.html">로그인</a>
     </div>
   </header>
 
-  <main>
-    <section id="overview" class="hero wrap">
-      <div class="hero-copy reveal">
-        <p class="eyebrow">Premium Multi-Market Auto Trading</p>
-        <h1>당신의 시간은 1/2로 투자하고,<br />돈은 2배로 가져가세요.</h1>
-        <p class="subline">복잡한 분석, 반복적인 실행, 사후 기록까지 한 화면에서 연결합니다. 주식과 코인을 같은 운영 콘솔에서 통합 제어하세요.</p>
-
-        <div class="hero-cta">
-          <button id="btnTrial" class="btn solid" type="button">7일 무료체험</button>
-          <button id="btnExplore" class="btn ghost" type="button">둘러보기</button>
-        </div>
-      </div>
-
-      <aside class="hero-panel reveal delay-1">
-        <h2>운영 포인트</h2>
-        <ul>
-          <li><span>지원 시장</span><strong>Kiwoom / Binance / Upbit</strong></li>
-          <li><span>알림</span><strong>Telegram 실시간 발송</strong></li>
-          <li><span>안전 시작</span><strong>DRY RUN 기본 모드</strong></li>
-        </ul>
-      </aside>
-    </section>
-
-    <section class="wrap proof-strip reveal delay-1" aria-label="서비스 강점">
-      <article class="proof-item">
-        <p class="proof-value">1 Console</p>
-        <p class="proof-label">주식/코인 통합 운영</p>
-      </article>
-      <article class="proof-item">
-        <p class="proof-value">Top 10 → 1</p>
-        <p class="proof-label">후보 압축 후 집중 매수</p>
-      </article>
-      <article class="proof-item">
-        <p class="proof-value">24/7 Alert</p>
-        <p class="proof-label">Telegram 즉시 알림</p>
-      </article>
-    </section>
-
-    <section id="onboarding" class="wrap onboarding reveal">
-      <div class="onboarding-head">
-        <h2>시작 순서</h2>
-        <p id="progressText">1단계: 회원가입 또는 로그인</p>
-      </div>
-      <div class="step-track" role="list" aria-label="진행 단계">
-        <button id="stepAuth" type="button" class="step-chip active" role="listitem">1. 회원 인증</button>
-        <button id="stepKyc" type="button" class="step-chip" role="listitem">2. 본인인증</button>
-        <button id="stepApi" type="button" class="step-chip" role="listitem">3. API 연결</button>
-        <button id="stepTrade" type="button" class="step-chip" role="listitem">4. 자동매매 시작</button>
+  <main class="wrap home-main">
+    <section class="hero-copy">
+      <p class="hero-mini">신개념 AI 투자</p>
+      <h1>시간은 2배 절약,<br />수익은 2배 확장</h1>
+      <p class="hero-sub">뉴스, 기술지표, 차트 패턴, 거래 기록 학습을 통합해 자동매매의 전 과정을 정교하게 운영합니다.</p>
+      <div class="hero-actions">
+        <button id="btnTrial" type="button" class="cta-main">7일 무료체험</button>
       </div>
     </section>
 
-    <section class="wrap app-grid">
-      <article id="auth" class="panel panel-auth reveal">
-        <div class="panel-head">
-          <h3>회원가입 / 로그인</h3>
-          <span id="authBadge" class="badge">미로그인</span>
-        </div>
-
-        <div class="auth-switch">
-          <button id="tabRegister" type="button" class="tab active">회원가입</button>
-          <button id="tabLogin" type="button" class="tab">로그인</button>
-        </div>
-
-        <form id="registerForm" class="stack">
-          <label for="regName">이름</label>
-          <input id="regName" type="text" placeholder="홍길동" required />
-
-          <label for="regPhone">휴대폰 번호</label>
-          <input id="regPhone" type="text" placeholder="010-1234-5678" required />
-
-          <label for="regEmail">이메일</label>
-          <input id="regEmail" type="email" placeholder="you@example.com" required />
-
-          <label for="regPassword">비밀번호</label>
-          <input id="regPassword" type="password" minlength="8" placeholder="8자 이상" required />
-
-          <button class="btn solid" type="submit">회원가입</button>
-        </form>
-
-        <form id="loginForm" class="stack hidden">
-          <label for="loginEmail">이메일</label>
-          <input id="loginEmail" type="email" placeholder="you@example.com" required />
-
-          <label for="loginPassword">비밀번호</label>
-          <input id="loginPassword" type="password" placeholder="비밀번호" required />
-
-          <button class="btn solid" type="submit">로그인</button>
-        </form>
-
-        <div class="inline-row top-gap">
-          <button id="btnLogout" class="btn ghost" type="button">로그아웃</button>
-        </div>
-
-        <p id="authMessage" class="hint">아직 로그인되지 않았습니다.</p>
+    <section class="status-row">
+      <article class="status-card">
+        <span>로그인 상태</span>
+        <strong id="authStateBadge">미로그인</strong>
       </article>
-
-      <article class="panel panel-kyc reveal delay-1">
-        <div class="panel-head">
-          <h3>본인인증</h3>
-          <span id="kycBadge" class="badge warning">미인증</span>
-        </div>
-
-        <p class="hint">자동매매 실행 전 본인인증을 완료하세요.</p>
-
-        <div class="inline-row top-gap">
-          <button id="btnVerifyStart" class="btn solid" type="button">본인인증 시작</button>
-          <button id="btnVerifyRefresh" class="btn ghost" type="button">상태 확인</button>
-        </div>
-
-        <form id="verifyCodeForm" class="stack top-gap">
-          <label for="verifyCode">인증 코드</label>
-          <input id="verifyCode" type="text" placeholder="6자리 코드 입력" />
-          <button class="btn ghost" type="submit">코드 제출</button>
-        </form>
-
-        <p id="verifyHint" class="hint">실서비스 연동 전에는 데모 코드 검증으로 동작합니다.</p>
+      <article class="status-card">
+        <span>본인인증</span>
+        <strong id="verifyStateBadge">미인증</strong>
       </article>
-
-      <article class="panel panel-api reveal delay-1">
-        <div class="panel-head">
-          <h3>API 연결</h3>
-          <span id="apiStatus" class="badge">대기</span>
-        </div>
-
-        <label for="apiBase">Backend API Base URL</label>
-        <input id="apiBase" type="text" placeholder="https://api.example.com" />
-
-        <label for="apiToken">Static API Token (선택)</label>
-        <input id="apiToken" type="password" placeholder="Bearer Token" />
-
-        <div class="inline-row top-gap">
-          <button id="btnCheckApi" class="btn ghost" type="button">연결 확인</button>
-        </div>
-        <p class="hint">비워두면 데모 모드로 동작합니다.</p>
+      <article class="status-card">
+        <span>API 연결</span>
+        <strong id="apiStateBadge">Demo</strong>
       </article>
-
-      <article class="panel panel-summary reveal">
-        <div class="panel-head">
-          <h3>운영 요약</h3>
-        </div>
-        <dl class="summary-list">
-          <div><dt>사용자</dt><dd id="sumUser">-</dd></div>
-          <div><dt>인증 상태</dt><dd id="sumVerify">미인증</dd></div>
-          <div><dt>API 모드</dt><dd id="sumApi">Demo</dd></div>
-          <div><dt>시장 / 거래소</dt><dd id="sumMarket">Stock / Kiwoom</dd></div>
-          <div><dt>종목 / 심볼</dt><dd id="sumSymbol">-</dd></div>
-          <div><dt>1회 주문금액</dt><dd id="sumBudget">0 KRW</dd></div>
-          <div><dt>실행 모드</dt><dd id="sumMode">DRY RUN</dd></div>
-        </dl>
+      <article class="status-card">
+        <span>현재 모드</span>
+        <strong id="activeModeBadge">DRY RUN</strong>
       </article>
+    </section>
 
-      <article id="trading" class="panel panel-trading reveal delay-1">
-        <div class="panel-head">
-          <h3>거래 설정</h3>
-          <span id="marketBadge" class="badge">Stock / Kiwoom</span>
-        </div>
+    <section id="tab-intro" class="tab-panel active">
+      <div class="intro-grid">
+        <article class="glass-panel">
+          <h2>시스템 소개</h2>
+          <p class="lead">이 시스템은 단순 신호 매매가 아니라, 선별-집행-회고-개선까지 하나의 사이클로 운영됩니다.</p>
+          <ul class="flow-list">
+            <li>
+              <h3>1. 데이터 수집</h3>
+              <p>각종 뉴스, 키움 뉴스, 기술 지표, 가격/거래량 패턴을 동시에 반영합니다.</p>
+            </li>
+            <li>
+              <h3>2. 후보 압축</h3>
+              <p>상승 확률 상위 10개를 먼저 추리고, 최종 1개 종목/심볼만 선택해 집중 진입합니다.</p>
+            </li>
+            <li>
+              <h3>3. 실행 및 알림</h3>
+              <p>매수/매도 체결은 Telegram으로 즉시 전달되고, 리스크 규칙(예: DRY RUN, 손절/익절)이 함께 적용됩니다.</p>
+            </li>
+            <li>
+              <h3>4. 회고 및 개선</h3>
+              <p>매매 일지를 자동 기록한 뒤 승률/손익/드로우다운을 분석하여 다음 세션 파라미터를 개선합니다.</p>
+            </li>
+          </ul>
+        </article>
 
-        <form id="settingsForm" class="settings-grid">
-          <label for="marketType">시장 타입</label>
-          <select id="marketType">
-            <option value="stock">Stock</option>
-            <option value="crypto">Crypto</option>
-          </select>
+        <article class="glass-panel feedback-panel">
+          <h2>매매 일지 피드백 루프</h2>
+          <ol class="feedback-steps">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>체결 로그 누적</h3>
+                <p>진입 사유, 체결가, 손익, 시장상황을 세션별로 축적합니다.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>성과 분석 실행</h3>
+                <p>승률, 평균 수익률, 최대 손실 구간을 자동 진단합니다.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>개선 포인트 반영</h3>
+                <p>진입 필터, 종목 선별 가중치, 리스크 파라미터를 재조정합니다.</p>
+              </div>
+            </li>
+          </ol>
+          <div class="intro-actions">
+            <button id="btnMoveStock" type="button" class="soft-btn">주식 투자 설정</button>
+            <button id="btnMoveCoin" type="button" class="soft-btn">코인 투자 설정</button>
+          </div>
+        </article>
+      </div>
+    </section>
 
-          <label for="exchange">거래소 / 증권사</label>
-          <select id="exchange">
-            <option value="kiwoom">Kiwoom</option>
-            <option value="binance">Binance</option>
-            <option value="upbit">Upbit</option>
-          </select>
+    <section id="tab-stock" class="tab-panel">
+      <div class="setup-grid">
+        <article class="glass-panel">
+          <h2>주식 투자 설정</h2>
+          <form id="stockForm" class="form-grid">
+            <label for="apiBase">Backend API Base URL</label>
+            <input id="apiBase" type="text" placeholder="https://api.example.com" />
 
-          <label for="accountNo">계좌번호</label>
-          <input id="accountNo" type="text" placeholder="8120-0764" />
+            <label for="apiToken">Static API Token (선택)</label>
+            <input id="apiToken" type="password" placeholder="Bearer token" />
 
-          <label for="symbol">종목/심볼</label>
-          <input id="symbol" type="text" placeholder="005930 또는 BTC/USDT" />
+            <label for="accountNo">계좌번호</label>
+            <input id="accountNo" type="text" placeholder="8120-0764" />
 
-          <label for="orderBudget">1회 최대 주문금액 (KRW)</label>
-          <input id="orderBudget" type="number" min="10000" max="2000000" value="2000000" />
+            <label for="stockSymbol">주식 종목코드</label>
+            <input id="stockSymbol" type="text" placeholder="005930" />
 
-          <label for="autoSelect">자동 종목/심볼 선정</label>
-          <select id="autoSelect">
-            <option value="true">ON</option>
-            <option value="false">OFF</option>
-          </select>
+            <label for="stockBudget">1회 최대 주문금액 (KRW)</label>
+            <input id="stockBudget" type="number" min="10000" max="2000000" value="2000000" />
 
-          <label for="dryRun">실행 모드</label>
-          <select id="dryRun">
-            <option value="true">DRY RUN</option>
-            <option value="false">LIVE</option>
-          </select>
+            <label for="stockAutoSelect">자동 종목 선정</label>
+            <select id="stockAutoSelect">
+              <option value="true">ON</option>
+              <option value="false">OFF</option>
+            </select>
 
-          <label for="telegramToken">Telegram Bot Token</label>
-          <input id="telegramToken" type="text" placeholder="123456:ABC..." />
+            <label for="stockDryRun">실행 모드</label>
+            <select id="stockDryRun">
+              <option value="true">DRY RUN</option>
+              <option value="false">LIVE</option>
+            </select>
 
-          <label for="telegramChatId">Telegram Chat ID</label>
-          <input id="telegramChatId" type="text" placeholder="123456789" />
-
-          <div id="kiwoomFields" class="provider-fields">
-            <h4>Kiwoom 연결</h4>
-            <label for="kiwoomApiKey">Kiwoom API Key (선택)</label>
+            <label for="kiwoomApiKey">Kiwoom API Key</label>
             <input id="kiwoomApiKey" type="text" placeholder="Kiwoom API Key" />
-            <label for="kiwoomApiSecret">Kiwoom API Secret (선택)</label>
+
+            <label for="kiwoomApiSecret">Kiwoom API Secret</label>
             <input id="kiwoomApiSecret" type="password" placeholder="Kiwoom API Secret" />
+
+            <label for="telegramToken">Telegram Bot Token</label>
+            <input id="telegramToken" type="text" placeholder="123456:ABC..." />
+
+            <label for="telegramChatId">Telegram Chat ID</label>
+            <input id="telegramChatId" type="text" placeholder="123456789" />
+
+            <div class="form-actions">
+              <button id="btnSaveStock" type="submit" class="soft-btn primary">주식 설정 저장</button>
+              <button id="btnStartStock" type="button" class="soft-btn accent">주식 자동매매 시작</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="glass-panel side-panel">
+          <h2>보안/실행 상태</h2>
+          <p class="side-note">회원가입/로그인은 상단 버튼에서 별도 페이지로 진행하세요.</p>
+
+          <div class="action-stack">
+            <button id="btnCheckApi" type="button" class="soft-btn">API 연결 확인</button>
+            <button id="btnVerifyStart" type="button" class="soft-btn">본인인증 시작</button>
+            <button id="btnVerifyRefresh" type="button" class="soft-btn">인증 상태 새로고침</button>
           </div>
 
-          <div id="binanceFields" class="provider-fields hidden">
-            <h4>Binance 연결</h4>
+          <form id="verifyCodeForm" class="verify-form">
+            <label for="verifyCode">인증 코드</label>
+            <input id="verifyCode" type="text" placeholder="6자리 코드" />
+            <button type="submit" class="soft-btn">코드 제출</button>
+          </form>
+
+          <p id="verifyHint" class="side-note">실서비스 연동 전에는 데모 모드로 인증 흐름을 테스트할 수 있습니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="tab-coin" class="tab-panel">
+      <div class="setup-grid">
+        <article class="glass-panel">
+          <h2>코인 투자 설정</h2>
+          <form id="coinForm" class="form-grid">
+            <label for="coinExchange">거래소</label>
+            <select id="coinExchange">
+              <option value="binance">Binance</option>
+              <option value="upbit">Upbit</option>
+            </select>
+
+            <label for="coinSymbol">심볼</label>
+            <input id="coinSymbol" type="text" placeholder="BTC/USDT 또는 BTC/KRW" />
+
+            <label for="coinBudget">1회 최대 주문금액 (KRW)</label>
+            <input id="coinBudget" type="number" min="10000" max="2000000" value="2000000" />
+
+            <label for="coinAutoSelect">자동 심볼 선정</label>
+            <select id="coinAutoSelect">
+              <option value="true">ON</option>
+              <option value="false">OFF</option>
+            </select>
+
+            <label for="coinDryRun">실행 모드</label>
+            <select id="coinDryRun">
+              <option value="true">DRY RUN</option>
+              <option value="false">LIVE</option>
+            </select>
+
             <label for="binanceApiKey">Binance API Key</label>
             <input id="binanceApiKey" type="text" placeholder="Binance API Key" />
+
             <label for="binanceApiSecret">Binance API Secret</label>
             <input id="binanceApiSecret" type="password" placeholder="Binance API Secret" />
-          </div>
 
-          <div id="upbitFields" class="provider-fields hidden">
-            <h4>Upbit 연결</h4>
             <label for="upbitApiKey">Upbit Access Key</label>
             <input id="upbitApiKey" type="text" placeholder="Upbit Access Key" />
+
             <label for="upbitApiSecret">Upbit Secret Key</label>
             <input id="upbitApiSecret" type="password" placeholder="Upbit Secret Key" />
+
+            <div class="form-actions">
+              <button id="btnSaveCoin" type="submit" class="soft-btn primary">코인 설정 저장</button>
+              <button id="btnStartCoin" type="button" class="soft-btn accent">코인 자동매매 시작</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="glass-panel side-panel">
+          <h2>자동매매 운영</h2>
+          <div class="action-stack">
+            <button id="btnStop" type="button" class="soft-btn danger">자동매매 중지</button>
+            <button id="btnAnalyze" type="button" class="soft-btn">매매일지 분석 실행</button>
+            <button id="btnLoadReport" type="button" class="soft-btn">최근 분석 리포트 조회</button>
           </div>
+          <p id="guardText" class="side-note">실행 전: 로그인 + 본인인증 + 종목/심볼 설정 + API 확인이 필요합니다.</p>
+        </article>
+      </div>
+    </section>
 
-          <button class="btn solid" type="submit">설정 저장</button>
-        </form>
-      </article>
-
-      <article class="panel panel-control reveal">
-        <div class="panel-head">
-          <h3>자동매매 제어</h3>
-        </div>
-
-        <p id="startGuardText" class="guard-text">시작 전 필수 항목을 확인하세요.</p>
-
-        <div class="control-grid">
-          <button id="btnStart" class="btn solid" type="button">자동매매 시작</button>
-          <button id="btnStop" class="btn ghost danger" type="button">자동매매 중지</button>
-          <button id="btnAnalyze" class="btn ghost" type="button">매매일지 분석</button>
-          <button id="btnLoadReport" class="btn ghost" type="button">최근 분석 조회</button>
-        </div>
-
-        <pre id="resultBox">준비 완료. API URL 또는 데모 모드를 선택해 시작하세요.</pre>
-      </article>
+    <section class="result-area glass-panel">
+      <h2>실행 로그</h2>
+      <pre id="resultBox">준비 완료. 상단 탭에서 설정을 완료하고 자동매매를 시작하세요.</pre>
     </section>
   </main>
 
-  <div class="mobile-dock" aria-label="모바일 빠른 실행">
-    <button id="btnMobileStart" class="btn solid" type="button">시작</button>
-    <button id="btnMobileStop" class="btn ghost danger" type="button">중지</button>
-    <button id="btnMobileTop" class="btn ghost" type="button">맨 위</button>
-  </div>
-
   <script src="./config.js"></script>
-  <script src="./app.js"></script>
+  <script src="./portal-core.js"></script>
+  <script src="./index.js"></script>
 </body>
 </html>
