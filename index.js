@@ -527,9 +527,13 @@
   function updateCoinCredentialFields() {
     var exchange = refs.coinExchange ? refs.coinExchange.value : 'binance';
     var showBinance = exchange !== 'upbit';
+    if (refs.coinForm) {
+      refs.coinForm.setAttribute('data-exchange', showBinance ? 'binance' : 'upbit');
+    }
 
     document.querySelectorAll('.coin-only-binance').forEach(function (node) {
       node.hidden = !showBinance;
+      node.classList.toggle('is-hidden', !showBinance);
       if (node.tagName === 'INPUT') {
         node.disabled = !showBinance;
       }
@@ -537,6 +541,7 @@
 
     document.querySelectorAll('.coin-only-upbit').forEach(function (node) {
       node.hidden = showBinance;
+      node.classList.toggle('is-hidden', showBinance);
       if (node.tagName === 'INPUT') {
         node.disabled = showBinance;
       }

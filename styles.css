@@ -26,6 +26,10 @@
   display: none !important;
 }
 
+.is-hidden {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -560,6 +564,22 @@ textarea {
   grid-template-columns: 214px 1fr;
   gap: 8px 12px;
   align-items: center;
+}
+
+#coinForm[data-exchange="binance"] .coin-only-upbit {
+  display: none !important;
+}
+
+#coinForm[data-exchange="upbit"] .coin-only-binance {
+  display: none !important;
+}
+
+#coinForm:has(#coinExchange option[value="binance"]:checked) .coin-only-upbit {
+  display: none !important;
+}
+
+#coinForm:has(#coinExchange option[value="upbit"]:checked) .coin-only-binance {
+  display: none !important;
 }
 
 label {
