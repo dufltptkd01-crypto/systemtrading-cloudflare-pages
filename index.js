@@ -881,7 +881,7 @@
     var profile = holdingProfile((refs.holdingPeriod && refs.holdingPeriod.value) || 'day');
     refs.strategyPresetBox.innerHTML = [
       '<strong>' + profile.name + '</strong>',
-      '<br />MA(' + profile.ma_short + '/' + profile.ma_long + '), Volume +' + profile.volume_threshold_pct + '%, RSI ??' + profile.rsi_threshold + ', Stop Loss ' + profile.stop_loss_pct + '%',
+      '<br />MA(' + profile.ma_short + '/' + profile.ma_long + '), Volume +' + profile.volume_threshold_pct + '%, RSI <= ' + profile.rsi_threshold + ', Stop Loss ' + profile.stop_loss_pct + '%',
       '<br />Score Weight - News ' + profile.news_weight + ' / Volume ' + profile.volume_weight + ' / RSI ' + profile.rsi_weight + ' / Trend ' + profile.trend_weight
     ].join('');
   }
@@ -983,7 +983,7 @@
   }
 
   function chartSymbolLabelText(tvSymbol, interval) {
-    return tvSymbol + ' 鸚?' + interval + 'm';
+    return tvSymbol + ' | ' + interval + 'm';
   }
 
   function setChartPanelVisible(panelNode, visible) {
@@ -1189,7 +1189,7 @@
     }
     if (candidate.rsi <= profile.rsi_threshold) {
       score += profile.rsi_weight;
-      reasons.push(trans('reco.reason.rsi', 'RSI 議곌굔 異⑹”'));
+      reasons.push(trans('reco.reason.rsi', 'RSI 조건 충족'));
     }
     if (candidate.ma_short > candidate.ma_long) {
       score += profile.trend_weight;
@@ -1268,15 +1268,15 @@
     if (risk === 'low') {
       return trans('reco.risk.low', '낮음');
     }
-    return trans('reco.risk.mid', '蹂댄넻');
+    return trans('reco.risk.mid', '보통');
   }
 
   function signalLabelText(signal) {
     if (signal === 'high') {
-      return trans('reco.signal.high', '媛뺥븿');
+      return trans('reco.signal.high', '강함');
     }
     if (signal === 'mid') {
-      return trans('reco.signal.mid', '以묎컙');
+      return trans('reco.signal.mid', '중간');
     }
     return trans('reco.signal.low', '약함');
   }
