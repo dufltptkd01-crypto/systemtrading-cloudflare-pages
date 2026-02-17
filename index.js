@@ -1,10 +1,11 @@
-(function () {
+﻿(function () {
   'use strict';
 
   var core = window.PortalCore;
   if (!core) {
     return;
   }
+  var TradingViewChartComponent = window.TradingViewChart;
 
   var LANG_KEY = 'systemtrading.ui.lang.v1';
   var ADMIN_EMAIL = 'dufltptkd01@naver.com';
@@ -19,9 +20,102 @@
     'nav.coin': 'Crypto',
     'nav.billing': 'Billing',
     'nav.admin': 'Admin',
+    'landing.nav.features': 'Features',
+    'landing.nav.security': 'Security',
+    'landing.nav.pricing': 'Pricing',
+    'landing.nav.faq': 'FAQ',
+    'landing.nav.start': 'Start Free',
     'auth.signup': 'Sign Up',
     'auth.login': 'Log In',
     'auth.logout': 'Log Out',
+    'landing.hero.kicker': 'PREMIUM AI TRADING CLOUD',
+    'landing.hero.title.main': 'AI-driven automated trading,',
+    'landing.hero.title.sub': 'execute complex markets with less effort.',
+    'landing.hero.sub': 'Score-based recommendations combine news, volume, and technical indicators, then connect execution and reporting inside your risk limits.',
+    'landing.hero.cta.primary': 'Start For Free',
+    'landing.hero.cta.secondary': 'View Demo',
+    'landing.badge.realtime': 'Real-time recommendations and fills',
+    'landing.badge.security': 'Encrypted API key storage',
+    'landing.badge.risk': 'Built-in risk limits',
+    'landing.stat.1.label': 'Recommendation Engine',
+    'landing.stat.1.value': 'Two-stage scoring: News + Indicators',
+    'landing.stat.2.label': 'Execution Policy',
+    'landing.stat.2.value': 'Pick one asset from top-ranked candidates',
+    'landing.stat.3.label': 'Risk Guard',
+    'landing.stat.3.value': 'Loss limits + streak stop + kill switch',
+    'landing.features.eyebrow': 'WHY SYSTEMTRADING PREMIER',
+    'landing.features.title': 'Why Choose Us',
+    'landing.features.lead': 'For trading SaaS, consistency and controlled execution matter before everything else.',
+    'landing.features.card1.title': 'AI Recommendation Scoring',
+    'landing.features.card1.body': 'News, volume, and indicators are scored together and filtered by threshold.',
+    'landing.features.card2.title': 'Holding-time Presets',
+    'landing.features.card2.body': 'Scalp, day-trade, and swing presets automatically tune indicators and exits.',
+    'landing.features.card3.title': 'Two-step Live Confirmation',
+    'landing.features.card3.body': 'Before live orders, you confirm order size and daily loss limits again.',
+    'landing.features.card4.title': 'Auto Trade Journal',
+    'landing.features.card4.body': 'Entry, exit, rationale, and pnl are structured for fast post-trade review.',
+    'landing.features.card5.title': 'Security-first Design',
+    'landing.features.card5.body': 'Secrets are encrypted on server-side vault and never exposed in frontend logs.',
+    'landing.features.card6.title': 'Multi-market Coverage',
+    'landing.features.card6.body': 'Run KR stocks and major crypto exchanges from one platform.',
+    'landing.how.eyebrow': 'HOW IT WORKS',
+    'landing.how.title': 'Start in 3 Steps',
+    'landing.how.step1.title': 'Connect Brokers/Exchanges',
+    'landing.how.step1.body': 'Link Kiwoom, Upbit, or Binance accounts and configure base budget.',
+    'landing.how.step2.title': 'Pick AI + Holding Time',
+    'landing.how.step2.body': 'Review recommendation scores and select scalp/day/swing mode.',
+    'landing.how.step3.title': 'Auto Execute + Report',
+    'landing.how.step3.body': 'Run with guardrails and improve using trade journals and daily summaries.',
+    'landing.how.holding.scalp': 'Scalp 1-10m',
+    'landing.how.holding.day': 'Day 1h-1d',
+    'landing.how.holding.swing': 'Swing 1d-several days',
+    'landing.action.stock': 'Start Stock Trading',
+    'landing.action.coin': 'Start Crypto Trading',
+    'landing.action.pricing': 'View Pricing',
+    'landing.action.intro': 'System Overview',
+    'landing.exchange.eyebrow': 'MARKET COVERAGE',
+    'landing.exchange.title': 'Supported Exchanges and Broker',
+    'landing.exchange.tip': 'Security tip: keep withdrawal permission OFF and enforce API IP whitelist.',
+    'landing.security.eyebrow': 'SECURITY & RISK CONTROL',
+    'landing.security.title': 'Trust Architecture for Real-money Trading',
+    'landing.security.lead': 'When real capital is on the line, risk control and security must come first.',
+    'landing.security.card1.title': 'Encrypted API Key Storage',
+    'landing.security.card1.body': 'Sensitive credentials are encrypted on server-side storage and masked in logs.',
+    'landing.security.card2.title': 'Least-Privilege Access',
+    'landing.security.card2.body': 'Only required permissions should be enabled. Withdrawal permission stays disabled.',
+    'landing.security.card3.title': 'Loss Limits + Kill Switch',
+    'landing.security.card3.body': 'Per-order cap, daily loss cap, streak-stop, and crash-stop work together.',
+    'landing.pricing.eyebrow': 'PRICING',
+    'landing.pricing.title': 'Plans for Each Growth Stage',
+    'landing.pricing.free.price': 'KRW 0 / 7 days',
+    'landing.pricing.free.f1': 'Recommendation feed',
+    'landing.pricing.free.f2': 'Dry-run simulation',
+    'landing.pricing.free.f3': 'Basic logs',
+    'landing.pricing.free.cta': 'Start Trial',
+    'landing.pricing.pro.price': 'KRW 49,000 / month',
+    'landing.pricing.pro.f1': 'Automated execution',
+    'landing.pricing.pro.f2': 'Telegram fill alerts',
+    'landing.pricing.pro.f3': 'Full risk guardrails',
+    'landing.pricing.pro.cta': 'Start Pro',
+    'landing.pricing.premium.price': 'KRW 99,000 / month',
+    'landing.pricing.premium.f1': 'Advanced reports and analytics',
+    'landing.pricing.premium.f2': 'Strategy tuning insights',
+    'landing.pricing.premium.f3': 'Priority support',
+    'landing.pricing.premium.cta': 'Contact Premium',
+    'landing.faq.eyebrow': 'FAQ',
+    'landing.faq.title': 'Frequently Asked Questions',
+    'landing.faq.q1': 'Can API keys leak?',
+    'landing.faq.a1': 'Secrets are encrypted in server storage and never exposed in plain text on UI/logs.',
+    'landing.faq.q2': 'Can I test before live trading?',
+    'landing.faq.a2': 'Yes. Dry-run mode simulates recommendations and planned orders without real execution.',
+    'landing.faq.q3': 'How does refund work?',
+    'landing.faq.a3': 'Refund policy follows terms and payment policy. Contact support for case review.',
+    'landing.faq.q4': 'Can I stop auto-trading anytime?',
+    'landing.faq.a4': 'Yes. You can stop manually anytime, and crash-stop kill switch can halt automatically.',
+    'landing.footer.copy': 'Premium SaaS for reliable automated trading operations',
+    'landing.footer.terms': 'Terms',
+    'landing.footer.privacy': 'Privacy',
+    'landing.footer.contact': 'Contact: dufltptkd01@gmail.com',
     'hero.kicker': 'AI ASSET ORCHESTRATION',
     'hero.title.a': 'Spend Less Time Deciding',
     'hero.title.b': 'Execute With More Precision',
@@ -162,6 +256,10 @@
     'chart.stock.lead': 'Chart updates automatically based on selected stock symbol.',
     'chart.coin.title': 'Crypto TradingView Chart',
     'chart.coin.lead': 'Chart updates automatically by selected exchange and symbol.',
+    'chart.toggle': 'Show Chart',
+    'chart.toggle.on': 'ON',
+    'chart.toggle.off': 'OFF',
+    'chart.toggle.help': 'When ON, clicking a recommended symbol opens its chart.',
     'journal.title': 'Auto-Trading Logs / Analysis',
     'journal.summary.win_rate': 'Win Rate',
     'journal.summary.total_pnl': 'Total PnL',
@@ -357,6 +455,11 @@
       admin: document.getElementById('tab-admin')
     },
     navAdmin: document.getElementById('navAdmin'),
+    btnNavFeatures: document.getElementById('btnNavFeatures'),
+    btnNavSecurity: document.getElementById('btnNavSecurity'),
+    btnNavPricing: document.getElementById('btnNavPricing'),
+    btnNavFaq: document.getElementById('btnNavFaq'),
+    btnNavStart: document.getElementById('btnNavStart'),
 
     btnTrial: document.getElementById('btnTrial'),
     btnGotoBilling: document.getElementById('btnGotoBilling'),
@@ -388,6 +491,7 @@
     stockBudget: document.getElementById('stockBudget'),
     stockAutoSelect: document.getElementById('stockAutoSelect'),
     holdingPeriod: document.getElementById('holdingPeriod'),
+    chartEnabled: document.getElementById('chartEnabled'),
     stockDryRun: document.getElementById('stockDryRun'),
     dailyMaxLoss: document.getElementById('dailyMaxLoss'),
     dailyMaxTrades: document.getElementById('dailyMaxTrades'),
@@ -427,8 +531,10 @@
     verifyHint: document.getElementById('verifyHint'),
     btnRefreshReco: document.getElementById('btnRefreshReco'),
     recommendationCards: document.getElementById('recommendationCards'),
-    stockChartFrame: document.getElementById('stockChartFrame'),
-    coinChartFrame: document.getElementById('coinChartFrame'),
+    stockChartPanel: document.getElementById('stockChartPanel'),
+    coinChartPanel: document.getElementById('coinChartPanel'),
+    stockChartMount: document.getElementById('stockChartMount'),
+    coinChartMount: document.getElementById('coinChartMount'),
     stockChartSymbolLabel: document.getElementById('stockChartSymbolLabel'),
     coinChartSymbolLabel: document.getElementById('coinChartSymbolLabel'),
     summaryWinRate: document.getElementById('summaryWinRate'),
@@ -473,6 +579,15 @@
     recommendations: [],
     recommendationContext: null,
     journalEntries: [],
+    chartWidgets: {
+      stock: null,
+      coin: null
+    },
+    selectedChartSymbols: {
+      stock: '',
+      coin: ''
+    },
+    selectedRecommendationSymbol: '',
     liveConfirmResolver: null,
     liveConfirmStep: 1,
     apiHealth: {
@@ -660,11 +775,11 @@
       return;
     }
     if (!state.adminUsersLoaded) {
-      renderAdminTableMessage(trans('billing.export_default', '관리 데이터를 불러오려면 버튼을 누르세요.'));
+      renderAdminTableMessage(trans('billing.export_default', '관리자 회원정보 불러오기를 눌러 회원 목록을 조회해 주세요.'));
       return;
     }
     if (!Array.isArray(state.adminUsers) || state.adminUsers.length < 1) {
-      renderAdminTableMessage(trans('admin.table.no_users', '조회된 회원이 없습니다.'));
+      renderAdminTableMessage(trans('admin.table.no_users', '표시할 회원 정보가 없습니다.'));
       return;
     }
 
@@ -765,7 +880,7 @@
     var profile = holdingProfile((refs.holdingPeriod && refs.holdingPeriod.value) || 'day');
     refs.strategyPresetBox.innerHTML = [
       '<strong>' + profile.name + '</strong>',
-      '<br />MA(' + profile.ma_short + '/' + profile.ma_long + '), Volume +' + profile.volume_threshold_pct + '%, RSI ≤ ' + profile.rsi_threshold + ', Stop Loss ' + profile.stop_loss_pct + '%',
+      '<br />MA(' + profile.ma_short + '/' + profile.ma_long + '), Volume +' + profile.volume_threshold_pct + '%, RSI ??' + profile.rsi_threshold + ', Stop Loss ' + profile.stop_loss_pct + '%',
       '<br />Score Weight - News ' + profile.news_weight + ' / Volume ' + profile.volume_weight + ' / RSI ' + profile.rsi_weight + ' / Trend ' + profile.trend_weight
     ].join('');
   }
@@ -801,7 +916,7 @@
     setHealthNode(refs.apiHealthIp, state.apiHealth.ip_restricted, 'ip');
     setText(
       refs.apiHealthCheckedAt,
-      (state.lang === 'en' ? 'Last check: ' : '최근 확인: ') + (state.apiHealth.checked_at ? formatDateText(state.apiHealth.checked_at) : '-')
+      (state.lang === 'en' ? 'Last check: ' : '최근 확인 시각: ') + (state.apiHealth.checked_at ? formatDateText(state.apiHealth.checked_at) : '-')
     );
   }
 
@@ -866,43 +981,71 @@
     return state.lang === 'en' ? 'en' : 'kr';
   }
 
-  function tradingViewEmbedUrl(symbol, interval) {
-    var params = new URLSearchParams();
-    params.set('symbol', symbol);
-    params.set('interval', interval || '30');
-    params.set('hidesidetoolbar', '1');
-    params.set('symboledit', '1');
-    params.set('saveimage', '0');
-    params.set('toolbarbg', '#131d2d');
-    params.set('theme', chartTheme());
-    params.set('style', '1');
-    params.set('timezone', 'Asia/Seoul');
-    params.set('withdateranges', '1');
-    params.set('hideideas', '1');
-    params.set('studies', '[]');
-    params.set('locale', chartLocale());
-    return 'https://s.tradingview.com/widgetembed/?' + params.toString();
+  function chartSymbolLabelText(tvSymbol, interval) {
+    return tvSymbol + ' 鸚?' + interval + 'm';
   }
 
-  function setChartFrame(frame, symbolLabelNode, tvSymbol, interval) {
-    if (!frame) {
+  function setChartPanelVisible(panelNode, visible) {
+    if (!panelNode) {
       return;
     }
-    if (symbolLabelNode) {
-      symbolLabelNode.textContent = tvSymbol + ' · ' + interval + 'm';
+    panelNode.hidden = !visible;
+    panelNode.classList.toggle('is-hidden', !visible);
+  }
+
+  function destroyChartWidget(kind) {
+    var widget = state.chartWidgets[kind];
+    if (widget && typeof widget.destroy === 'function') {
+      widget.destroy();
     }
-    var src = tradingViewEmbedUrl(tvSymbol, interval);
-    if (frame.src !== src) {
-      frame.src = src;
+    state.chartWidgets[kind] = null;
+  }
+
+  function upsertChartWidget(kind, mountNode, tvSymbol, interval) {
+    if (!mountNode || !TradingViewChartComponent) {
+      destroyChartWidget(kind);
+      return;
     }
+    var widget = state.chartWidgets[kind];
+    var props = {
+      symbol: tvSymbol,
+      interval: interval,
+      timezone: 'Asia/Seoul',
+      theme: chartTheme(),
+      locale: chartLocale()
+    };
+    if (!widget) {
+      state.chartWidgets[kind] = new TradingViewChartComponent(mountNode, props);
+      return;
+    }
+    widget.setProps(props);
   }
 
   function renderTradingViewCharts() {
     var settings = currentSettings();
-    var stockSymbol = stockTvSymbol(settings.stockSymbol);
-    var coinSymbol = coinTvSymbol(settings.coinExchange, settings.coinSymbol);
-    setChartFrame(refs.stockChartFrame, refs.stockChartSymbolLabel, stockSymbol, intervalByHolding(settings.holdingPeriod, 'stock'));
-    setChartFrame(refs.coinChartFrame, refs.coinChartSymbolLabel, coinSymbol, intervalByHolding(settings.holdingPeriod, 'crypto'));
+    var enabled = settings.chartEnabled !== false;
+    var stockRaw = state.selectedChartSymbols.stock || settings.stockSymbol;
+    var coinRaw = state.selectedChartSymbols.coin || settings.coinSymbol;
+    var stockSymbol = stockTvSymbol(stockRaw);
+    var coinSymbol = coinTvSymbol(settings.coinExchange, coinRaw);
+    var stockInterval = intervalByHolding(settings.holdingPeriod, 'stock');
+    var coinInterval = intervalByHolding(settings.holdingPeriod, 'crypto');
+
+    setText(refs.stockChartSymbolLabel, chartSymbolLabelText(stockSymbol, stockInterval));
+    setText(refs.coinChartSymbolLabel, chartSymbolLabelText(coinSymbol, coinInterval));
+
+    if (!enabled) {
+      setChartPanelVisible(refs.stockChartPanel, false);
+      setChartPanelVisible(refs.coinChartPanel, false);
+      destroyChartWidget('stock');
+      destroyChartWidget('coin');
+      return;
+    }
+
+    setChartPanelVisible(refs.stockChartPanel, true);
+    setChartPanelVisible(refs.coinChartPanel, true);
+    upsertChartWidget('stock', refs.stockChartMount, stockSymbol, stockInterval);
+    upsertChartWidget('coin', refs.coinChartMount, coinSymbol, coinInterval);
   }
 
   function marketUniverse(marketType) {
@@ -923,18 +1066,18 @@
       ];
     }
     return [
-      { symbol: '005930', name: '삼성전자' },
-      { symbol: '000660', name: 'SK하이닉스' },
+      { symbol: '005930', name: 'Samsung Electronics' },
+      { symbol: '000660', name: 'SK Hynix' },
       { symbol: '035420', name: 'NAVER' },
-      { symbol: '035720', name: '카카오' },
-      { symbol: '068270', name: '셀트리온' },
-      { symbol: '005380', name: '현대차' },
-      { symbol: '207940', name: '삼성바이오로직스' },
-      { symbol: '051910', name: 'LG화학' },
-      { symbol: '105560', name: 'KB금융' },
-      { symbol: '066570', name: 'LG전자' },
-      { symbol: '003670', name: '포스코퓨처엠' },
-      { symbol: '042660', name: '한화오션' }
+      { symbol: '035720', name: 'Kakao' },
+      { symbol: '068270', name: 'Celltrion' },
+      { symbol: '005380', name: 'Hyundai Motor' },
+      { symbol: '207940', name: 'Samsung Biologics' },
+      { symbol: '051910', name: 'LG Chem' },
+      { symbol: '105560', name: 'KB Financial Group' },
+      { symbol: '066570', name: 'LG Electronics' },
+      { symbol: '003670', name: 'POSCO Future M' },
+      { symbol: '042660', name: 'Hanwha Ocean' }
     ];
   }
 
@@ -1045,7 +1188,7 @@
     }
     if (candidate.rsi <= profile.rsi_threshold) {
       score += profile.rsi_weight;
-      reasons.push(trans('reco.reason.rsi', 'RSI 조건 충족'));
+      reasons.push(trans('reco.reason.rsi', 'RSI 議곌굔 異⑹”'));
     }
     if (candidate.ma_short > candidate.ma_long) {
       score += profile.trend_weight;
@@ -1124,17 +1267,51 @@
     if (risk === 'low') {
       return trans('reco.risk.low', '낮음');
     }
-    return trans('reco.risk.mid', '보통');
+    return trans('reco.risk.mid', '蹂댄넻');
   }
 
   function signalLabelText(signal) {
     if (signal === 'high') {
-      return trans('reco.signal.high', '강함');
+      return trans('reco.signal.high', '媛뺥븿');
     }
     if (signal === 'mid') {
-      return trans('reco.signal.mid', '중간');
+      return trans('reco.signal.mid', '以묎컙');
     }
     return trans('reco.signal.low', '약함');
+  }
+
+  function recommendationMarketKey() {
+    return state.recommendationContext && state.recommendationContext.market_type === 'crypto'
+      ? 'coin'
+      : 'stock';
+  }
+
+  function syncSelectedRecommendationSymbol() {
+    var marketKey = recommendationMarketKey();
+    var cards = Array.isArray(state.recommendations) ? state.recommendations : [];
+    if (!cards.length) {
+      state.selectedRecommendationSymbol = '';
+      state.selectedChartSymbols[marketKey] = '';
+      return;
+    }
+    var preferred = state.selectedChartSymbols[marketKey];
+    var hasPreferred = cards.some(function (item) {
+      return item && item.symbol === preferred;
+    });
+    var selected = hasPreferred ? preferred : String(cards[0].symbol || '');
+    state.selectedRecommendationSymbol = selected;
+    state.selectedChartSymbols[marketKey] = selected;
+  }
+
+  function applyRecommendationSelection(item) {
+    if (!item || !item.symbol) {
+      return;
+    }
+    var marketKey = recommendationMarketKey();
+    state.selectedRecommendationSymbol = item.symbol;
+    state.selectedChartSymbols[marketKey] = item.symbol;
+    renderRecommendationCards();
+    renderTradingViewCharts();
   }
 
   function renderRecommendationCards() {
@@ -1144,15 +1321,19 @@
     clearNode(refs.recommendationCards);
     var cards = Array.isArray(state.recommendations) ? state.recommendations.slice(0, 10) : [];
     if (cards.length < 1) {
+      state.selectedRecommendationSymbol = '';
       var empty = document.createElement('article');
       empty.className = 'recommendation-card placeholder-card';
-      empty.innerHTML = '<h3>' + trans('reco.empty.title', '추천 대기 중') + '</h3><p>' + trans('reco.empty.body', '설정 저장 후 추천 새로고침 또는 자동매매 시작 시 추천 카드가 생성됩니다.') + '</p>';
+      empty.innerHTML = '<h3>' + trans('reco.empty.title', '추천 대기 중') + '</h3><p>' + trans('reco.empty.body', '설정을 저장하고 추천을 새로고침하거나 자동매매를 시작하면 추천 카드가 생성됩니다.') + '</p>';
       refs.recommendationCards.appendChild(empty);
       return;
     }
     cards.forEach(function (item) {
       var card = document.createElement('article');
       card.className = 'recommendation-card';
+      if (item.symbol === state.selectedRecommendationSymbol) {
+        card.classList.add('is-selected');
+      }
       var reasonsHtml = (item.reasons || []).map(function (reason) {
         return '<li>' + reason + '</li>';
       }).join('');
@@ -1174,6 +1355,9 @@
         '<ul class="recommendation-reasons">' + reasonsHtml + '</ul>',
         '<div class="recommendation-time">' + trans('reco.time', '추천 시각') + ': ' + formatDateText(item.generated_at) + '</div>'
       ].join('');
+      card.addEventListener('click', function () {
+        applyRecommendationSelection(item);
+      });
       refs.recommendationCards.appendChild(card);
     });
   }
@@ -1182,9 +1366,11 @@
     var settings = collectFormSettings();
     state.recommendationContext = buildRecommendationContext(marketType || 'stock', settings);
     state.recommendations = state.recommendationContext.candidates || [];
+    syncSelectedRecommendationSymbol();
     renderRecommendationCards();
+    renderTradingViewCharts();
     if (!silent) {
-      addLog(trans('log.reco_ready', '추천 카드 갱신'), {
+      addLog(trans('log.reco_ready', '추천 후보 생성 완료'), {
         market: marketType || 'stock',
         picked: state.recommendationContext.picked ? state.recommendationContext.picked.symbol : null,
         candidate_count: state.recommendations.length
@@ -1224,7 +1410,7 @@
         var emptyCell = document.createElement('td');
         emptyCell.colSpan = 9;
         emptyCell.className = 'journal-empty';
-        emptyCell.textContent = trans('journal.empty', '아직 매매 기록이 없습니다.');
+        emptyCell.textContent = trans('journal.empty', '아직 기록된 매매 일지가 없습니다.');
         emptyRow.appendChild(emptyCell);
         refs.journalTableBody.appendChild(emptyRow);
       } else {
@@ -1376,7 +1562,7 @@
     }
     try {
       var response = await callApi('storeCredentials', 'POST', { credentials: payloadCredentials });
-      addLog(trans('log.credentials_vault_ok', '자격증명 서버 보관 완료'), {
+      addLog(trans('log.credentials_vault_ok', '민감정보 서버 저장 완료'), {
         stored_keys: keys.map(function (key) { return key; }),
         masked: keys.reduce(function (acc, key) {
           acc[key] = maskCredentialValue(payloadCredentials[key]);
@@ -1385,7 +1571,7 @@
         result: response
       });
     } catch (err) {
-      addLog(trans('log.credentials_vault_fail', '자격증명 보관 실패'), String(err.message || err));
+      addLog(trans('log.credentials_vault_fail', '민감정보 서버 저장 실패'), String(err.message || err));
     }
   }
 
@@ -1394,7 +1580,7 @@
     if (refs.liveConfirmStepText) {
       refs.liveConfirmStepText.textContent = step === 1
         ? trans('live.step1', '1 / 2 확인 단계')
-        : trans('live.step2', '2 / 2 최종 단계');
+        : trans('live.step2', '2 / 2 최종 확인');
     }
     if (refs.btnLiveConfirmNext) {
       refs.btnLiveConfirmNext.hidden = step !== 1;
@@ -1417,11 +1603,11 @@
 
   function askLiveConfirmation(orderMax, dailyLoss) {
     if (!refs.liveConfirmModal) {
-      var first = window.confirm('실거래 전환 확인\n1회 최대 주문금액: ' + formatKrw(orderMax) + '\n하루 손실 제한: ' + formatKrw(dailyLoss) + '\n다음 단계로 진행하시겠습니까?');
+      var first = window.confirm('실거래 전환 확인\n1회 최대 주문금액: ' + formatKrw(orderMax) + '\n하루 최대 손실: ' + formatKrw(dailyLoss) + '\n위 한도 기준으로 주문을 실행합니다.');
       if (!first) {
         return Promise.resolve(false);
       }
-      return Promise.resolve(window.confirm('최종 확인: 실제 주문을 실행합니다.'));
+      return Promise.resolve(window.confirm('실거래 모드를 계속 진행하시겠습니까?'));
     }
     if (refs.liveConfirmOrderMax) {
       refs.liveConfirmOrderMax.textContent = formatKrw(orderMax);
@@ -1437,7 +1623,7 @@
   }
 
   function modeLabel(isDryRun) {
-    return isDryRun ? trans('mode.sim', '드라이런') : trans('mode.live', '실거래');
+    return isDryRun ? trans('mode.sim', '모의투자') : trans('mode.live', '실거래');
   }
 
   function isMobileViewport() {
@@ -1521,6 +1707,9 @@
     refs.stockBudget.value = String(settings.stockBudget);
     refs.stockAutoSelect.value = String(Boolean(settings.stockAutoSelect));
     refs.holdingPeriod.value = settings.holdingPeriod || 'day';
+    if (refs.chartEnabled) {
+      refs.chartEnabled.value = String(settings.chartEnabled !== false);
+    }
     refs.stockDryRun.value = String(Boolean(settings.stockDryRun));
     refs.dailyMaxLoss.value = String(settings.dailyMaxLoss || 300000);
     refs.dailyMaxTrades.value = String(settings.dailyMaxTrades || 8);
@@ -1557,6 +1746,7 @@
       stockBudget: refs.stockBudget.value,
       stockAutoSelect: refs.stockAutoSelect.value === 'true',
       holdingPeriod: refs.holdingPeriod.value,
+      chartEnabled: refs.chartEnabled ? refs.chartEnabled.value === 'true' : true,
       stockDryRun: refs.stockDryRun.value === 'true',
       dailyMaxLoss: refs.dailyMaxLoss.value,
       dailyMaxTrades: refs.dailyMaxTrades.value,
@@ -1759,7 +1949,7 @@
       checks.push(trans('check.verify', '본인인증 필요'));
     }
     if (session.user && (!billing || !billing.can_trade)) {
-      checks.push(trans('check.plan', '이용권 필요'));
+      checks.push(trans('check.plan', '구독권 필요'));
     }
     if (settings.apiBase && !state.apiChecked) {
       checks.push(trans('check.api', 'API 연결 확인 필요'));
@@ -1796,8 +1986,8 @@
 
     if (refs.guardText) {
       refs.guardText.textContent = visibleChecks.length
-        ? (trans('guard.prefix', '실행 전 확인') + ': ' + visibleChecks.join(' / '))
-        : trans('guard.ready', '실행 준비 완료. 자동매매를 시작할 수 있습니다.');
+        ? (trans('guard.prefix', '사전 확인 항목') + ': ' + visibleChecks.join(' / '))
+        : trans('guard.ready', '사전 확인이 완료되었습니다. 자동매매를 시작할 수 있습니다.');
     }
 
     if (refs.btnStartStock) {
@@ -1830,7 +2020,7 @@
       core.clearSession();
       state.apiChecked = false;
       if (!silent) {
-        addLog(trans('log.session_fail', '세션 갱신 실패'), String(err.message || err));
+        addLog(trans('log.session_fail', '세션 불러오기 실패'), String(err.message || err));
       }
     }
     updateStatus();
@@ -1937,7 +2127,9 @@
     var context = buildRecommendationContext('stock', settings);
     state.recommendationContext = context;
     state.recommendations = context.candidates || [];
+    syncSelectedRecommendationSymbol();
     renderRecommendationCards();
+    renderTradingViewCharts();
     var checks = buildChecks('stock');
     var safetyChecks = toSafetyChecks(settings, context);
     checks = checks.concat(safetyChecks);
@@ -1990,7 +2182,7 @@
         symbol: picked.symbol,
         score: picked.score,
         reasons: picked.reasons,
-        news_summary: '긍정도 ' + Math.round(numberOr(picked.news_positive, 0) * 100) + '%, 언급량 +' + Math.round(numberOr(picked.news_mentions_delta_pct, 0)) + '%',
+        news_summary: '뉴스 긍정 비율 ' + Math.round(numberOr(picked.news_positive, 0) * 100) + '%, 언급 증가율 +' + Math.round(numberOr(picked.news_mentions_delta_pct, 0)) + '%',
         indicators: {
           rsi: picked.rsi,
           ma_short: picked.ma_short,
@@ -2046,7 +2238,9 @@
     var context = buildRecommendationContext('crypto', settings);
     state.recommendationContext = context;
     state.recommendations = context.candidates || [];
+    syncSelectedRecommendationSymbol();
     renderRecommendationCards();
+    renderTradingViewCharts();
     var checks = buildChecks('coin');
     var safetyChecks = toSafetyChecks(settings, context);
     checks = checks.concat(safetyChecks);
@@ -2068,7 +2262,7 @@
       }
       var accepted = await askLiveConfirmation(settings.coinBudget, settings.dailyMaxLoss);
       if (!accepted) {
-        addLog(trans('log.live_confirm_cancelled', '실거래 확인 취소'), { market: 'crypto' });
+        addLog(trans('log.live_confirm_cancelled', '실거래 전환이 취소되었습니다.'), { market: 'crypto' });
         return;
       }
     }
@@ -2119,7 +2313,7 @@
         symbol: picked.symbol,
         score: picked.score,
         reasons: picked.reasons,
-        news_summary: '긍정도 ' + Math.round(numberOr(picked.news_positive, 0) * 100) + '%, 언급량 +' + Math.round(numberOr(picked.news_mentions_delta_pct, 0)) + '%',
+        news_summary: '뉴스 긍정 비율 ' + Math.round(numberOr(picked.news_positive, 0) * 100) + '%, 언급 증가율 +' + Math.round(numberOr(picked.news_mentions_delta_pct, 0)) + '%',
         indicators: {
           rsi: picked.rsi,
           ma_short: picked.ma_short,
@@ -2135,12 +2329,12 @@
     };
 
     if (numberOr(context.market_snapshot && context.market_snapshot.btc_change_pct_24h, 0) <= (-1 * numberOr(settings.marketCrashStopPct, 3))) {
-      addLog(trans('log.market_crash_stop', '시장 급락 자동중지 발동'), context.market_snapshot);
+      addLog(trans('log.market_crash_stop', '시장 급락으로 자동매매가 중지되었습니다.'), context.market_snapshot);
       return;
     }
 
     if (settings.coinDryRun) {
-      addLog(trans('log.dry_run_plan', '드라이런 주문 예정 기록(실주문 없음)'), {
+      addLog(trans('log.dry_run_plan', '모의투자 모드로 주문 예정 정보만 기록합니다.'), {
         market: settings.coinExchange,
         symbol: finalSymbol,
         order_amount: settings.coinBudget,
@@ -2156,7 +2350,7 @@
       }
       state.journalEntries = buildSimulatedJournalEntries(context, settings.coinExchange.toUpperCase(), settings.coinDryRun).concat(state.journalEntries);
       renderJournal();
-      addLog(trans('log.coin_start_ok', '코인 자동매매 시작 요청 완료'), data);
+      addLog(trans('log.coin_start_ok', '코인 자동매매가 시작되었습니다.'), data);
     } catch (err) {
       addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), String(err.message || err));
     }
@@ -2167,12 +2361,12 @@
   async function stopTrading() {
     var session = currentSession();
     if (!session.token) {
-      addLog(trans('log.stop_fail', '자동매매 중지 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      addLog(trans('log.stop_fail', '자동매매 중지 실패'), trans('log.need_login_first', '먼저 로그인해 주세요.'));
       return;
     }
     try {
       var data = await callApi('stop', 'POST', {});
-      addLog(trans('log.stop_ok', '자동매매 중지 요청 완료'), data);
+      addLog(trans('log.stop_ok', '자동매매 중지 요청이 완료되었습니다.'), data);
     } catch (err) {
       addLog(trans('log.stop_fail', '자동매매 중지 실패'), String(err.message || err));
     }
@@ -2181,28 +2375,28 @@
   async function runAnalyze() {
     var session = currentSession();
     if (!session.token) {
-      addLog(trans('log.analyze_fail', '매매일지 분석 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      addLog(trans('log.analyze_fail', '분석 실행 실패'), trans('log.need_login_first', '먼저 로그인해 주세요.'));
       return;
     }
     try {
       var data = await callApi('analyze', 'POST', { trigger: 'manual' });
       renderSummaryFromReport(data.report);
-      addLog(trans('log.analyze_ok', '매매일지 분석 완료'), data);
+      addLog(trans('log.analyze_ok', '분석 요청이 완료되었습니다.'), data);
     } catch (err) {
-      addLog(trans('log.analyze_fail', '매매일지 분석 실패'), String(err.message || err));
+      addLog(trans('log.analyze_fail', '분석 실행 실패'), String(err.message || err));
     }
   }
 
   async function loadLatestReport() {
     var session = currentSession();
     if (!session.token) {
-      addLog(trans('log.report_fail', '리포트 조회 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      addLog(trans('log.report_fail', '리포트 조회 실패'), trans('log.need_login_first', '먼저 로그인해 주세요.'));
       return;
     }
     try {
       var data = await callApi('reportLatest', 'GET');
       renderSummaryFromReport(data.report);
-      addLog(trans('log.report_ok', '최근 분석 리포트'), data);
+      addLog(trans('log.report_ok', '최신 리포트를 불러왔습니다.'), data);
     } catch (err) {
       addLog(trans('log.report_fail', '리포트 조회 실패'), String(err.message || err));
     }
@@ -2211,13 +2405,13 @@
   async function startCheckout() {
     var session = currentSession();
     if (!session.token) {
-      addLog(trans('log.checkout_fail', '결제 시작 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      addLog(trans('log.checkout_fail', '결제 시작 실패'), trans('log.need_login_first', '먼저 로그인해 주세요.'));
       return;
     }
     try {
       var data = await callApi('billingCheckout', 'POST', { plan: 'monthly' });
       state.checkoutId = (data.checkout && data.checkout.checkout_id) || '';
-      addLog(trans('log.checkout_ok', '구독 결제 시작'), data);
+      addLog(trans('log.checkout_ok', '결제 세션이 생성되었습니다.'), data);
     } catch (err) {
       addLog(trans('log.checkout_fail', '결제 시작 실패'), String(err.message || err));
     }
@@ -2226,7 +2420,7 @@
   async function confirmPayment() {
     var session = currentSession();
     if (!session.token) {
-      addLog(trans('log.confirm_fail', '결제 완료 처리 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      addLog(trans('log.confirm_fail', '결제 확인 실패'), trans('log.need_login_first', '먼저 로그인해 주세요.'));
       return;
     }
     try {
@@ -2234,9 +2428,9 @@
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
-      addLog(trans('log.confirm_ok', '결제 완료 처리'), data);
+      addLog(trans('log.confirm_ok', '결제 상태가 갱신되었습니다.'), data);
     } catch (err) {
-      addLog(trans('log.confirm_fail', '결제 완료 처리 실패'), String(err.message || err));
+      addLog(trans('log.confirm_fail', '결제 확인 실패'), String(err.message || err));
     }
     updateStatus();
     updateGuard();
@@ -2245,14 +2439,14 @@
   async function exportUsers() {
     var session = currentSession();
     if (!session.token) {
-      addLog(trans('log.users_fail', '회원정보 조회 실패'), trans('log.need_login_first', '먼저 로그인하세요.'));
+      addLog(trans('log.users_fail', '회원 목록 조회 실패'), trans('log.need_login_first', '먼저 로그인해 주세요.'));
       return;
     }
     if (!isAdminUser(session.user)) {
-      addLog(trans('log.admin_required', '관리자 계정 필요'), trans('admin.access_denied', '관리자 전용 메뉴입니다.'));
+      addLog(trans('log.admin_required', '관리자 권한이 필요합니다.'), trans('admin.access_denied', '관리자 계정만 접근할 수 있습니다.'));
       state.adminUsersLoaded = false;
       state.adminUsers = [];
-      renderAdminTableMessage(trans('admin.access_denied', '관리자 전용 메뉴입니다.'));
+      renderAdminTableMessage(trans('admin.access_denied', '관리자 계정만 접근할 수 있습니다.'));
       goToTab('home');
       return;
     }
@@ -2261,9 +2455,9 @@
       state.adminUsers = Array.isArray(data.users) ? data.users : [];
       state.adminUsersLoaded = true;
       renderUserTable();
-      addLog(trans('log.users_ok', '데모 회원정보 불러오기 완료'), { count: state.adminUsers.length });
+      addLog(trans('log.users_ok', '회원 정보를 불러왔습니다.'), { count: state.adminUsers.length });
     } catch (err) {
-      addLog(trans('log.users_fail', '회원정보 조회 실패'), String(err.message || err));
+      addLog(trans('log.users_fail', '회원 목록 조회 실패'), String(err.message || err));
       state.adminUsersLoaded = false;
       state.adminUsers = [];
       renderAdminTableMessage(String(err.message || err));
@@ -2272,12 +2466,17 @@
 
   function runLogout() {
     core.clearSession();
+    destroyChartWidget('stock');
+    destroyChartWidget('coin');
     state.apiChecked = false;
     state.checkoutId = '';
     state.adminUsersLoaded = false;
     state.adminUsers = [];
     state.recommendations = [];
     state.recommendationContext = null;
+    state.selectedRecommendationSymbol = '';
+    state.selectedChartSymbols.stock = '';
+    state.selectedChartSymbols.coin = '';
     state.journalEntries = [];
     state.apiHealth = {
       checked: false,
@@ -2291,7 +2490,8 @@
     renderRecommendationCards();
     renderJournal();
     renderApiHealth();
-    addLog(trans('log.logout.title', '로그아웃 완료'), trans('log.logout.body', '세션이 종료되었습니다.'));
+    renderTradingViewCharts();
+    addLog(trans('log.logout.title', '로그아웃 완료'), trans('log.logout.body', '세션이 정리되었습니다.'));
     updateStatus();
     updateGuard();
     goToTab('home');
@@ -2299,7 +2499,38 @@
 
   function goToTab(tab) {
     setActiveTab(tab);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+    });
+  }
+
+  function goToHomeSection(sectionId) {
+    setActiveTab('home');
+    var node = document.getElementById(sectionId);
+    if (!node) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      return;
+    }
+    window.requestAnimationFrame(function () {
+      node.scrollIntoView({
+        block: 'start',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+      });
+    });
+  }
+
+  function startTrialFlow() {
+    var session = currentSession();
+    if (!session.user) {
+      window.location.href = './signup.html';
+      return;
+    }
+    goToTab('stock');
+    addLog(
+      trans('log.trial_info.title', '7일 무료체험 안내'),
+      trans('log.trial_info.body', '7일 무료체험 동안 자동매매를 이용할 수 있으며, 이후에는 구독 결제가 필요합니다.')
+    );
   }
 
   function bindButton(node, handler) {
@@ -2339,6 +2570,10 @@
         setMenuOpen(false);
       }
     });
+    window.addEventListener('beforeunload', function () {
+      destroyChartWidget('stock');
+      destroyChartWidget('coin');
+    });
 
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && state.menuOpen) {
@@ -2358,15 +2593,12 @@
     bindButton(refs.btnLangKo, function () { setLanguage('ko'); });
     bindButton(refs.btnLangEn, function () { setLanguage('en'); });
 
-    bindButton(refs.btnTrial, function () {
-      var session = currentSession();
-      if (!session.user) {
-        window.location.href = './signup.html';
-        return;
-      }
-      goToTab('stock');
-      addLog(trans('log.trial_info.title', '무료체험 안내'), trans('log.trial_info.body', '7일 무료체험 기간에는 자동매매를 바로 실행할 수 있습니다.'));
-    });
+    bindButton(refs.btnNavFeatures, function () { goToHomeSection('landing-features'); });
+    bindButton(refs.btnNavSecurity, function () { goToHomeSection('landing-security'); });
+    bindButton(refs.btnNavPricing, function () { goToHomeSection('landing-pricing'); });
+    bindButton(refs.btnNavFaq, function () { goToHomeSection('landing-faq'); });
+    bindButton(refs.btnNavStart, startTrialFlow);
+    bindButton(refs.btnTrial, startTrialFlow);
     bindButton(refs.btnGotoBilling, function () { goToTab('billing'); });
     bindButton(refs.btnGotoGuide, function () { goToTab('guide'); });
     bindButton(refs.btnGotoStock, function () { goToTab('stock'); });
@@ -2385,7 +2617,7 @@
       refs.stockForm.addEventListener('submit', function (event) {
         event.preventDefault();
         var saved = collectFormSettings();
-        addLog(trans('log.stock_saved', '주식 설정 저장 완료'), {
+        addLog(trans('log.stock_saved', '주식 설정이 저장되었습니다.'), {
           accountNo: saved.accountNo,
           symbol: saved.stockSymbol,
           budget: saved.stockBudget,
@@ -2401,7 +2633,7 @@
       refs.coinForm.addEventListener('submit', function (event) {
         event.preventDefault();
         var saved = collectFormSettings();
-        addLog(trans('log.coin_saved', '코인 설정 저장 완료'), {
+        addLog(trans('log.coin_saved', '코인 설정이 저장되었습니다.'), {
           exchange: saved.coinExchange,
           symbol: saved.coinSymbol,
           budget: saved.coinBudget,
@@ -2467,6 +2699,7 @@
       refs.stockBudget,
       refs.stockAutoSelect,
       refs.holdingPeriod,
+      refs.chartEnabled,
       refs.stockDryRun,
       refs.dailyMaxLoss,
       refs.dailyMaxTrades,
@@ -2496,7 +2729,7 @@
         if (node === refs.holdingPeriod) {
           renderStrategyPreset();
         }
-        if (node === refs.stockSymbol || node === refs.coinSymbol || node === refs.coinExchange || node === refs.holdingPeriod) {
+        if (node === refs.stockSymbol || node === refs.coinSymbol || node === refs.coinExchange || node === refs.holdingPeriod || node === refs.chartEnabled) {
           renderTradingViewCharts();
         }
       });
@@ -2534,7 +2767,7 @@
     bindEvents();
     setMenuOpen(false);
     setActiveTab('home');
-    addLog(trans('log.dashboard_ready.title', '대시보드 준비 완료'), trans('log.dashboard_ready.body', '홈에서 7일 무료체험을 시작하고, 투자 설정 후 자동매매를 실행하세요.'));
+    addLog(trans('log.dashboard_ready.title', '대시보드 준비 완료'), trans('log.dashboard_ready.body', '계정 연결 후 설정을 저장하고 자동매매를 시작할 수 있습니다.'));
     refreshMe(true).then(function () {
       return refreshBillingStatus(true);
     });

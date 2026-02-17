@@ -16,6 +16,7 @@
       stockBudget: 2000000,
       stockAutoSelect: true,
       holdingPeriod: 'day',
+      chartEnabled: true,
       stockDryRun: true,
       dailyMaxLoss: 300000,
       dailyMaxTrades: 8,
@@ -166,6 +167,7 @@
       merged.stockBudget = normalizeBudget(merged.stockBudget);
       merged.coinBudget = normalizeBudget(merged.coinBudget);
       merged.holdingPeriod = normalizeHoldingPeriod(merged.holdingPeriod);
+      merged.chartEnabled = merged.chartEnabled !== false;
       merged.dailyMaxLoss = normalizeInt(merged.dailyMaxLoss, 10000, 50000000, 300000);
       merged.dailyMaxTrades = normalizeInt(merged.dailyMaxTrades, 1, 100, 8);
       merged.maxConsecutiveLosses = normalizeInt(merged.maxConsecutiveLosses, 1, 20, 3);
@@ -186,6 +188,7 @@
     merged.stockBudget = normalizeBudget(merged.stockBudget);
     merged.coinBudget = normalizeBudget(merged.coinBudget);
     merged.holdingPeriod = normalizeHoldingPeriod(merged.holdingPeriod);
+    merged.chartEnabled = merged.chartEnabled !== false;
     merged.dailyMaxLoss = normalizeInt(merged.dailyMaxLoss, 10000, 50000000, 300000);
     merged.dailyMaxTrades = normalizeInt(merged.dailyMaxTrades, 1, 100, 8);
     merged.maxConsecutiveLosses = normalizeInt(merged.maxConsecutiveLosses, 1, 20, 3);
