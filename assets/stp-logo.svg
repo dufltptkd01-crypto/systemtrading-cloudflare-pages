@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="20" y1="14" x2="160" y2="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#11161D" />
+      <stop offset="0.55" stop-color="#0C1119" />
+      <stop offset="1" stop-color="#06090F" />
+    </linearGradient>
+    <linearGradient id="metal" x1="82" y1="38" x2="78" y2="138" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F5F7FB" />
+      <stop offset="0.22" stop-color="#D6DBE4" />
+      <stop offset="0.52" stop-color="#9EA6B3" />
+      <stop offset="0.76" stop-color="#6D7380" />
+      <stop offset="1" stop-color="#E2E6ED" />
+    </linearGradient>
+    <linearGradient id="rim" x1="16" y1="18" x2="164" y2="162" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A2AABD" stop-opacity="0.52" />
+      <stop offset="0.52" stop-color="#313A49" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#A4ADBF" stop-opacity="0.28" />
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(90 30) rotate(90) scale(80 110)">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0" />
+    </radialGradient>
+    <filter id="drop" x="0" y="0" width="180" height="180" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+      <feOffset dy="10" />
+      <feGaussianBlur stdDeviation="7" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.006 0 0 0 0 0.01 0 0 0 0 0.02 0 0 0 0.62 0" />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape" />
+    </filter>
+  </defs>
+
+  <g filter="url(#drop)">
+    <rect x="8" y="8" width="164" height="164" rx="28" fill="url(#bg)" />
+    <rect x="8.75" y="8.75" width="162.5" height="162.5" rx="27.25" stroke="url(#rim)" stroke-width="1.5" />
+    <rect x="16" y="16" width="148" height="148" rx="22" fill="url(#shine)" />
+
+    <g aria-label="STP monogram">
+      <text x="24" y="124" fill="url(#metal)" font-size="96" font-style="italic" font-weight="700" font-family="Georgia, 'Times New Roman', serif">S</text>
+      <text x="72" y="98" fill="url(#metal)" font-size="78" font-style="italic" font-weight="700" font-family="Georgia, 'Times New Roman', serif">T</text>
+      <text x="98" y="130" fill="url(#metal)" font-size="94" font-style="italic" font-weight="700" font-family="Georgia, 'Times New Roman', serif">P</text>
+    </g>
+
+    <path d="M36 128C50 117 64 113 80 113C93 113 107 115 122 122" stroke="#F0F3F8" stroke-opacity="0.38" stroke-width="3.2" stroke-linecap="round" />
+    <path d="M58 56H124" stroke="#EFF2F8" stroke-opacity="0.3" stroke-width="2.3" stroke-linecap="round" />
+  </g>
+</svg>

@@ -16,7 +16,12 @@
 
   <main class="auth-wrap">
     <header class="auth-topbar">
-      <a class="brand-link" href="./index.html" data-i18n="brand.name">STP</a>
+      <a class="brand-link" href="./index.html" aria-label="STP">
+        <span class="stp-logo-wrap auth" aria-hidden="true">
+          <img class="stp-logo-img" src="./assets/stp-logo.svg" alt="" />
+        </span>
+        <span class="sr-only" data-i18n="brand.name">STP</span>
+      </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button id="btnLangKoAuth" class="lang-btn active" type="button">KO</button>
         <button id="btnLangEnAuth" class="lang-btn" type="button">EN</button>
