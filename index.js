@@ -134,6 +134,9 @@
     'reco.score': 'Score',
     'reco.signal': 'Signal',
     'reco.risk': 'Risk',
+    'reco.current_price': 'Current',
+    'reco.buy_price': 'Buy Target',
+    'reco.sell_price': 'Sell Target',
     'reco.reason': 'Reasons',
     'reco.time': 'Generated',
     'reco.signal.high': 'High',
@@ -830,10 +833,71 @@
     return min + (Math.random() * (max - min));
   }
 
-  function baseCandidate(universeItem, profile) {
+  function roundPriceBySymbol(symbol, value) {
+    var raw = Number(value);
+    if (!Number.isFinite(raw) || raw <= 0) {
+      return 0;
+    }
+    if (String(symbol || '').indexOf('/USDT') >= 0) {
+      return Math.round(raw * 100) / 100;
+    }
+    return Math.round(raw);
+  }
+
+  function simulatedCurrentPrice(symbol, marketType) {
+    var key = String(symbol || '').toUpperCase();
+    if (marketType === 'stock') {
+      if (key === '005930') return randomBetween(68000, 82000);
+      if (key === '000660') return randomBetween(130000, 180000);
+      if (key === '207940') return randomBetween(650000, 850000);
+      return randomBetween(12000, 250000);
+    }
+    if (key.indexOf('BTC') === 0 && key.indexOf('/USDT') >= 0) return randomBetween(48000, 125000);
+    if (key.indexOf('BTC') === 0 && key.indexOf('/KRW') >= 0) return randomBetween(70000000, 170000000);
+    if (key.indexOf('ETH') === 0 && key.indexOf('/USDT') >= 0) return randomBetween(2400, 7200);
+    if (key.indexOf('ETH') === 0 && key.indexOf('/KRW') >= 0) return randomBetween(3200000, 9900000);
+    if (key.indexOf('/USDT') >= 0) return randomBetween(0.12, 1200);
+    return randomBetween(100, 9000000);
+  }
+
+  function buildPriceTargets(currentPrice, profile, symbol) {
+    var buyDipRange = profile.key === 'scalp'
+      ? { min: 0.001, max: 0.004 }
+      : (profile.key === 'swing' ? { min: 0.006, max: 0.02 } : { min: 0.003, max: 0.012 });
+    var sellGainRange = profile.key === 'scalp'
+      ? { min: 0.003, max: 0.01 }
+      : (profile.key === 'swing' ? { min: 0.018, max: 0.06 } : { min: 0.01, max: 0.03 });
+
+    var buyDiscount = randomBetween(buyDipRange.min, buyDipRange.max);
+    var sellPremium = randomBetween(sellGainRange.min, sellGainRange.max);
+
+    return {
+      current_price: roundPriceBySymbol(symbol, currentPrice),
+      buy_price: roundPriceBySymbol(symbol, currentPrice * (1 - buyDiscount)),
+      sell_price: roundPriceBySymbol(symbol, currentPrice * (1 + sellPremium))
+    };
+  }
+
+  function formatPriceBySymbol(symbol, price) {
+    var value = numberOr(price, 0);
+    var text;
+    if (String(symbol || '').indexOf('/USDT') >= 0) {
+      text = new Intl.NumberFormat(state.lang === 'en' ? 'en-US' : 'ko-KR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(value);
+      return '$' + text;
+    }
+    text = new Intl.NumberFormat(state.lang === 'en' ? 'en-US' : 'ko-KR').format(Math.round(value));
+    return state.lang === 'en' ? (text + ' KRW') : (text + '원');
+  }
+
+  function baseCandidate(universeItem, profile, marketType) {
     var rsi = randomBetween(20, 70);
     var maLong = randomBetween(95, 130);
     var maShort = maLong + randomBetween(-15, 18);
+    var currentPrice = simulatedCurrentPrice(universeItem.symbol, marketType);
+    var prices = buildPriceTargets(currentPrice, profile, universeItem.symbol);
     return {
       symbol: universeItem.symbol,
       name: universeItem.name,
@@ -844,6 +908,9 @@
       rsi: rsi,
       ma_short: maShort,
       ma_long: maLong,
+      current_price: prices.current_price,
+      buy_price: prices.buy_price,
+      sell_price: prices.sell_price,
       generated_at: new Date().toISOString(),
       profile: profile
     };
@@ -894,7 +961,7 @@
     var profile = holdingProfile(settings.holdingPeriod);
     var universe = marketUniverse(marketType);
     var generated = universe.map(function (item) {
-      var candidate = baseCandidate(item, profile);
+      var candidate = baseCandidate(item, profile, marketType);
       candidate.stage1 = stage1Score(candidate);
       return candidate;
     });
@@ -989,6 +1056,11 @@
         '<span>' + trans('reco.score', '점수') + ': ' + item.score + '</span>',
         '<span>' + trans('reco.signal', '신호강도') + ': ' + signalLabelText(item.signal) + '</span>',
         '<span>' + trans('reco.risk', '위험도') + ': ' + riskLabelText(item.risk) + '</span>',
+        '</div>',
+        '<div class="recommendation-prices">',
+        '<span>' + trans('reco.current_price', '현재가') + ': ' + formatPriceBySymbol(item.symbol, item.current_price) + '</span>',
+        '<span>' + trans('reco.buy_price', '매수 추천가') + ': ' + formatPriceBySymbol(item.symbol, item.buy_price) + '</span>',
+        '<span>' + trans('reco.sell_price', '매도 추천가') + ': ' + formatPriceBySymbol(item.symbol, item.sell_price) + '</span>',
         '</div>',
         '<ul class="recommendation-reasons">' + reasonsHtml + '</ul>',
         '<div class="recommendation-time">' + trans('reco.time', '추천 시각') + ': ' + formatDateText(item.generated_at) + '</div>'

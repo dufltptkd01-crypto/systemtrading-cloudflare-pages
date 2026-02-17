@@ -793,6 +793,21 @@ input::placeholder {
   background: rgba(24, 36, 56, 0.72);
 }
 
+.recommendation-prices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.recommendation-prices span {
+  border: 1px solid rgba(135, 164, 205, 0.24);
+  border-radius: 10px;
+  padding: 7px 9px;
+  background: rgba(20, 31, 49, 0.74);
+  color: #d8e7ff;
+  font-size: 12px;
+}
+
 .recommendation-reasons {
   margin: 0;
   padding-left: 16px;
@@ -1376,6 +1391,10 @@ pre {
   }
 
   .recommendation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendation-prices {
     grid-template-columns: 1fr;
   }
 
