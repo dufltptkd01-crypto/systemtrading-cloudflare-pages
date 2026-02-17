@@ -15,7 +15,12 @@
       stockSymbol: '005930',
       stockBudget: 2000000,
       stockAutoSelect: true,
+      holdingPeriod: 'day',
       stockDryRun: true,
+      dailyMaxLoss: 300000,
+      dailyMaxTrades: 8,
+      maxConsecutiveLosses: 3,
+      marketCrashStopPct: 3,
       kiwoomApiKey: '',
       kiwoomApiSecret: '',
 
@@ -32,6 +37,43 @@
       telegramToken: '',
       telegramChatId: ''
     };
+  }
+
+  function normalizeInt(raw, min, max, fallback) {
+    var parsed = Number(raw);
+    if (!Number.isFinite(parsed)) {
+      return fallback;
+    }
+    parsed = Math.round(parsed);
+    if (parsed < min) {
+      return min;
+    }
+    if (parsed > max) {
+      return max;
+    }
+    return parsed;
+  }
+
+  function normalizePercent(raw, min, max, fallback) {
+    var parsed = Number(raw);
+    if (!Number.isFinite(parsed)) {
+      return fallback;
+    }
+    if (parsed < min) {
+      return min;
+    }
+    if (parsed > max) {
+      return max;
+    }
+    return Math.round(parsed * 10) / 10;
+  }
+
+  function normalizeHoldingPeriod(raw) {
+    var next = String(raw || '').toLowerCase();
+    if (next === 'scalp' || next === 'day' || next === 'swing') {
+      return next;
+    }
+    return 'day';
   }
 
   function normalizeBudget(raw) {
@@ -123,6 +165,11 @@
       merged.accountNo = normalizeAccount(merged.accountNo);
       merged.stockBudget = normalizeBudget(merged.stockBudget);
       merged.coinBudget = normalizeBudget(merged.coinBudget);
+      merged.holdingPeriod = normalizeHoldingPeriod(merged.holdingPeriod);
+      merged.dailyMaxLoss = normalizeInt(merged.dailyMaxLoss, 10000, 50000000, 300000);
+      merged.dailyMaxTrades = normalizeInt(merged.dailyMaxTrades, 1, 100, 8);
+      merged.maxConsecutiveLosses = normalizeInt(merged.maxConsecutiveLosses, 1, 20, 3);
+      merged.marketCrashStopPct = normalizePercent(merged.marketCrashStopPct, 1, 20, 3);
       merged.stockAutoSelect = Boolean(merged.stockAutoSelect);
       merged.stockDryRun = Boolean(merged.stockDryRun);
       merged.coinAutoSelect = Boolean(merged.coinAutoSelect);
@@ -138,6 +185,11 @@
     merged.accountNo = normalizeAccount(merged.accountNo);
     merged.stockBudget = normalizeBudget(merged.stockBudget);
     merged.coinBudget = normalizeBudget(merged.coinBudget);
+    merged.holdingPeriod = normalizeHoldingPeriod(merged.holdingPeriod);
+    merged.dailyMaxLoss = normalizeInt(merged.dailyMaxLoss, 10000, 50000000, 300000);
+    merged.dailyMaxTrades = normalizeInt(merged.dailyMaxTrades, 1, 100, 8);
+    merged.maxConsecutiveLosses = normalizeInt(merged.maxConsecutiveLosses, 1, 20, 3);
+    merged.marketCrashStopPct = normalizePercent(merged.marketCrashStopPct, 1, 20, 3);
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
     return merged;
   }
@@ -259,11 +311,65 @@
     };
   }
 
+  function toBase64Utf8(text) {
+    try {
+      return btoa(unescape(encodeURIComponent(text)));
+    } catch (_err) {
+      return btoa(text);
+    }
+  }
+
+  function encryptSecret(raw, userId) {
+    return 'enc_' + toBase64Utf8(String(userId) + '::' + String(raw || ''));
+  }
+
   function mockRequest(endpointName, method, body, sessionToken) {
     var db = readMockDb();
 
     if (endpointName === 'health') {
-      return { ok: true, mode: 'mock' };
+      var settings = loadSettings();
+      var hasCredential = Boolean(
+        (body && body.has_credentials) ||
+        settings.kiwoomApiKey ||
+        settings.binanceApiKey ||
+        settings.upbitApiKey
+      );
+      return {
+        ok: true,
+        mode: 'mock',
+        checked_at: new Date().toISOString(),
+        api_key_valid: hasCredential,
+        balance_available: hasCredential,
+        order_permission: hasCredential,
+        ip_restricted: false
+      };
+    }
+
+    if (endpointName === 'storeCredentials' && method === 'POST') {
+      var scUser = sessionUserByToken(db, sessionToken);
+      if (!scUser) {
+        throw new Error('로그인이 필요합니다.');
+      }
+      var creds = (body && body.credentials) || {};
+      var encrypted = {};
+      Object.keys(creds).forEach(function (key) {
+        var value = String(creds[key] || '').trim();
+        if (value) {
+          encrypted[key] = encryptSecret(value, scUser.id);
+        }
+      });
+      db.runtime[scUser.id] = db.runtime[scUser.id] || {};
+      db.runtime[scUser.id].credential_vault = {
+        updated_at: new Date().toISOString(),
+        encrypted: encrypted
+      };
+      writeMockDb(db);
+      return {
+        ok: true,
+        mode: 'mock',
+        stored: true,
+        count: Object.keys(encrypted).length
+      };
     }
 
     if (endpointName === 'register' && method === 'POST') {
@@ -503,7 +609,12 @@
           exchange: body.exchange,
           symbol: body.symbol,
           max_order_amount_krw: body.max_order_amount_krw,
-          dry_run: body.dry_run
+          dry_run: body.dry_run,
+          holding_period: body.holding_period,
+          risk_limits: body.risk_limits || {},
+          recommendation: body.recommendation || null,
+          strategy_profile: body.strategy_profile || null,
+          engine_pipeline: body.engine_pipeline || null
         }
       });
       writeMockDb(db);
@@ -544,6 +655,17 @@
           win_rate: 0.61,
           avg_return_pct: 0.019,
           drawdown_pct: 0.028,
+          total_pnl_krw: 126000,
+          max_drawdown_pct: 0.043,
+          recommendation_score_avg: 78,
+          recommendation_basis: ['뉴스 긍정 신호', '거래량 증가', 'RSI 조건 충족'],
+          latest_news_summary: '반도체 업황 회복 기대감과 수급 유입이 동반되었습니다.',
+          indicator_snapshot: {
+            rsi: 34,
+            ma_short: 102.3,
+            ma_long: 97.9,
+            volume_growth_pct: 66
+          },
           feedback: [
             '급등 직후 추격 진입 제한',
             '뉴스 가중치 상향 조정',
@@ -586,6 +708,7 @@
         billingStatus: '/api/billing/status',
         billingCheckout: '/api/billing/checkout',
         billingConfirm: '/api/billing/confirm',
+        storeCredentials: '/api/credentials/store',
         adminUsers: '/api/admin/users',
         start: '/api/trading/start',
         stop: '/api/trading/stop',
@@ -618,7 +741,9 @@
     if (opts.withAuth !== false && currentSession.token) {
       headers.Authorization = 'Bearer ' + currentSession.token;
     }
-    if (currentSettings.apiToken) {
+    if (opts.apiToken) {
+      headers['X-Portal-Token'] = String(opts.apiToken);
+    } else if (currentSettings.apiToken) {
       headers['X-Portal-Token'] = currentSettings.apiToken;
     }
 

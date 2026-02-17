@@ -93,10 +93,19 @@
     'stock.symbol': 'Stock Symbol',
     'stock.budget': 'Max Amount per Order (KRW)',
     'stock.auto_select': 'Auto Candidate Select',
+    'strategy.holding_period': 'Holding Period',
+    'strategy.holding.scalp': 'Scalp (1-10 min)',
+    'strategy.holding.day': 'Day Trade (1h-1d)',
+    'strategy.holding.swing': 'Swing (1d-several days)',
+    'strategy.holding.help': 'Holding period updates MA/volume/news weights and stop rules.',
     'stock.mode': 'Execution Mode',
-    'stock.mode.sim_option': 'Simulation (No real order)',
+    'stock.mode.sim_option': 'Dry Run (No real order)',
     'stock.mode.live_option': 'Live Trading (Real order)',
-    'stock.mode.help': 'Simulation is for validation. Live mode sends real orders.',
+    'stock.mode.help': 'Dry run records only planned orders. Live mode sends real orders.',
+    'risk.daily_max_loss': 'Daily Max Loss (KRW)',
+    'risk.daily_max_trades': 'Daily Max Trades',
+    'risk.max_consecutive_losses': 'Auto-stop on Consecutive Losses',
+    'risk.market_crash_stop': 'Crash Stop Threshold (BTC -%)',
     'stock.kiwoom_key': 'Kiwoom API Key',
     'stock.kiwoom_secret': 'Kiwoom API Secret',
     'stock.telegram_token': 'Telegram Bot Token',
@@ -111,15 +120,73 @@
     'stock.verify_code': 'Verification Code',
     'stock.verify_submit': 'Submit Code',
     'stock.verify_hint': 'In demo mode, you can test the full flow with temporary code.',
+    'api.health.title': 'API Diagnostics',
+    'api.health.key': 'API key validity',
+    'api.health.balance': 'Balance query',
+    'api.health.order': 'Order permission',
+    'api.health.ip': 'IP restriction',
+    'security.note': 'For security, API secrets are not stored in browser storage and are used only at runtime.',
+    'reco.title': 'AI Recommendation Cards',
+    'reco.refresh': 'Refresh Recommendations',
+    'reco.lead': 'Stage 1 filters candidates with news/volume/volatility, then Stage 2 scores technical signals. Only score >= 70 is recommended.',
+    'reco.empty.title': 'Waiting for recommendations',
+    'reco.empty.body': 'Save settings, refresh recommendations, or start auto-trading to generate cards.',
+    'reco.score': 'Score',
+    'reco.signal': 'Signal',
+    'reco.risk': 'Risk',
+    'reco.reason': 'Reasons',
+    'reco.time': 'Generated',
+    'reco.signal.high': 'High',
+    'reco.signal.mid': 'Medium',
+    'reco.signal.low': 'Low',
+    'reco.risk.low': 'Low',
+    'reco.risk.mid': 'Medium',
+    'reco.risk.high': 'High',
+    'reco.reason.news': 'Positive news signal',
+    'reco.reason.volume': 'Volume surge',
+    'reco.reason.rsi': 'RSI condition met',
+    'reco.reason.trend': 'Uptrend alignment',
+    'arch.title': 'Engine Split Architecture',
+    'arch.step.1': '1. News Collection Server',
+    'arch.step.1.body': 'Collect mention surge and sentiment shifts.',
+    'arch.step.2': '2. Indicator Analysis Server',
+    'arch.step.2.body': 'Compute RSI, moving averages, volume, and volatility.',
+    'arch.step.3': '3. Recommendation Engine',
+    'arch.step.3.body': 'Apply two-stage scoring and candidate compression.',
+    'arch.step.4': '4. Order Execution Server',
+    'arch.step.4.body': 'Validate risk guardrails, place orders, and write journals.',
+    'journal.title': 'Auto-Trading Logs / Analysis',
+    'journal.summary.win_rate': 'Win Rate',
+    'journal.summary.total_pnl': 'Total PnL',
+    'journal.summary.max_drawdown': 'Max Drawdown',
+    'journal.col.market': 'Market',
+    'journal.col.buy_at': 'Buy Time',
+    'journal.col.sell_at': 'Sell Time',
+    'journal.col.reason': 'Entry Reason',
+    'journal.col.pnl': 'PnL',
+    'journal.col.score': 'Score',
+    'journal.col.basis': 'Recommendation Basis',
+    'journal.col.news': 'News Summary',
+    'journal.col.indicators': 'Indicator Values',
+    'journal.empty': 'No trade journals yet.',
+    'live.title': 'Live Trading Confirmation',
+    'live.lead': 'Live mode sends real orders. Please review your risk limits.',
+    'live.max_order': 'Max order amount',
+    'live.daily_loss': 'Daily loss limit',
+    'live.cancel': 'Cancel',
+    'live.next': 'Next confirmation',
+    'live.final': 'Final execute',
+    'live.step1': 'Step 1 / 2 confirmation',
+    'live.step2': 'Step 2 / 2 final confirmation',
     'coin.title': 'Crypto Trading Setup',
     'coin.exchange': 'Exchange',
     'coin.symbol': 'Symbol',
     'coin.budget': 'Max Amount per Order (KRW)',
     'coin.auto_select': 'Auto Symbol Select',
     'coin.mode': 'Execution Mode',
-    'coin.mode.sim_option': 'Simulation (No real order)',
+    'coin.mode.sim_option': 'Dry Run (No real order)',
     'coin.mode.live_option': 'Live Trading (Real order)',
-    'coin.mode.help': 'Simulation runs without real exchange orders.',
+    'coin.mode.help': 'Dry run records only planned orders without exchange execution.',
     'coin.binance_key': 'Binance API Key',
     'coin.binance_secret': 'Binance API Secret',
     'coin.upbit_key': 'Upbit Access Key',
@@ -183,10 +250,13 @@
     'ph.upbit_key': 'Upbit Access Key',
     'ph.upbit_secret': 'Upbit Secret Key',
     'auth.user': 'Signed-in User',
-    'mode.sim': 'Simulation',
+    'mode.sim': 'Dry Run',
     'mode.live': 'Live Trading',
     'label.yes': 'Yes',
     'label.no': 'No',
+    'label.allowed': 'Allowed',
+    'label.blocked': 'Blocked',
+    'label.unknown': 'Unknown',
     'status.badge.logged_out': 'Logged Out',
     'status.badge.verified': 'Verified',
     'status.badge.unverified': 'Not Verified',
@@ -208,6 +278,13 @@
     'check.account': 'Account number required',
     'check.stock_symbol': 'Stock symbol required',
     'check.coin_symbol': 'Crypto symbol required',
+    'check.daily_loss': 'Daily max loss exceeded',
+    'check.daily_trades': 'Daily trade count limit reached',
+    'check.consecutive_losses': 'Consecutive loss stop triggered',
+    'check.market_crash': 'Market crash stop triggered',
+    'check.score_threshold': 'Recommendation score below threshold',
+    'check.order_permission': 'Order permission unavailable',
+    'check.ip_restricted': 'IP restriction blocks ordering',
     'guard.prefix': 'Pre-run checks',
     'guard.ready': 'Ready. You can start auto-trading now.',
     'stock.verify_sent': 'Verification code was sent.',
@@ -245,7 +322,14 @@
     'log.stock_saved': 'Stock settings saved',
     'log.coin_saved': 'Crypto settings saved',
     'log.dashboard_ready.title': 'Dashboard ready',
-    'log.dashboard_ready.body': 'Start the 7-day trial from Home, then configure and run auto-trading.'
+    'log.dashboard_ready.body': 'Start the 7-day trial from Home, then configure and run auto-trading.',
+    'log.reco_ready': 'Recommendation cards refreshed',
+    'log.safety_blocked': 'Safety guard blocked execution',
+    'log.live_confirm_cancelled': 'Live trading confirmation cancelled',
+    'log.credentials_vault_ok': 'Credentials stored in server vault',
+    'log.credentials_vault_fail': 'Failed to store credentials in vault',
+    'log.dry_run_plan': 'Dry-run order plan only (no real orders)',
+    'log.market_crash_stop': 'Market crash stop triggered'
   };
 
   var refs = {
@@ -296,7 +380,13 @@
     stockSymbol: document.getElementById('stockSymbol'),
     stockBudget: document.getElementById('stockBudget'),
     stockAutoSelect: document.getElementById('stockAutoSelect'),
+    holdingPeriod: document.getElementById('holdingPeriod'),
     stockDryRun: document.getElementById('stockDryRun'),
+    dailyMaxLoss: document.getElementById('dailyMaxLoss'),
+    dailyMaxTrades: document.getElementById('dailyMaxTrades'),
+    maxConsecutiveLosses: document.getElementById('maxConsecutiveLosses'),
+    marketCrashStopPct: document.getElementById('marketCrashStopPct'),
+    strategyPresetBox: document.getElementById('strategyPresetBox'),
     kiwoomApiKey: document.getElementById('kiwoomApiKey'),
     kiwoomApiSecret: document.getElementById('kiwoomApiSecret'),
     telegramToken: document.getElementById('telegramToken'),
@@ -320,9 +410,20 @@
     btnCheckApi: document.getElementById('btnCheckApi'),
     btnVerifyStart: document.getElementById('btnVerifyStart'),
     btnVerifyRefresh: document.getElementById('btnVerifyRefresh'),
+    apiHealthKey: document.getElementById('apiHealthKey'),
+    apiHealthBalance: document.getElementById('apiHealthBalance'),
+    apiHealthOrder: document.getElementById('apiHealthOrder'),
+    apiHealthIp: document.getElementById('apiHealthIp'),
+    apiHealthCheckedAt: document.getElementById('apiHealthCheckedAt'),
     verifyCodeForm: document.getElementById('verifyCodeForm'),
     verifyCode: document.getElementById('verifyCode'),
     verifyHint: document.getElementById('verifyHint'),
+    btnRefreshReco: document.getElementById('btnRefreshReco'),
+    recommendationCards: document.getElementById('recommendationCards'),
+    summaryWinRate: document.getElementById('summaryWinRate'),
+    summaryTotalPnl: document.getElementById('summaryTotalPnl'),
+    summaryMaxDrawdown: document.getElementById('summaryMaxDrawdown'),
+    journalTableBody: document.getElementById('journalTableBody'),
 
     btnStop: document.getElementById('btnStop'),
     btnAnalyze: document.getElementById('btnAnalyze'),
@@ -338,6 +439,13 @@
     btnRefreshBilling: document.getElementById('btnRefreshBilling'),
     btnExportUsers: document.getElementById('btnExportUsers'),
     userTableBody: document.getElementById('userTableBody'),
+    liveConfirmModal: document.getElementById('liveConfirmModal'),
+    liveConfirmOrderMax: document.getElementById('liveConfirmOrderMax'),
+    liveConfirmLossLimit: document.getElementById('liveConfirmLossLimit'),
+    liveConfirmStepText: document.getElementById('liveConfirmStepText'),
+    btnLiveConfirmCancel: document.getElementById('btnLiveConfirmCancel'),
+    btnLiveConfirmNext: document.getElementById('btnLiveConfirmNext'),
+    btnLiveConfirmFinal: document.getElementById('btnLiveConfirmFinal'),
 
     resultBox: document.getElementById('resultBox')
   };
@@ -350,7 +458,20 @@
     lang: loadLanguage(),
     logs: [],
     adminUsers: [],
-    adminUsersLoaded: false
+    adminUsersLoaded: false,
+    recommendations: [],
+    recommendationContext: null,
+    journalEntries: [],
+    liveConfirmResolver: null,
+    liveConfirmStep: 1,
+    apiHealth: {
+      checked: false,
+      api_key_valid: null,
+      balance_available: null,
+      order_permission: null,
+      ip_restricted: null,
+      checked_at: ''
+    }
   };
 
   function loadLanguage() {
@@ -371,6 +492,10 @@
     updateStatus();
     updateGuard();
     renderUserTable();
+    renderRecommendationCards();
+    renderJournal();
+    renderApiHealth();
+    renderStrategyPreset();
   }
 
   function trans(key, koText) {
@@ -432,8 +557,23 @@
     }
   }
 
+  function redactSensitive(rawText) {
+    return String(rawText || '').replace(/("?(?:api[_-]?key|api[_-]?secret|secret|token|password|access_key|private_key)"?\s*:\s*")([^"]*)"/gi, '$1***REDACTED***"');
+  }
+
+  function safePayloadText(payload) {
+    if (typeof payload === 'string') {
+      return redactSensitive(payload);
+    }
+    try {
+      return redactSensitive(JSON.stringify(payload, null, 2));
+    } catch (_err) {
+      return redactSensitive(String(payload));
+    }
+  }
+
   function addLog(title, payload) {
-    var body = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+    var body = safePayloadText(payload);
     var line = '[' + new Date().toLocaleString(state.lang === 'en' ? 'en-US' : 'ko-KR') + '] ' + title + '\n' + body;
     state.logs.unshift(line);
     state.logs = state.logs.slice(0, 20);
@@ -545,8 +685,578 @@
     });
   }
 
+  function numberOr(value, fallback) {
+    var parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  function formatKrw(value) {
+    var amount = numberOr(value, 0);
+    return new Intl.NumberFormat(state.lang === 'en' ? 'en-US' : 'ko-KR').format(Math.round(amount)) + (state.lang === 'en' ? ' KRW' : '원');
+  }
+
+  function percentText(value) {
+    var num = numberOr(value, 0);
+    return (Math.round(num * 100) / 100).toFixed(2) + '%';
+  }
+
+  function holdingProfile(holdingPeriod) {
+    if (holdingPeriod === 'scalp') {
+      return {
+        key: 'scalp',
+        name: trans('strategy.holding.scalp', '초단타 (1~10분)'),
+        ma_short: 5,
+        ma_long: 20,
+        volume_threshold_pct: 70,
+        rsi_threshold: 40,
+        stop_loss_pct: 0.8,
+        news_weight: 30,
+        volume_weight: 20,
+        rsi_weight: 20,
+        trend_weight: 30
+      };
+    }
+    if (holdingPeriod === 'swing') {
+      return {
+        key: 'swing',
+        name: trans('strategy.holding.swing', '스윙 (1일~수일)'),
+        ma_short: 20,
+        ma_long: 60,
+        volume_threshold_pct: 30,
+        rsi_threshold: 38,
+        stop_loss_pct: 3.2,
+        news_weight: 40,
+        volume_weight: 15,
+        rsi_weight: 15,
+        trend_weight: 30
+      };
+    }
+    return {
+      key: 'day',
+      name: trans('strategy.holding.day', '단타 (1시간~1일)'),
+      ma_short: 10,
+      ma_long: 30,
+      volume_threshold_pct: 45,
+      rsi_threshold: 35,
+      stop_loss_pct: 1.8,
+      news_weight: 30,
+      volume_weight: 20,
+      rsi_weight: 20,
+      trend_weight: 30
+    };
+  }
+
+  function renderStrategyPreset() {
+    if (!refs.strategyPresetBox) {
+      return;
+    }
+    var profile = holdingProfile((refs.holdingPeriod && refs.holdingPeriod.value) || 'day');
+    refs.strategyPresetBox.innerHTML = [
+      '<strong>' + profile.name + '</strong>',
+      '<br />MA(' + profile.ma_short + '/' + profile.ma_long + '), Volume +' + profile.volume_threshold_pct + '%, RSI ≤ ' + profile.rsi_threshold + ', Stop Loss ' + profile.stop_loss_pct + '%',
+      '<br />Score Weight - News ' + profile.news_weight + ' / Volume ' + profile.volume_weight + ' / RSI ' + profile.rsi_weight + ' / Trend ' + profile.trend_weight
+    ].join('');
+  }
+
+  function healthLabel(value, kind) {
+    if (value === null || value === undefined) {
+      return { text: trans('label.unknown', '미확인'), className: 'status-warn' };
+    }
+    if (kind === 'ip') {
+      return value
+        ? { text: trans('label.blocked', '제한됨'), className: 'status-bad' }
+        : { text: trans('label.allowed', '정상'), className: 'status-good' };
+    }
+    return value
+      ? { text: trans('label.allowed', '정상'), className: 'status-good' }
+      : { text: trans('label.blocked', '불가'), className: 'status-bad' };
+  }
+
+  function setHealthNode(node, value, kind) {
+    if (!node) {
+      return;
+    }
+    var badge = healthLabel(value, kind);
+    node.textContent = badge.text;
+    node.classList.remove('status-good', 'status-warn', 'status-bad');
+    node.classList.add(badge.className);
+  }
+
+  function renderApiHealth() {
+    setHealthNode(refs.apiHealthKey, state.apiHealth.api_key_valid, 'default');
+    setHealthNode(refs.apiHealthBalance, state.apiHealth.balance_available, 'default');
+    setHealthNode(refs.apiHealthOrder, state.apiHealth.order_permission, 'default');
+    setHealthNode(refs.apiHealthIp, state.apiHealth.ip_restricted, 'ip');
+    setText(
+      refs.apiHealthCheckedAt,
+      (state.lang === 'en' ? 'Last check: ' : '최근 확인: ') + (state.apiHealth.checked_at ? formatDateText(state.apiHealth.checked_at) : '-')
+    );
+  }
+
+  function marketUniverse(marketType) {
+    if (marketType === 'crypto') {
+      return [
+        { symbol: 'BTC/KRW', name: 'Bitcoin' },
+        { symbol: 'ETH/KRW', name: 'Ethereum' },
+        { symbol: 'SOL/KRW', name: 'Solana' },
+        { symbol: 'XRP/KRW', name: 'Ripple' },
+        { symbol: 'DOGE/KRW', name: 'Dogecoin' },
+        { symbol: 'BNB/USDT', name: 'BNB' },
+        { symbol: 'ADA/KRW', name: 'Cardano' },
+        { symbol: 'TRX/KRW', name: 'TRON' },
+        { symbol: 'AVAX/KRW', name: 'Avalanche' },
+        { symbol: 'LINK/KRW', name: 'Chainlink' },
+        { symbol: 'DOT/KRW', name: 'Polkadot' },
+        { symbol: 'MATIC/KRW', name: 'Polygon' }
+      ];
+    }
+    return [
+      { symbol: '005930', name: '삼성전자' },
+      { symbol: '000660', name: 'SK하이닉스' },
+      { symbol: '035420', name: 'NAVER' },
+      { symbol: '035720', name: '카카오' },
+      { symbol: '068270', name: '셀트리온' },
+      { symbol: '005380', name: '현대차' },
+      { symbol: '207940', name: '삼성바이오로직스' },
+      { symbol: '051910', name: 'LG화학' },
+      { symbol: '105560', name: 'KB금융' },
+      { symbol: '066570', name: 'LG전자' },
+      { symbol: '003670', name: '포스코퓨처엠' },
+      { symbol: '042660', name: '한화오션' }
+    ];
+  }
+
+  function randomBetween(min, max) {
+    return min + (Math.random() * (max - min));
+  }
+
+  function baseCandidate(universeItem, profile) {
+    var rsi = randomBetween(20, 70);
+    var maLong = randomBetween(95, 130);
+    var maShort = maLong + randomBetween(-15, 18);
+    return {
+      symbol: universeItem.symbol,
+      name: universeItem.name,
+      news_positive: randomBetween(0.3, 0.9),
+      news_mentions_delta_pct: randomBetween(5, 160),
+      volume_growth_pct: randomBetween(10, 220),
+      volatility_increase_pct: randomBetween(6, 90),
+      rsi: rsi,
+      ma_short: maShort,
+      ma_long: maLong,
+      generated_at: new Date().toISOString(),
+      profile: profile
+    };
+  }
+
+  function stage1Score(candidate) {
+    var news = candidate.news_mentions_delta_pct * 0.38;
+    var volume = candidate.volume_growth_pct * 0.37;
+    var volatility = candidate.volatility_increase_pct * 0.25;
+    return news + volume + volatility;
+  }
+
+  function scoreCandidate(candidate, profile) {
+    var score = 0;
+    var reasons = [];
+    if (candidate.news_positive >= 0.55) {
+      score += profile.news_weight;
+      reasons.push(trans('reco.reason.news', '뉴스 긍정 신호'));
+    }
+    if (candidate.volume_growth_pct >= profile.volume_threshold_pct) {
+      score += profile.volume_weight;
+      reasons.push(trans('reco.reason.volume', '거래량 증가'));
+    }
+    if (candidate.rsi <= profile.rsi_threshold) {
+      score += profile.rsi_weight;
+      reasons.push(trans('reco.reason.rsi', 'RSI 조건 충족'));
+    }
+    if (candidate.ma_short > candidate.ma_long) {
+      score += profile.trend_weight;
+      reasons.push(trans('reco.reason.trend', '추세 상승'));
+    }
+    var riskScore = (candidate.volatility_increase_pct * 0.6) + (Math.max(0, 50 - candidate.rsi) * 0.4);
+    var risk = 'mid';
+    if (riskScore >= 62) {
+      risk = 'high';
+    } else if (riskScore <= 34) {
+      risk = 'low';
+    }
+    return {
+      score: Math.round(score),
+      reasons: reasons,
+      signal: score >= 85 ? 'high' : (score >= 70 ? 'mid' : 'low'),
+      risk: risk
+    };
+  }
+
+  function buildRecommendationContext(marketType, settings) {
+    var profile = holdingProfile(settings.holdingPeriod);
+    var universe = marketUniverse(marketType);
+    var generated = universe.map(function (item) {
+      var candidate = baseCandidate(item, profile);
+      candidate.stage1 = stage1Score(candidate);
+      return candidate;
+    });
+    var staged = generated.filter(function (candidate) {
+      return candidate.news_mentions_delta_pct >= 20 || candidate.volume_growth_pct >= 40 || candidate.volatility_increase_pct >= 18;
+    }).sort(function (a, b) {
+      return b.stage1 - a.stage1;
+    }).slice(0, 10);
+    if (staged.length < 1) {
+      staged = generated.sort(function (a, b) {
+        return b.stage1 - a.stage1;
+      }).slice(0, 10);
+    }
+
+    var scored = staged.map(function (candidate) {
+      var detail = scoreCandidate(candidate, profile);
+      return Object.assign(candidate, detail);
+    }).sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    var recommended = scored.filter(function (candidate) {
+      return candidate.score >= 70;
+    });
+    var picked = recommended.length ? recommended[0] : (scored[0] || null);
+    var btcDropPct = randomBetween(-5.2, 2.1);
+
+    return {
+      market_type: marketType,
+      created_at: new Date().toISOString(),
+      profile: profile,
+      candidates: scored,
+      recommended: recommended,
+      picked: picked,
+      market_snapshot: {
+        btc_change_pct_24h: Math.round(btcDropPct * 100) / 100
+      },
+      pipeline: {
+        news_collection_server: 'active',
+        indicator_analysis_server: 'active',
+        recommendation_engine: 'active',
+        order_execution_server: 'ready'
+      }
+    };
+  }
+
+  function riskLabelText(risk) {
+    if (risk === 'high') {
+      return trans('reco.risk.high', '높음');
+    }
+    if (risk === 'low') {
+      return trans('reco.risk.low', '낮음');
+    }
+    return trans('reco.risk.mid', '보통');
+  }
+
+  function signalLabelText(signal) {
+    if (signal === 'high') {
+      return trans('reco.signal.high', '강함');
+    }
+    if (signal === 'mid') {
+      return trans('reco.signal.mid', '중간');
+    }
+    return trans('reco.signal.low', '약함');
+  }
+
+  function renderRecommendationCards() {
+    if (!refs.recommendationCards) {
+      return;
+    }
+    clearNode(refs.recommendationCards);
+    var cards = Array.isArray(state.recommendations) ? state.recommendations.slice(0, 10) : [];
+    if (cards.length < 1) {
+      var empty = document.createElement('article');
+      empty.className = 'recommendation-card placeholder-card';
+      empty.innerHTML = '<h3>' + trans('reco.empty.title', '추천 대기 중') + '</h3><p>' + trans('reco.empty.body', '설정 저장 후 추천 새로고침 또는 자동매매 시작 시 추천 카드가 생성됩니다.') + '</p>';
+      refs.recommendationCards.appendChild(empty);
+      return;
+    }
+    cards.forEach(function (item) {
+      var card = document.createElement('article');
+      card.className = 'recommendation-card';
+      var reasonsHtml = (item.reasons || []).map(function (reason) {
+        return '<li>' + reason + '</li>';
+      }).join('');
+      if (!reasonsHtml) {
+        reasonsHtml = '<li>' + trans('reco.reason.news', '뉴스 긍정 신호') + '</li>';
+      }
+      card.innerHTML = [
+        '<h3>' + item.name + ' <small>(' + item.symbol + ')</small></h3>',
+        '<div class="recommendation-meta">',
+        '<span>' + trans('reco.score', '점수') + ': ' + item.score + '</span>',
+        '<span>' + trans('reco.signal', '신호강도') + ': ' + signalLabelText(item.signal) + '</span>',
+        '<span>' + trans('reco.risk', '위험도') + ': ' + riskLabelText(item.risk) + '</span>',
+        '</div>',
+        '<ul class="recommendation-reasons">' + reasonsHtml + '</ul>',
+        '<div class="recommendation-time">' + trans('reco.time', '추천 시각') + ': ' + formatDateText(item.generated_at) + '</div>'
+      ].join('');
+      refs.recommendationCards.appendChild(card);
+    });
+  }
+
+  function refreshRecommendations(marketType, silent) {
+    var settings = collectFormSettings();
+    state.recommendationContext = buildRecommendationContext(marketType || 'stock', settings);
+    state.recommendations = state.recommendationContext.candidates || [];
+    renderRecommendationCards();
+    if (!silent) {
+      addLog(trans('log.reco_ready', '추천 카드 갱신'), {
+        market: marketType || 'stock',
+        picked: state.recommendationContext.picked ? state.recommendationContext.picked.symbol : null,
+        candidate_count: state.recommendations.length
+      });
+    }
+  }
+
+  function todayJournalEntries() {
+    var now = new Date();
+    var y = now.getFullYear();
+    var m = now.getMonth();
+    var d = now.getDate();
+    return state.journalEntries.filter(function (entry) {
+      var ts = new Date(entry.buy_at);
+      return ts.getFullYear() === y && ts.getMonth() === m && ts.getDate() === d;
+    });
+  }
+
+  function consecutiveLosses(entries) {
+    var count = 0;
+    entries.forEach(function (entry) {
+      if (entry.pnl_krw < 0) {
+        count += 1;
+      } else {
+        count = 0;
+      }
+    });
+    return count;
+  }
+
+  function renderJournal() {
+    var entries = Array.isArray(state.journalEntries) ? state.journalEntries : [];
+    if (refs.journalTableBody) {
+      clearNode(refs.journalTableBody);
+      if (entries.length < 1) {
+        var emptyRow = document.createElement('tr');
+        var emptyCell = document.createElement('td');
+        emptyCell.colSpan = 9;
+        emptyCell.className = 'journal-empty';
+        emptyCell.textContent = trans('journal.empty', '아직 매매 기록이 없습니다.');
+        emptyRow.appendChild(emptyCell);
+        refs.journalTableBody.appendChild(emptyRow);
+      } else {
+        entries.slice(0, 30).forEach(function (entry) {
+          var row = document.createElement('tr');
+          appendTableCell(row, entry.market_label || '-');
+          appendTableCell(row, formatDateText(entry.buy_at));
+          appendTableCell(row, formatDateText(entry.sell_at));
+          appendTableCell(row, entry.entry_reason || '-');
+          appendTableCell(row, (entry.pnl_krw >= 0 ? '+' : '') + formatKrw(entry.pnl_krw) + ' (' + percentText(entry.pnl_pct) + ')');
+          appendTableCell(row, String(entry.reco_score || '-'));
+          appendTableCell(row, (entry.reco_basis || []).join(', ') || '-');
+          appendTableCell(row, entry.news_summary || '-');
+          appendTableCell(row, entry.indicator_summary || '-');
+          refs.journalTableBody.appendChild(row);
+        });
+      }
+    }
+
+    var total = entries.reduce(function (acc, entry) { return acc + numberOr(entry.pnl_krw, 0); }, 0);
+    var wins = entries.filter(function (entry) { return numberOr(entry.pnl_krw, 0) > 0; }).length;
+    var winRate = entries.length ? ((wins / entries.length) * 100) : 0;
+    var equity = 0;
+    var peak = 0;
+    var maxDrawdown = 0;
+    entries.slice().reverse().forEach(function (entry) {
+      equity += numberOr(entry.pnl_krw, 0);
+      if (equity > peak) {
+        peak = equity;
+      }
+      if (peak > 0) {
+        var dd = ((peak - equity) / peak) * 100;
+        if (dd > maxDrawdown) {
+          maxDrawdown = dd;
+        }
+      }
+    });
+
+    if (refs.summaryWinRate) {
+      refs.summaryWinRate.textContent = percentText(winRate);
+    }
+    if (refs.summaryTotalPnl) {
+      refs.summaryTotalPnl.textContent = (total >= 0 ? '+' : '') + formatKrw(total);
+      refs.summaryTotalPnl.classList.remove('metric-up', 'metric-down');
+      refs.summaryTotalPnl.classList.add(total >= 0 ? 'metric-up' : 'metric-down');
+    }
+    if (refs.summaryMaxDrawdown) {
+      refs.summaryMaxDrawdown.textContent = percentText(maxDrawdown);
+    }
+  }
+
+  function renderSummaryFromReport(report) {
+    if (!report || !report.details || state.journalEntries.length > 0) {
+      return;
+    }
+    var details = report.details;
+    var winRate = numberOr(details.win_rate, 0) * (details.win_rate <= 1 ? 100 : 1);
+    var total = numberOr(details.total_pnl_krw, 0);
+    var maxDd = numberOr(details.max_drawdown_pct, numberOr(details.drawdown_pct, 0) * 100);
+    if (refs.summaryWinRate) {
+      refs.summaryWinRate.textContent = percentText(winRate);
+    }
+    if (refs.summaryTotalPnl) {
+      refs.summaryTotalPnl.textContent = (total >= 0 ? '+' : '') + formatKrw(total);
+      refs.summaryTotalPnl.classList.remove('metric-up', 'metric-down');
+      refs.summaryTotalPnl.classList.add(total >= 0 ? 'metric-up' : 'metric-down');
+    }
+    if (refs.summaryMaxDrawdown) {
+      refs.summaryMaxDrawdown.textContent = percentText(maxDd);
+    }
+  }
+
+  function buildSimulatedJournalEntries(context, marketLabel, dryRun) {
+    var picks = (context && context.recommended && context.recommended.length ? context.recommended : context.candidates || []).slice(0, 2);
+    var profile = context ? context.profile : holdingProfile('day');
+    var now = Date.now();
+    return picks.map(function (item, index) {
+      var holdMs = profile.key === 'scalp'
+        ? randomBetween(1, 10) * 60 * 1000
+        : (profile.key === 'swing' ? randomBetween(26, 90) * 60 * 60 * 1000 : randomBetween(1, 20) * 60 * 60 * 1000);
+      var buyAt = new Date(now - ((index + 1) * 9 * 60 * 1000)).toISOString();
+      var sellAt = new Date(Date.parse(buyAt) + holdMs).toISOString();
+      var edge = (numberOr(item.score, 65) - 60) / 100;
+      var pnlPct = dryRun ? (edge + randomBetween(-0.35, 0.4)) : (edge + randomBetween(-0.7, 0.85));
+      var pnlKrw = Math.round(numberOr(item.score, 70) * 8500 * pnlPct);
+      return {
+        market_label: marketLabel + (dryRun ? ' (DRY RUN)' : ' (LIVE)'),
+        buy_at: buyAt,
+        sell_at: sellAt,
+        entry_reason: (item.reasons || []).slice(0, 2).join(' + ') || trans('reco.reason.trend', '추세 상승'),
+        pnl_krw: pnlKrw,
+        pnl_pct: pnlPct,
+        reco_score: item.score,
+        reco_basis: item.reasons || [],
+        news_summary: '뉴스 긍정 ' + Math.round(numberOr(item.news_positive, 0) * 100) + '%, 언급량 +' + Math.round(numberOr(item.news_mentions_delta_pct, 0)) + '%',
+        indicator_summary: 'RSI ' + Math.round(numberOr(item.rsi, 0)) + ', MA ' + Math.round(numberOr(item.ma_short, 0)) + '/' + Math.round(numberOr(item.ma_long, 0)),
+        recommendation: {
+          score: item.score,
+          reasons: item.reasons || [],
+          rsi: item.rsi,
+          ma_short: item.ma_short,
+          ma_long: item.ma_long,
+          volume_growth_pct: item.volume_growth_pct
+        },
+        simulated: dryRun
+      };
+    });
+  }
+
+  function toSafetyChecks(settings, context) {
+    var checks = [];
+    var todayEntries = todayJournalEntries();
+    var todayPnl = todayEntries.reduce(function (acc, entry) { return acc + numberOr(entry.pnl_krw, 0); }, 0);
+    if (todayPnl <= (-1 * numberOr(settings.dailyMaxLoss, 300000))) {
+      checks.push(trans('check.daily_loss', '하루 최대 손실 한도 초과'));
+    }
+    if (todayEntries.length >= numberOr(settings.dailyMaxTrades, 8)) {
+      checks.push(trans('check.daily_trades', '하루 최대 거래 횟수 한도 도달'));
+    }
+    if (consecutiveLosses(todayEntries) >= numberOr(settings.maxConsecutiveLosses, 3)) {
+      checks.push(trans('check.consecutive_losses', '연속 손실 자동중지 조건 충족'));
+    }
+    if (context && context.market_snapshot && numberOr(context.market_snapshot.btc_change_pct_24h, 0) <= (-1 * numberOr(settings.marketCrashStopPct, 3))) {
+      checks.push(trans('check.market_crash', '시장 급락 자동중지 발동') + ': BTC ' + percentText(context.market_snapshot.btc_change_pct_24h));
+    }
+    if (!context || !context.picked || numberOr(context.picked.score, 0) < 70) {
+      checks.push(trans('check.score_threshold', '추천 점수 70점 미만'));
+    }
+    return checks;
+  }
+
+  function maskCredentialValue(value) {
+    var text = String(value || '');
+    if (!text) {
+      return '';
+    }
+    if (text.length <= 6) {
+      return '***';
+    }
+    return text.slice(0, 3) + '***' + text.slice(-2);
+  }
+
+  async function storeCredentialsInVault(payloadCredentials) {
+    var keys = Object.keys(payloadCredentials || {}).filter(function (key) {
+      return String(payloadCredentials[key] || '').trim().length > 0;
+    });
+    if (keys.length < 1) {
+      return;
+    }
+    try {
+      var response = await callApi('storeCredentials', 'POST', { credentials: payloadCredentials });
+      addLog(trans('log.credentials_vault_ok', '자격증명 서버 보관 완료'), {
+        stored_keys: keys.map(function (key) { return key; }),
+        masked: keys.reduce(function (acc, key) {
+          acc[key] = maskCredentialValue(payloadCredentials[key]);
+          return acc;
+        }, {}),
+        result: response
+      });
+    } catch (err) {
+      addLog(trans('log.credentials_vault_fail', '자격증명 보관 실패'), String(err.message || err));
+    }
+  }
+
+  function setLiveModalStep(step) {
+    state.liveConfirmStep = step;
+    if (refs.liveConfirmStepText) {
+      refs.liveConfirmStepText.textContent = step === 1
+        ? trans('live.step1', '1 / 2 확인 단계')
+        : trans('live.step2', '2 / 2 최종 단계');
+    }
+    if (refs.btnLiveConfirmNext) {
+      refs.btnLiveConfirmNext.hidden = step !== 1;
+    }
+    if (refs.btnLiveConfirmFinal) {
+      refs.btnLiveConfirmFinal.hidden = step !== 2;
+    }
+  }
+
+  function closeLiveConfirmModal(accepted) {
+    if (refs.liveConfirmModal) {
+      refs.liveConfirmModal.hidden = true;
+    }
+    if (typeof state.liveConfirmResolver === 'function') {
+      state.liveConfirmResolver(Boolean(accepted));
+    }
+    state.liveConfirmResolver = null;
+    setLiveModalStep(1);
+  }
+
+  function askLiveConfirmation(orderMax, dailyLoss) {
+    if (!refs.liveConfirmModal) {
+      var first = window.confirm('실거래 전환 확인\n1회 최대 주문금액: ' + formatKrw(orderMax) + '\n하루 손실 제한: ' + formatKrw(dailyLoss) + '\n다음 단계로 진행하시겠습니까?');
+      if (!first) {
+        return Promise.resolve(false);
+      }
+      return Promise.resolve(window.confirm('최종 확인: 실제 주문을 실행합니다.'));
+    }
+    if (refs.liveConfirmOrderMax) {
+      refs.liveConfirmOrderMax.textContent = formatKrw(orderMax);
+    }
+    if (refs.liveConfirmLossLimit) {
+      refs.liveConfirmLossLimit.textContent = formatKrw(dailyLoss);
+    }
+    refs.liveConfirmModal.hidden = false;
+    setLiveModalStep(1);
+    return new Promise(function (resolve) {
+      state.liveConfirmResolver = resolve;
+    });
+  }
+
   function modeLabel(isDryRun) {
-    return isDryRun ? trans('mode.sim', '모의투자') : trans('mode.live', '실거래');
+    return isDryRun ? trans('mode.sim', '드라이런') : trans('mode.live', '실거래');
   }
 
   function isMobileViewport() {
@@ -574,6 +1284,15 @@
   function fixedApiBase() {
     var cfg = window.APP_CONFIG || {};
     return String(cfg.defaultApiBase || '').trim();
+  }
+
+  function callApi(endpointName, method, body, options) {
+    var opts = Object.assign({}, options || {});
+    var runtimeApiToken = String((refs.apiToken && refs.apiToken.value) || '').trim();
+    if (runtimeApiToken) {
+      opts.apiToken = runtimeApiToken;
+    }
+    return core.callApi(endpointName, method, body, opts);
   }
 
   function normalizeEmail(raw) {
@@ -615,15 +1334,20 @@
     if (refs.apiBase) {
       refs.apiBase.value = fixedApiBase();
     }
-    refs.apiToken.value = settings.apiToken;
+    refs.apiToken.value = '';
     refs.accountNo.value = settings.accountNo;
     refs.stockSymbol.value = settings.stockSymbol;
     refs.stockBudget.value = String(settings.stockBudget);
     refs.stockAutoSelect.value = String(Boolean(settings.stockAutoSelect));
+    refs.holdingPeriod.value = settings.holdingPeriod || 'day';
     refs.stockDryRun.value = String(Boolean(settings.stockDryRun));
-    refs.kiwoomApiKey.value = settings.kiwoomApiKey;
-    refs.kiwoomApiSecret.value = settings.kiwoomApiSecret;
-    refs.telegramToken.value = settings.telegramToken;
+    refs.dailyMaxLoss.value = String(settings.dailyMaxLoss || 300000);
+    refs.dailyMaxTrades.value = String(settings.dailyMaxTrades || 8);
+    refs.maxConsecutiveLosses.value = String(settings.maxConsecutiveLosses || 3);
+    refs.marketCrashStopPct.value = String(settings.marketCrashStopPct || 3);
+    refs.kiwoomApiKey.value = '';
+    refs.kiwoomApiSecret.value = '';
+    refs.telegramToken.value = '';
     refs.telegramChatId.value = settings.telegramChatId;
 
     refs.coinExchange.value = settings.coinExchange;
@@ -631,11 +1355,12 @@
     refs.coinBudget.value = String(settings.coinBudget);
     refs.coinAutoSelect.value = String(Boolean(settings.coinAutoSelect));
     refs.coinDryRun.value = String(Boolean(settings.coinDryRun));
-    refs.binanceApiKey.value = settings.binanceApiKey;
-    refs.binanceApiSecret.value = settings.binanceApiSecret;
-    refs.upbitApiKey.value = settings.upbitApiKey;
-    refs.upbitApiSecret.value = settings.upbitApiSecret;
+    refs.binanceApiKey.value = '';
+    refs.binanceApiSecret.value = '';
+    refs.upbitApiKey.value = '';
+    refs.upbitApiSecret.value = '';
 
+    renderStrategyPreset();
     updateCoinCredentialFields();
   }
 
@@ -649,23 +1374,41 @@
       stockSymbol: refs.stockSymbol.value.trim(),
       stockBudget: refs.stockBudget.value,
       stockAutoSelect: refs.stockAutoSelect.value === 'true',
+      holdingPeriod: refs.holdingPeriod.value,
       stockDryRun: refs.stockDryRun.value === 'true',
-      kiwoomApiKey: refs.kiwoomApiKey.value.trim(),
-      kiwoomApiSecret: refs.kiwoomApiSecret.value.trim(),
+      dailyMaxLoss: refs.dailyMaxLoss.value,
+      dailyMaxTrades: refs.dailyMaxTrades.value,
+      maxConsecutiveLosses: refs.maxConsecutiveLosses.value,
+      marketCrashStopPct: refs.marketCrashStopPct.value,
+      kiwoomApiKey: '',
+      kiwoomApiSecret: '',
 
       coinExchange: refs.coinExchange.value,
       coinSymbol: refs.coinSymbol.value.trim(),
       coinBudget: refs.coinBudget.value,
       coinAutoSelect: refs.coinAutoSelect.value === 'true',
       coinDryRun: refs.coinDryRun.value === 'true',
-      binanceApiKey: refs.binanceApiKey.value.trim(),
-      binanceApiSecret: refs.binanceApiSecret.value.trim(),
-      upbitApiKey: refs.upbitApiKey.value.trim(),
-      upbitApiSecret: refs.upbitApiSecret.value.trim(),
+      binanceApiKey: '',
+      binanceApiSecret: '',
+      upbitApiKey: '',
+      upbitApiSecret: '',
 
-      telegramToken: refs.telegramToken.value.trim(),
+      telegramToken: '',
       telegramChatId: refs.telegramChatId.value.trim()
     });
+  }
+
+  function collectRuntimeSecrets() {
+    return {
+      apiToken: String((refs.apiToken && refs.apiToken.value) || '').trim(),
+      kiwoomApiKey: String((refs.kiwoomApiKey && refs.kiwoomApiKey.value) || '').trim(),
+      kiwoomApiSecret: String((refs.kiwoomApiSecret && refs.kiwoomApiSecret.value) || '').trim(),
+      telegramToken: String((refs.telegramToken && refs.telegramToken.value) || '').trim(),
+      binanceApiKey: String((refs.binanceApiKey && refs.binanceApiKey.value) || '').trim(),
+      binanceApiSecret: String((refs.binanceApiSecret && refs.binanceApiSecret.value) || '').trim(),
+      upbitApiKey: String((refs.upbitApiKey && refs.upbitApiKey.value) || '').trim(),
+      upbitApiSecret: String((refs.upbitApiSecret && refs.upbitApiSecret.value) || '').trim()
+    };
   }
 
   function updateCoinCredentialFields() {
@@ -781,6 +1524,8 @@
     }
 
     renderBilling(session, billing);
+    renderApiHealth();
+    renderStrategyPreset();
   }
 
   function tabKeys() {
@@ -809,6 +1554,12 @@
       setMenuOpen(false);
     }
 
+    if (key === 'coin') {
+      refreshRecommendations('crypto', true);
+    } else if (key === 'stock') {
+      refreshRecommendations('stock', true);
+    }
+
     updateStatus();
     updateGuard();
   }
@@ -830,6 +1581,12 @@
     }
     if (settings.apiBase && !state.apiChecked) {
       checks.push(trans('check.api', 'API 연결 확인 필요'));
+    }
+    if (state.apiHealth.checked && state.apiHealth.order_permission === false) {
+      checks.push(trans('check.order_permission', '주문 권한 없음'));
+    }
+    if (state.apiHealth.checked && state.apiHealth.ip_restricted === true) {
+      checks.push(trans('check.ip_restricted', 'IP 제한으로 주문 불가'));
     }
 
     if (targetMarket === 'stock') {
@@ -879,7 +1636,7 @@
       return;
     }
     try {
-      var data = await core.callApi('me', 'GET');
+      var data = await callApi('me', 'GET');
       var user = data.user || null;
       saveSession({
         token: session.token,
@@ -906,7 +1663,7 @@
       return;
     }
     try {
-      var data = await core.callApi('billingStatus', 'GET');
+      var data = await callApi('billingStatus', 'GET');
       var billing = data.billing || null;
       saveSession({ billing: billing });
       if (!silent) {
@@ -928,7 +1685,7 @@
       return;
     }
     try {
-      var data = await core.callApi('verifyStart', 'POST', {});
+      var data = await callApi('verifyStart', 'POST', {});
       refs.verifyHint.textContent = (data.message || trans('stock.verify_sent', '인증 코드가 발송되었습니다.')) + (data.debug_code ? (' | code: ' + data.debug_code) : '');
       addLog(trans('log.verify_start_ok', '본인인증 시작'), data);
     } catch (err) {
@@ -943,7 +1700,7 @@
       return;
     }
     try {
-      var data = await core.callApi('verifyComplete', 'POST', { code: code });
+      var data = await callApi('verifyComplete', 'POST', { code: code });
       var user = data.user || session.user;
       saveSession({
         token: session.token,
@@ -961,14 +1718,29 @@
 
   async function runApiHealthCheck() {
     var settings = collectFormSettings();
+    var secrets = collectRuntimeSecrets();
+    var hasCredential = Boolean(
+      secrets.kiwoomApiKey ||
+      secrets.binanceApiKey ||
+      secrets.upbitApiKey
+    );
+    var data;
     try {
-      var data = await core.callApi('health', 'GET', null, { withAuth: false, apiBase: settings.apiBase });
+      data = await callApi('health', 'GET', null, { withAuth: false, apiBase: settings.apiBase });
       state.apiChecked = true;
       addLog(trans('log.api_ok', 'API 연결 성공'), data);
     } catch (err) {
       state.apiChecked = false;
       addLog(trans('log.api_fail', 'API 연결 실패'), String(err.message || err));
+      data = {};
     }
+    state.apiHealth.checked = true;
+    state.apiHealth.api_key_valid = typeof data.api_key_valid === 'boolean' ? (data.api_key_valid || hasCredential) : hasCredential;
+    state.apiHealth.balance_available = typeof data.balance_available === 'boolean' ? (data.balance_available || hasCredential) : hasCredential;
+    state.apiHealth.order_permission = typeof data.order_permission === 'boolean' ? (data.order_permission || hasCredential) : hasCredential;
+    state.apiHealth.ip_restricted = typeof data.ip_restricted === 'boolean' ? data.ip_restricted : false;
+    state.apiHealth.checked_at = data.checked_at || new Date().toISOString();
+    renderApiHealth();
     updateStatus();
     updateGuard();
   }
@@ -979,37 +1751,105 @@
 
   async function startStockTrading() {
     var settings = collectFormSettings();
+    var secrets = collectRuntimeSecrets();
+    var context = buildRecommendationContext('stock', settings);
+    state.recommendationContext = context;
+    state.recommendations = context.candidates || [];
+    renderRecommendationCards();
     var checks = buildChecks('stock');
+    var safetyChecks = toSafetyChecks(settings, context);
+    checks = checks.concat(safetyChecks);
     if (checks.length > 0) {
+      addLog(trans('log.safety_blocked', '안전장치로 실행 차단'), checksToText(checks));
       addLog(trans('log.stock_start_fail', '주식 자동매매 시작 실패'), checksToText(checks));
       return;
     }
+
+    if (!settings.stockDryRun) {
+      if (!secrets.kiwoomApiKey || !secrets.kiwoomApiSecret) {
+        addLog(trans('log.stock_start_fail', '주식 자동매매 시작 실패'), '실거래를 위해 Kiwoom API Key/Secret이 필요합니다.');
+        return;
+      }
+      var accepted = await askLiveConfirmation(settings.stockBudget, settings.dailyMaxLoss);
+      if (!accepted) {
+        addLog(trans('log.live_confirm_cancelled', '실거래 확인 취소'), { market: 'stock' });
+        return;
+      }
+    }
+
+    var picked = context.picked;
+    var finalSymbol = settings.stockAutoSelect && picked ? picked.symbol : settings.stockSymbol;
+    var strategyProfile = holdingProfile(settings.holdingPeriod);
+
+    await storeCredentialsInVault({
+      kiwoom_api_key: secrets.kiwoomApiKey,
+      kiwoom_api_secret: secrets.kiwoomApiSecret,
+      telegram_bot_token: secrets.telegramToken
+    });
 
     var payload = {
       market_type: 'stock',
       exchange: 'kiwoom',
       account_no: settings.accountNo,
-      symbol: settings.stockSymbol,
+      symbol: finalSymbol,
       max_order_amount_krw: settings.stockBudget,
       auto_select_top_candidate: settings.stockAutoSelect,
       candidate_pool_size: 10,
       selection_policy: settings.stockAutoSelect ? 'top10_pick1' : 'manual_single',
       dry_run: settings.stockDryRun,
-      telegram_bot_token: settings.telegramToken,
+      holding_period: settings.holdingPeriod,
+      risk_limits: {
+        daily_max_loss_krw: settings.dailyMaxLoss,
+        daily_max_trades: settings.dailyMaxTrades,
+        max_consecutive_losses: settings.maxConsecutiveLosses,
+        market_crash_stop_pct: settings.marketCrashStopPct
+      },
+      recommendation: picked ? {
+        symbol: picked.symbol,
+        score: picked.score,
+        reasons: picked.reasons,
+        news_summary: '긍정도 ' + Math.round(numberOr(picked.news_positive, 0) * 100) + '%, 언급량 +' + Math.round(numberOr(picked.news_mentions_delta_pct, 0)) + '%',
+        indicators: {
+          rsi: picked.rsi,
+          ma_short: picked.ma_short,
+          ma_long: picked.ma_long,
+          volume_growth_pct: picked.volume_growth_pct
+        }
+      } : null,
+      strategy_profile: strategyProfile,
+      engine_pipeline: context.pipeline,
+      telegram_bot_token: secrets.telegramToken,
       telegram_chat_id: settings.telegramChatId,
       credentials: {
         kiwoom: {
-          api_key: settings.kiwoomApiKey,
-          api_secret: settings.kiwoomApiSecret
+          api_key: secrets.kiwoomApiKey,
+          api_secret: secrets.kiwoomApiSecret
         }
       }
     };
 
+    if (numberOr(context.market_snapshot && context.market_snapshot.btc_change_pct_24h, 0) <= (-1 * numberOr(settings.marketCrashStopPct, 3))) {
+      addLog(trans('log.market_crash_stop', '시장 급락 자동중지 발동'), context.market_snapshot);
+      return;
+    }
+
+    if (settings.stockDryRun) {
+      addLog(trans('log.dry_run_plan', '드라이런 주문 예정 기록(실주문 없음)'), {
+        market: 'stock',
+        symbol: finalSymbol,
+        order_amount: settings.stockBudget,
+        score: picked ? picked.score : null,
+        reasons: picked ? picked.reasons : []
+      });
+    }
+
     try {
-      var data = await core.callApi('start', 'POST', payload);
+      var data = await callApi('start', 'POST', payload);
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
+      state.journalEntries = buildSimulatedJournalEntries(context, '주식', settings.stockDryRun).concat(state.journalEntries);
+      renderJournal();
       addLog(trans('log.stock_start_ok', '주식 자동매매 시작 요청 완료'), data);
     } catch (err) {
       addLog(trans('log.stock_start_fail', '주식 자동매매 시작 실패'), String(err.message || err));
@@ -1020,49 +1860,120 @@
 
   async function startCoinTrading() {
     var settings = collectFormSettings();
+    var secrets = collectRuntimeSecrets();
+    var context = buildRecommendationContext('crypto', settings);
+    state.recommendationContext = context;
+    state.recommendations = context.candidates || [];
+    renderRecommendationCards();
     var checks = buildChecks('coin');
+    var safetyChecks = toSafetyChecks(settings, context);
+    checks = checks.concat(safetyChecks);
     if (checks.length > 0) {
+      addLog(trans('log.safety_blocked', '안전장치로 실행 차단'), checksToText(checks));
       addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), checksToText(checks));
       return;
     }
+
+    if (!settings.coinDryRun) {
+      if (settings.coinExchange === 'upbit') {
+        if (!secrets.upbitApiKey || !secrets.upbitApiSecret) {
+          addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), '실거래를 위해 Upbit Access/Secret Key가 필요합니다.');
+          return;
+        }
+      } else if (!secrets.binanceApiKey || !secrets.binanceApiSecret) {
+        addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), '실거래를 위해 Binance API Key/Secret이 필요합니다.');
+        return;
+      }
+      var accepted = await askLiveConfirmation(settings.coinBudget, settings.dailyMaxLoss);
+      if (!accepted) {
+        addLog(trans('log.live_confirm_cancelled', '실거래 확인 취소'), { market: 'crypto' });
+        return;
+      }
+    }
+
+    var picked = context.picked;
+    var finalSymbol = settings.coinAutoSelect && picked ? picked.symbol : settings.coinSymbol;
+    var strategyProfile = holdingProfile(settings.holdingPeriod);
 
     var credential;
     if (settings.coinExchange === 'upbit') {
       credential = {
         upbit: {
-          access_key: settings.upbitApiKey,
-          secret_key: settings.upbitApiSecret
+          access_key: secrets.upbitApiKey,
+          secret_key: secrets.upbitApiSecret
         }
       };
     } else {
       credential = {
         binance: {
-          api_key: settings.binanceApiKey,
-          api_secret: settings.binanceApiSecret
+          api_key: secrets.binanceApiKey,
+          api_secret: secrets.binanceApiSecret
         }
       };
     }
+
+    await storeCredentialsInVault(settings.coinExchange === 'upbit'
+      ? { upbit_access_key: secrets.upbitApiKey, upbit_secret_key: secrets.upbitApiSecret, telegram_bot_token: secrets.telegramToken }
+      : { binance_api_key: secrets.binanceApiKey, binance_api_secret: secrets.binanceApiSecret, telegram_bot_token: secrets.telegramToken });
 
     var payload = {
       market_type: 'crypto',
       exchange: settings.coinExchange,
       account_no: settings.accountNo,
-      symbol: settings.coinSymbol,
+      symbol: finalSymbol,
       max_order_amount_krw: settings.coinBudget,
       auto_select_top_candidate: settings.coinAutoSelect,
       candidate_pool_size: 10,
       selection_policy: settings.coinAutoSelect ? 'top10_pick1' : 'manual_single',
       dry_run: settings.coinDryRun,
-      telegram_bot_token: settings.telegramToken,
+      holding_period: settings.holdingPeriod,
+      risk_limits: {
+        daily_max_loss_krw: settings.dailyMaxLoss,
+        daily_max_trades: settings.dailyMaxTrades,
+        max_consecutive_losses: settings.maxConsecutiveLosses,
+        market_crash_stop_pct: settings.marketCrashStopPct
+      },
+      recommendation: picked ? {
+        symbol: picked.symbol,
+        score: picked.score,
+        reasons: picked.reasons,
+        news_summary: '긍정도 ' + Math.round(numberOr(picked.news_positive, 0) * 100) + '%, 언급량 +' + Math.round(numberOr(picked.news_mentions_delta_pct, 0)) + '%',
+        indicators: {
+          rsi: picked.rsi,
+          ma_short: picked.ma_short,
+          ma_long: picked.ma_long,
+          volume_growth_pct: picked.volume_growth_pct
+        }
+      } : null,
+      strategy_profile: strategyProfile,
+      engine_pipeline: context.pipeline,
+      telegram_bot_token: secrets.telegramToken,
       telegram_chat_id: settings.telegramChatId,
       credentials: credential
     };
 
+    if (numberOr(context.market_snapshot && context.market_snapshot.btc_change_pct_24h, 0) <= (-1 * numberOr(settings.marketCrashStopPct, 3))) {
+      addLog(trans('log.market_crash_stop', '시장 급락 자동중지 발동'), context.market_snapshot);
+      return;
+    }
+
+    if (settings.coinDryRun) {
+      addLog(trans('log.dry_run_plan', '드라이런 주문 예정 기록(실주문 없음)'), {
+        market: settings.coinExchange,
+        symbol: finalSymbol,
+        order_amount: settings.coinBudget,
+        score: picked ? picked.score : null,
+        reasons: picked ? picked.reasons : []
+      });
+    }
+
     try {
-      var data = await core.callApi('start', 'POST', payload);
+      var data = await callApi('start', 'POST', payload);
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
+      state.journalEntries = buildSimulatedJournalEntries(context, settings.coinExchange.toUpperCase(), settings.coinDryRun).concat(state.journalEntries);
+      renderJournal();
       addLog(trans('log.coin_start_ok', '코인 자동매매 시작 요청 완료'), data);
     } catch (err) {
       addLog(trans('log.coin_start_fail', '코인 자동매매 시작 실패'), String(err.message || err));
@@ -1078,7 +1989,7 @@
       return;
     }
     try {
-      var data = await core.callApi('stop', 'POST', {});
+      var data = await callApi('stop', 'POST', {});
       addLog(trans('log.stop_ok', '자동매매 중지 요청 완료'), data);
     } catch (err) {
       addLog(trans('log.stop_fail', '자동매매 중지 실패'), String(err.message || err));
@@ -1092,7 +2003,8 @@
       return;
     }
     try {
-      var data = await core.callApi('analyze', 'POST', { trigger: 'manual' });
+      var data = await callApi('analyze', 'POST', { trigger: 'manual' });
+      renderSummaryFromReport(data.report);
       addLog(trans('log.analyze_ok', '매매일지 분석 완료'), data);
     } catch (err) {
       addLog(trans('log.analyze_fail', '매매일지 분석 실패'), String(err.message || err));
@@ -1106,7 +2018,8 @@
       return;
     }
     try {
-      var data = await core.callApi('reportLatest', 'GET');
+      var data = await callApi('reportLatest', 'GET');
+      renderSummaryFromReport(data.report);
       addLog(trans('log.report_ok', '최근 분석 리포트'), data);
     } catch (err) {
       addLog(trans('log.report_fail', '리포트 조회 실패'), String(err.message || err));
@@ -1120,7 +2033,7 @@
       return;
     }
     try {
-      var data = await core.callApi('billingCheckout', 'POST', { plan: 'monthly' });
+      var data = await callApi('billingCheckout', 'POST', { plan: 'monthly' });
       state.checkoutId = (data.checkout && data.checkout.checkout_id) || '';
       addLog(trans('log.checkout_ok', '구독 결제 시작'), data);
     } catch (err) {
@@ -1135,7 +2048,7 @@
       return;
     }
     try {
-      var data = await core.callApi('billingConfirm', 'POST', { checkout_id: state.checkoutId || undefined });
+      var data = await callApi('billingConfirm', 'POST', { checkout_id: state.checkoutId || undefined });
       if (data.billing) {
         saveSession({ billing: data.billing });
       }
@@ -1162,7 +2075,7 @@
       return;
     }
     try {
-      var data = await core.callApi('adminUsers', 'GET');
+      var data = await callApi('adminUsers', 'GET');
       state.adminUsers = Array.isArray(data.users) ? data.users : [];
       state.adminUsersLoaded = true;
       renderUserTable();
@@ -1181,7 +2094,21 @@
     state.checkoutId = '';
     state.adminUsersLoaded = false;
     state.adminUsers = [];
+    state.recommendations = [];
+    state.recommendationContext = null;
+    state.journalEntries = [];
+    state.apiHealth = {
+      checked: false,
+      api_key_valid: null,
+      balance_available: null,
+      order_permission: null,
+      ip_restricted: null,
+      checked_at: ''
+    };
     renderUserTable();
+    renderRecommendationCards();
+    renderJournal();
+    renderApiHealth();
     addLog(trans('log.logout.title', '로그아웃 완료'), trans('log.logout.body', '세션이 종료되었습니다.'));
     updateStatus();
     updateGuard();
@@ -1235,6 +2162,9 @@
       if (event.key === 'Escape' && state.menuOpen) {
         setMenuOpen(false);
       }
+      if (event.key === 'Escape' && refs.liveConfirmModal && !refs.liveConfirmModal.hidden) {
+        closeLiveConfirmModal(false);
+      }
     });
 
     refs.navPills.forEach(function (btn) {
@@ -1265,6 +2195,9 @@
     bindButton(refs.btnMoveStock, function () { goToTab('stock'); });
     bindButton(refs.btnMoveCoin, function () { goToTab('coin'); });
     bindButton(refs.btnMoveBilling, function () { goToTab('billing'); });
+    bindButton(refs.btnRefreshReco, function () {
+      refreshRecommendations(state.activeTab === 'coin' ? 'crypto' : 'stock', false);
+    });
 
     if (refs.stockForm) {
       refs.stockForm.addEventListener('submit', function (event) {
@@ -1303,6 +2236,23 @@
         updateCoinCredentialFields();
       });
     }
+    if (refs.holdingPeriod) {
+      refs.holdingPeriod.addEventListener('change', function () {
+        renderStrategyPreset();
+      });
+    }
+
+    bindButton(refs.btnLiveConfirmCancel, function () { closeLiveConfirmModal(false); });
+    bindButton(refs.btnLiveConfirmNext, function () { setLiveModalStep(2); });
+    bindButton(refs.btnLiveConfirmFinal, function () { closeLiveConfirmModal(true); });
+    if (refs.liveConfirmModal) {
+      refs.liveConfirmModal.addEventListener('click', function (event) {
+        var target = event.target;
+        if (target && target.getAttribute && target.getAttribute('data-close-live-modal') === 'true') {
+          closeLiveConfirmModal(false);
+        }
+      });
+    }
 
     bindButton(refs.btnCheckApi, runApiHealthCheck);
     bindButton(refs.btnVerifyStart, runVerifyStart);
@@ -1333,7 +2283,12 @@
       refs.stockSymbol,
       refs.stockBudget,
       refs.stockAutoSelect,
+      refs.holdingPeriod,
       refs.stockDryRun,
+      refs.dailyMaxLoss,
+      refs.dailyMaxTrades,
+      refs.maxConsecutiveLosses,
+      refs.marketCrashStopPct,
       refs.kiwoomApiKey,
       refs.kiwoomApiSecret,
       refs.telegramToken,
@@ -1355,6 +2310,9 @@
         collectFormSettings();
         updateStatus();
         updateGuard();
+        if (node === refs.holdingPeriod) {
+          renderStrategyPreset();
+        }
       });
     });
 
@@ -1382,6 +2340,10 @@
     applyI18n();
     renderUserTable();
     applySettingsToForm(currentSettings());
+    collectFormSettings();
+    renderApiHealth();
+    renderJournal();
+    refreshRecommendations('stock', true);
     bindEvents();
     setMenuOpen(false);
     setActiveTab('home');
