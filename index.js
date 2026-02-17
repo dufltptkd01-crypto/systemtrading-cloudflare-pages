@@ -158,6 +158,10 @@
     'arch.step.3.body': 'Apply two-stage scoring and candidate compression.',
     'arch.step.4': '4. Order Execution Server',
     'arch.step.4.body': 'Validate risk guardrails, place orders, and write journals.',
+    'chart.stock.title': 'Stock TradingView Chart',
+    'chart.stock.lead': 'Chart updates automatically based on selected stock symbol.',
+    'chart.coin.title': 'Crypto TradingView Chart',
+    'chart.coin.lead': 'Chart updates automatically by selected exchange and symbol.',
     'journal.title': 'Auto-Trading Logs / Analysis',
     'journal.summary.win_rate': 'Win Rate',
     'journal.summary.total_pnl': 'Total PnL',
@@ -423,6 +427,10 @@
     verifyHint: document.getElementById('verifyHint'),
     btnRefreshReco: document.getElementById('btnRefreshReco'),
     recommendationCards: document.getElementById('recommendationCards'),
+    stockChartFrame: document.getElementById('stockChartFrame'),
+    coinChartFrame: document.getElementById('coinChartFrame'),
+    stockChartSymbolLabel: document.getElementById('stockChartSymbolLabel'),
+    coinChartSymbolLabel: document.getElementById('coinChartSymbolLabel'),
     summaryWinRate: document.getElementById('summaryWinRate'),
     summaryTotalPnl: document.getElementById('summaryTotalPnl'),
     summaryMaxDrawdown: document.getElementById('summaryMaxDrawdown'),
@@ -499,6 +507,7 @@
     renderJournal();
     renderApiHealth();
     renderStrategyPreset();
+    renderTradingViewCharts();
   }
 
   function trans(key, koText) {
@@ -794,6 +803,106 @@
       refs.apiHealthCheckedAt,
       (state.lang === 'en' ? 'Last check: ' : '최근 확인: ') + (state.apiHealth.checked_at ? formatDateText(state.apiHealth.checked_at) : '-')
     );
+  }
+
+  function intervalByHolding(holdingPeriod, marketType) {
+    if (holdingPeriod === 'scalp') {
+      return '1';
+    }
+    if (holdingPeriod === 'swing') {
+      return marketType === 'crypto' ? '240' : '120';
+    }
+    return marketType === 'crypto' ? '15' : '30';
+  }
+
+  function parsePair(rawSymbol, fallbackBase, fallbackQuote) {
+    var text = String(rawSymbol || '').trim().toUpperCase();
+    if (!text) {
+      return { base: fallbackBase, quote: fallbackQuote };
+    }
+    if (text.indexOf('/') >= 0) {
+      var split = text.split('/');
+      return {
+        base: (split[0] || fallbackBase).replace(/[^A-Z0-9]/g, ''),
+        quote: (split[1] || fallbackQuote).replace(/[^A-Z0-9]/g, '')
+      };
+    }
+    if (text.endsWith('USDT')) {
+      return { base: text.slice(0, -4), quote: 'USDT' };
+    }
+    if (text.endsWith('KRW')) {
+      return { base: text.slice(0, -3), quote: 'KRW' };
+    }
+    return { base: text.replace(/[^A-Z0-9]/g, ''), quote: fallbackQuote };
+  }
+
+  function stockTvSymbol(rawSymbol) {
+    var code = String(rawSymbol || '').trim();
+    if (!/^\d{6}$/.test(code)) {
+      code = '005930';
+    }
+    return 'KRX:' + code;
+  }
+
+  function coinTvSymbol(exchange, rawSymbol) {
+    var ex = String(exchange || 'binance').toLowerCase();
+    var pair = parsePair(rawSymbol, 'BTC', ex === 'upbit' ? 'KRW' : 'USDT');
+    var quote = pair.quote;
+    if (!quote) {
+      quote = ex === 'upbit' ? 'KRW' : 'USDT';
+    }
+    if (ex === 'binance' && quote === 'KRW') {
+      quote = 'USDT';
+    }
+    var tvExchange = ex === 'upbit' ? 'UPBIT' : 'BINANCE';
+    return tvExchange + ':' + pair.base + quote;
+  }
+
+  function chartTheme() {
+    return 'dark';
+  }
+
+  function chartLocale() {
+    return state.lang === 'en' ? 'en' : 'kr';
+  }
+
+  function tradingViewEmbedUrl(symbol, interval) {
+    var params = new URLSearchParams();
+    params.set('symbol', symbol);
+    params.set('interval', interval || '30');
+    params.set('hidesidetoolbar', '1');
+    params.set('symboledit', '1');
+    params.set('saveimage', '0');
+    params.set('toolbarbg', '#131d2d');
+    params.set('theme', chartTheme());
+    params.set('style', '1');
+    params.set('timezone', 'Asia/Seoul');
+    params.set('withdateranges', '1');
+    params.set('hideideas', '1');
+    params.set('studies', '[]');
+    params.set('locale', chartLocale());
+    return 'https://s.tradingview.com/widgetembed/?' + params.toString();
+  }
+
+  function setChartFrame(frame, symbolLabelNode, tvSymbol, interval) {
+    if (!frame) {
+      return;
+    }
+    if (symbolLabelNode) {
+      symbolLabelNode.textContent = tvSymbol + ' · ' + interval + 'm';
+    }
+    var src = tradingViewEmbedUrl(tvSymbol, interval);
+    if (frame.src !== src) {
+      frame.src = src;
+    }
+  }
+
+  function renderTradingViewCharts() {
+    var settings = currentSettings();
+    var stockSymbol = stockTvSymbol(settings.stockSymbol);
+    var coinSymbol = coinTvSymbol(settings.coinExchange, settings.coinSymbol);
+    setChartFrame(refs.stockChartFrame, refs.stockChartSymbolLabel, stockSymbol, intervalByHolding(settings.holdingPeriod, 'stock'));
+    setChartFrame(refs.coinChartFrame, refs.coinChartSymbolLabel, coinSymbol, intervalByHolding(settings.holdingPeriod, 'crypto'));
   }
 
   function marketUniverse(marketType) {
@@ -1434,6 +1543,7 @@
 
     renderStrategyPreset();
     updateCoinCredentialFields();
+    renderTradingViewCharts();
   }
 
   function collectFormSettings() {
@@ -2306,6 +2416,7 @@
     if (refs.coinExchange) {
       refs.coinExchange.addEventListener('change', function () {
         updateCoinCredentialFields();
+        renderTradingViewCharts();
       });
     }
     if (refs.holdingPeriod) {
@@ -2385,6 +2496,9 @@
         if (node === refs.holdingPeriod) {
           renderStrategyPreset();
         }
+        if (node === refs.stockSymbol || node === refs.coinSymbol || node === refs.coinExchange || node === refs.holdingPeriod) {
+          renderTradingViewCharts();
+        }
       });
     });
 
@@ -2416,6 +2530,7 @@
     renderApiHealth();
     renderJournal();
     refreshRecommendations('stock', true);
+    renderTradingViewCharts();
     bindEvents();
     setMenuOpen(false);
     setActiveTab('home');

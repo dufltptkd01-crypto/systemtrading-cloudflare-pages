@@ -340,6 +340,23 @@
       </div>
 
       <div class="setup-grid top-gap">
+        <article class="glass-panel chart-panel">
+          <div class="panel-head">
+            <h2 data-i18n="chart.stock.title">주식 트레이딩뷰 차트</h2>
+            <span id="stockChartSymbolLabel" class="chart-symbol-chip">KRX:005930</span>
+          </div>
+          <p class="side-note" data-i18n="chart.stock.lead">선택한 주식 종목코드 기준으로 차트가 자동 갱신됩니다.</p>
+          <div class="tv-chart-frame top-gap">
+            <iframe
+              id="stockChartFrame"
+              title="Stock TradingView Chart"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </article>
+
         <article class="glass-panel">
           <div class="panel-head">
             <h2 data-i18n="reco.title">AI 추천 종목</h2>
@@ -477,6 +494,23 @@
           <p id="guardText" class="side-note" data-i18n="coin.guard">실행 전: 로그인 + 본인인증 + 이용권 + API 확인이 필요합니다.</p>
         </article>
       </div>
+
+      <article class="glass-panel chart-panel top-gap">
+        <div class="panel-head">
+          <h2 data-i18n="chart.coin.title">코인 트레이딩뷰 차트</h2>
+          <span id="coinChartSymbolLabel" class="chart-symbol-chip">BINANCE:BTCUSDT</span>
+        </div>
+        <p class="side-note" data-i18n="chart.coin.lead">거래소 및 심볼 설정값에 맞춰 차트가 자동 갱신됩니다.</p>
+        <div class="tv-chart-frame top-gap">
+          <iframe
+            id="coinChartFrame"
+            title="Crypto TradingView Chart"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </article>
     </section>
 
     <section id="tab-billing" class="tab-panel">
