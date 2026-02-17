@@ -85,8 +85,10 @@ textarea {
 }
 
 .wrap {
-  width: min(1580px, 98vw);
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
+  padding-inline: clamp(10px, 1.6vw, 28px);
 }
 
 .hero-nav {

@@ -30,7 +30,7 @@
     'auth.logout': 'Log Out',
     'landing.hero.kicker': 'PREMIUM AUTO TRADING EXPERIENCE',
     'landing.hero.tag': 'Executive AI Trading Lounge',
-    'landing.hero.title.main': 'The Velvet Trading Lounge',
+    'landing.hero.title.main': 'AI-Recommended Automated Trading',
     'landing.hero.title.sub': 'AI-recommended auto-trading with refined control.',
     'landing.hero.sub': 'Our score-driven engine fuses news, volume, and indicators to shortlist top candidates and execute inside strict risk limits.',
     'landing.hero.cta.primary': 'Start For Free',
